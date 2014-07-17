@@ -1,4 +1,4 @@
 SandboxDESI
 ===========
 
-Testing codes for DESI
+Code testing for DESI
