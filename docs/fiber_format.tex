@@ -32,6 +32,35 @@ or any target: fiber mapping changes it becomes a new pointing. A
 slightly different positioner location of the same targets on the
 same fibers is the same pointing.  
 
+\section{\code\ inputs}
+The necessary input of \code\ are 
+\begin{itemize}
+\item TargetDB. Data base containing the information of all targets on the sky. 
+\item SurveyTiles. File containing the positions of all the tiles to be observed.
+\end{itemize}
+
+
+
+\section{\code\ inputs format}
+
+
+TargetDB is a database with the following tables.
+\begin{itemize}
+\item brickid: [1,662174]
+\item objid: [0,N-1]
+\item brick\_primary: T, F
+\item ra: degrees [0-360]
+\item dec: degrees [-90 -+90]
+\item objtype: ELG, LRG, QSO, SKY, STDSTAR, GAL, OTHER
+\end{itemize}
+
+\noindent
+SurveyTiles is a FITS file with the following fields.
+\begin{itemize}
+\item ...
+\end{itemize}
+
+
 \section{\code\ outputs}
 
 The principal outputs of \code\ are
