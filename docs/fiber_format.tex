@@ -36,12 +36,15 @@ same fibers is the same pointing.
 The necessary input of \code\ are 
 \begin{itemize}
 \item TargetDB. Data base containing the information of all targets on the sky. 
-\item SurveyTiles. File containing the positions of all the tiles to be observed.
+\item SurveyTiles. File containing the positions of all the tiles to
+  be observed. 
+\item FiberPositions. File containing the positions of all fibers on
+  the focal plane.  
 \end{itemize}
 
 
 
-\section{\code\ inputs format}
+\section{\code\ inputs data-structure}
 
 
 TargetDB is a database with the following tables.
@@ -88,7 +91,7 @@ where \texttt{TTTTTT} is the 6-digit Tile ID and \texttt{PPPPPPPPPPPP} is
 a 12-digit pointing ID. The pointing ID is hash value computed by
 adding the IDs of all the targets in the pointing. 
 
-\section{Output file data-structure}
+\section{\code\ outputs data-structure}
 
 
 PotentialFiberMap contains the following information
