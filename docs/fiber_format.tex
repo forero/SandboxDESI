@@ -52,23 +52,33 @@ In the TargetDB found in \texttt{/project/projectdirs/desi/db} the
 table of interest is \texttt{Target} with the following columns
 
 \begin{itemize}
-\item brickid: [1,662174]
-\item objid: [0,N-1]
-\item brick\_primary: T, F
+\item id: primary key.
+\item cand\_id: 
 \item ra: degrees [0-360]
 \item dec: degrees [-90 -+90]
+\item priority: 
+\item nobs: 
 \item objtype: ELG, LRG, QSO, SKY, STDSTAR, GAL, OTHER
 \end{itemize}
 
 \noindent
-SurveyTiles is a FITS file with the following fields.
+SurveyTiles is an ASCII file including the following fields
 \begin{itemize}
-\item ...
+\item tileid [1:28810]
+\item ra: degree [0-360]
+\item dec: degrees [-90-+90]
+\item pass [1-5]
+\item in\_desi [0,1]
 \end{itemize}
 
-FiberPositions is a FITS file with the following fields.
+FiberPositions is an ASCII file including the following fields.
 \begin{itemize}
-\item ...
+\item fiber\_ID [0:]
+\item positioner\_ID  [0:]
+\item spectrograph\_ID [0:]
+\item x: mm, position on focal plane
+\item y: mm, position on focal plane
+\item z: mm, position on focal plane
 \end{itemize}
 
 
