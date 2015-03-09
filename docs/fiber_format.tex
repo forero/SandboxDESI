@@ -37,9 +37,10 @@ The necessary input of \code\ are
 \begin{itemize}
 \item TargetDB. Data base containing the information of all targets on the sky. 
 \item SurveyTiles. File containing the positions of all the tiles to
-  be observed. 
+  be observed. Currently this ASCII file
+  \url{https://desi.lbl.gov/trac/browser/code/survey/surveyplan/trunk/data/desi-tiles-full.par} 
 \item FiberPositions. File containing the positions of all fibers on
-  the focal plane.  
+  the focal plane.  Currently this ASCII file \url{https://desi.lbl.gov/trac/browser/code/desimodel/trunk/data/focalplane/fiberpos.txt}
 \end{itemize}
 
 
@@ -47,7 +48,9 @@ The necessary input of \code\ are
 \section{\code\ inputs data-structure}
 
 
-TargetDB is a database with the following tables.
+In the TargetDB found in \texttt{/project/projectdirs/desi/db} the
+table of interest is \texttt{Target} with the following columns
+
 \begin{itemize}
 \item brickid: [1,662174]
 \item objid: [0,N-1]
