@@ -2,7 +2,7 @@
 \usepackage{hyperref}
 \newcommand{\code}{{\texttt{QuickFiber}}}
 \title{Documentation for \code\ Input and Output Files}
-\author{Jaime E. Forero-Romero}
+\author{Jaime E. Forero-Romero \& Stephen Bailey}
 
 \begin{document}
 \maketitle
@@ -35,7 +35,10 @@ same fibers is the same pointing.
 \section{\code\ inputs}
 The necessary inputs of \code\ are 
 \begin{itemize}
-\item TargetDB. Data base containing the information of all targets on the sky. 
+\item TargetDB. Database containing the information of all targets on the sky. 
+\item ObsDB. Database constructed from the ongoing DESI
+observations after the data has been processed by the Spectroscopic
+pipeline. This DB has not been designed yet. 
 \item SurveyTiles. File containing the positions of all the tiles to
   be observed. 
 Currently this ASCII file\\
@@ -55,26 +58,42 @@ Currently this ASCII file\\
 \section{\code\ inputs data-structure}
 
 
-In the TargetDB found in \texttt{/project/projectdirs/desi/db} the
-table of interest is \texttt{Target} with the following columns
+The table of interest in the TargetDB \texttt{/project/projectdirs/desi/db}
+is \texttt{Target} with the following columns
 
 \begin{itemize}
 \item id: primary key
-\item cand\_id [0-]
+\item cand\_ID [0-]
 \item ra: degrees [0-360]
 \item dec: degrees [-90 -+90]
-\item priority 
-\item nobs 
+\item priority: [0-] Larger positive numbers indicate higher priority.
+\item nobs: [0-] Desired number of spectroscopic observations in
+  DESI.
 \item objtype: ELG, LRG, QSO, SKY, STDSTAR, GAL, OTHER
+\end{itemize}
+
+\noindent
+Columns of interest to \code\ from ObsDB will be
+
+\begin{itemize}
+\item cand\_ID [0-]
+\item ra: degrees [0-360]
+\item dec: degrees [-90 -+90]
+\item fiber\_ID [0:]
+\item positioner\_ID  [0:]
+\item spectrograph\_ID [0:]
+\item tile\_ID [1:28810]
+\item signaltonoise
+\item confirmedobjtype: ELG, LRG, QSO, SKY, STDSTAR, GAL, OTHER
 \end{itemize}
 
 \noindent
 SurveyTiles is an ASCII file including the following fields
 \begin{itemize}
-\item tileid [1:28810]
+\item tile\_ID [1:28810]
 \item ra: degree [0-360]
 \item dec: degrees [-90-+90]
-\item pass [1-5]
+\item layer [1-5]
 \item in\_desi [0,1]
 \end{itemize}
 
@@ -107,7 +126,7 @@ The principal outputs of \code\ are
 \end{itemize}
 
 The previous two sets will be stored in the same FITS file for each
-tile and poiting. This means that two different assignment algorithms
+tile and pointing. This means that two different assignment algorithms
 running on the same tile producing different pointings will store
 the results in different files. 
 
@@ -140,17 +159,16 @@ HDU2 & Binary FITS table & PotentialFiberMap information\\\hline
 
 \subsection{Data-structure}
 
-FiberMap contains the following information
+FiberMap is a table with the following columns.
 \begin{itemize}
 \item fiber: [0-4999]
 \item positioner: [0-4999]
-\item numtargetid: [1-] Number of potential target IDs associated to each
-  fiber. If a fiber has zero potential targets it has the
-  targetID \texttt{-1} associated to it. 
+\item numtarget: [0-] Number of potential target IDs associated to each
+  fiber. 
 \item objtype: ELG, LRG, QSO, SKY, STDSTAR, GAL, OTHER. 
 \item targetid: 
   unique target identifier to get back to target
-  selection info. Corresponds to the cand\_id in the TargetDB.
+  selection info. Corresponds to the cand\_ID in the TargetDB.
 \item desi\_target0: 64 bit mask of targeting info. 
 \item ra: degrees [0-360]. 
 \item dec: degrees [-90 - +90]. 
@@ -159,11 +177,11 @@ FiberMap contains the following information
 \end{itemize}
 
 \noindent
-PotentialFiberMap includes the following information.
+PotentialFiberMap with only one column.
 \begin{itemize}
 \item potentialtargetid:  unique target identifier to get back to target
   selection info. This contains  all the targets that can be
-  reached by a fiber. Corresponds to the cand\_id in the TargetDB. 
+  reached by a fiber. Corresponds to the cand\_ID in the TargetDB. 
   This concatenates the sets of available
   targets for each fiber.
 \end{itemize}
@@ -176,19 +194,19 @@ potentialtargetid which has a variable size.
 Let's assume for simplicity that we have 4 fibers with IDs
 \texttt{[0,1,2,3]}. There are in turn 4 differents sets of targets that
 can be reached by each fiber. These sets are \texttt{[980,203]},
-\texttt{[736,102,304]}, \texttt{[234]} and \texttt{[-1]} for fibers
+\texttt{[736,102,304]}, \texttt{[0]} and \texttt{[234]} for fibers
 \texttt{0,1,2} and \texttt{3}, respectiveley.
 The index \texttt{-1} for fiber \texttt{3} means that this fiber
 cannot reach any target.
 
-In this case fiber, numtargetid and potentialtargetid are as follows.
+In this case fiber, numtarget and potentialtargetid are as follows.
 \begin{itemize}
 \item
 fiber: contains the array \texttt{[0,1,2,3]}.
 \item
-numtargetid: contains the array \texttt{[2,3,1,1]}.
+numtarget: contains the array \texttt{[2,3,0,1]}.
 \item
-potentialtargetid: contains the array \texttt{[980,203,736,102,304,234,-1]}.
+potentialtargetid: contains the array \texttt{[980,203,736,102,304,234]}.
 
 \end{itemize}
 
