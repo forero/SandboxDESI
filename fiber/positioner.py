@@ -110,10 +110,10 @@ def find_collision_type(pos_A, pos_B):
     if(lower_A_poly.intersects(central_B_poly)|lower_B_poly.intersects(central_A_poly)):
        collision_III = True
 
-    if(collision_III):
-        print("Collision III")
-    if(collision_II):
-        print("Collision II")
-    if((collision_III==False) & (collision_II==False)):
-        print("We don't have collisions here")
+#    if(collision_III):
+#        print("Collision III")
+#    if(collision_II):
+#        print("Collision II")
+#    if((collision_III==False) & (collision_II==False)):
+#        print("We don't have collisions here")
     return collision_II, collision_III
