@@ -4,25 +4,6 @@ import numpy as np
 import fitsio as F
 import os
 
-def get_tiles():
-    """
-    input: none
-    output: numpy array with RA, DEC, PASS footprint information from desi-tiles.fits
-    """
-    tiling_file = os.path.join(os.environ['DESIMODEL'], 'data/footprint/', 'desi-tiles.fits')
-    try:
-        dat = F.read(tiling_file,columns=('RA','DEC','PASS','IN_DESI'))
-        ww  = np.nonzero( dat['IN_DESI'] )[0]
-        ra_desi  = (dat[  'RA'][ww]).astype('f4')
-        dec_desi  = (dat[ 'DEC'][ww]).astype('f4')
-        pass_desi = (dat[ 'DEC'][ww]).astype('int')
-    except Exception, e:
-        import traceback
-        print 'ERROR in get_tiles'
-        traceback.print_exc()
-        raise e    
-    return ra_desi, dec_desi, pass_desi
-
 
 def simple_test():
     ra = 335.0
