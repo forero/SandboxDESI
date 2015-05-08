@@ -40,8 +40,10 @@ index = 0
 for ra, dec, ipass in zip(ra_tiles, dec_tiles, pass_tiles):
     cur.execute("select id, ra, dec from candidate where q3c_radial_query(candidate.ra, candidate.dec, %f, %f,0.7);"%(ra,dec))
     m=cur.fetchall()
-    index = index+1
+    index = index+1    
+    print "looking for in", index
     if(len(m)):
+        print "something in", index
         out.write("%d %f %f %d %d\n"%(index, ra, dec, ipass, len(m)))
 
 if con:
