@@ -32,19 +32,21 @@ cur = con.cursor()
 
 #file to write the data
 out = open("../data/decals_ngals.dat", "w")
-out.write("# number of decals sources in a circle of 0.7 deg in radius")
-out.write("# index, ra , dec , ipass , ngaln")
+out.write("# number of decals sources in a circle of 0.7 deg in radius\n")
+out.write("# index, ra , dec , ipass , ngaln\n")
+out.close()
 
 #loop over tiles to count the number of galaxies inside
 index = 0
-for ra, dec, ipass in zip(ra_tiles, dec_tiles, pass_tiles):
-    cur.execute("select id, ra, dec from candidate where q3c_radial_query(candidate.ra, candidate.dec, %f, %f,0.7);"%(ra,dec))
+n_tiles = np.size(pass_tiles)
+for i in range(10):
+    cur.execute("select id, ra, dec from candidate where q3c_radial_query(candidate.ra, candidate.dec, %f, %f,0.7);"%(ra_tiles[i],dec_tiles[i]))
     m=cur.fetchall()
-    index = index+1    
-    print "looking for in", index
+    print "looking for in", i
     if(len(m)):
-        print "something in", index
-        out.write("%d %f %f %d %d\n"%(index, ra, dec, ipass, len(m)))
-
+        out = open("../data/decals_ngals.dat", "a")
+        print "something in", i
+        out.write("%d %f %f %d %d\n"%(i, ra_tiles[i], dec_tiles[i], pass_tiles[i], len(m)))
+        out.close()
 if con:
     con.close()
