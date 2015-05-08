@@ -87,9 +87,12 @@ r_cut = 10.0**((22.5-23.0)/2.5)
 
 g_flux = data_dic['GFLUX'][not_zero]/data_dic['GFRAC'][not_zero]
 r_flux = data_dic['RFLUX'][not_zero]/data_dic['RFRAC'][not_zero]
+z_flux = data_dic['ZFLUX'][not_zero]/data_dic['ZFRAC'][not_zero]
 w_flux = 0.25*data_dic['W1FLUX'][not_zero]/data_dic['W1FRAC'][not_zero] + 0.75*data_dic['W2FLUX'][not_zero]/data_dic['W2FRAC'][not_zero]
 
-qso_true = np.where((r_flux>r_cut)  & (r_flux < (g_flux * (10**(1.0/2.5)))) & ((w_flux*(g_flux**1.2)) > (10**(-0.4/2.5) * (r_flux**(1.0+1.2)))))
+qso_true = np.where((r_flux>r_cut)  & (r_flux < (g_flux * (10**(1.0/2.5)))) & 
+                    (z_flux > 10**(-0.3/2.5)*r_flux)& (z_flux<10**(1.1/2.5)*r_flux) &((w_flux*(g_flux**1.2)) > (10**(-0.4/2.5) * (r_flux**(1.0+1.2)))))
+
 
 print np.size(qso_true)/(np.pi*radius**2)    
 
