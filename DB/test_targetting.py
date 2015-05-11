@@ -187,11 +187,9 @@ hdu=fits.PrimaryHDU()
 hdulist=fits.HDUList([hdu])
 hdulist.append(table_targetcat_hdu)
 hdulist.append(table_tile_hdu)
-print("VERIFY")
 hdulist.verify()
-print("WRITING")
 hdulist.writeto(filename)
-print("DONE!")
+
 
         
 if con:
