@@ -163,7 +163,7 @@ target_id = np.append(target_id, np.arange(np.size(target_ra), dtype='int'))
 
 #write the samples in FITS format
 tile_id = 341
-filename = "Targets_Tile_%06d.fits"%(tile_id)
+filename = "../data/Targets_Tile_%06d.fits"%(tile_id)
 
 c0=fits.Column(name='ID', format='I', array=target_id)
 c1=fits.Column(name='TARGETID', format='I', array=target_db_id)
