@@ -1,9 +1,24 @@
 import psycopg2
 import sys
 import numpy as np
-import fitsio as F
+from astropy.io import fits
 import os
 
+
+#arrays with target info
+
+possible_types = ['ELG', 'LRG', 'QSO', 'STDSTAR', 'GAL', 'OTHER']
+
+priority = {'ELG': 4, 'LRG': 3, 'QSO': 1}
+nobs = {'ELG':1, 'LRG':2, 'QSO': 2}
+
+target_id = np.empty((0), dtype='int')
+target_db_id = np.empty((0), dtype='int')
+target_ra = np.empty((0))
+target_dec = np.empty((0))
+target_priority = np.empty((0), dtype='int')
+target_nobs = np.empty((0), dtype='int')
+target_types = np.empty((0))
 
 
 ra = 335.0
@@ -13,8 +28,8 @@ con = psycopg2.connect(host='scidb2.nersc.gov', user='desi_user', database='desi
 cur = con.cursor()
 
     #LRG
+cur.execute("select candidate.id, candidate.ra, candidate.dec, decam.gflux, decam.rflux, decam.zflux, wise.w1flux, decam.gfracflux, decam.rfracflux, decam.zfracflux, wise.w1fracflux from  candidate, decam, wise where q3c_radial_query(candidate.ra, candidate.dec, %f, %f, %f) and decam.cand_id = candidate.id and wise.cand_id = candidate.id and decam.g_anymask =0  and decam.r_anymask =0 and decam.z_anymask=0;"%(ra,dec,radius))
 
-cur.execute("select candidate.id, candidate.ra, candidate.dec, decam.gflux, decam.rflux, decam.zflux, wise.w1flux, decam.gfracflux, decam.rfracflux, decam.zfracflux, wise.w1fracflux from  candidate, decam, wise where q3c_radial_query(candidate.ra, candidate.dec, %f, %f, %f) and decam.cand_id = candidate.id and wise.cand_id = candidate.id and decam.r_anymask =0 and decam.z_anymask=0;"%(ra,dec,radius))
 m=cur.fetchall()
 data = np.array(m)
 
@@ -23,7 +38,7 @@ data_dic = dict([('ID', data[:,0]), ('RA', data[:,1]), ('DEC', data[:,2]),
                  ('GFRAC', data[:,7]), ('RFRAC',data[:,8]), ('ZFRAC', data[:,9]), ('WFRAC', data[:,10])])
 
 
-not_zero = np.where((data_dic['RFLUX']!=0) & (data_dic['ZFLUX']!=0) & (data_dic['WFLUX']!=0))
+not_zero = np.where((data_dic['RFLUX']!=0) & (data_dic['ZFLUX']!=0) & (data_dic['WFLUX']!=0) & (data_dic['RFRAC']!=0) & (data_dic['ZFRAC']!=0) & (data_dic['WFRAC']!=0))
 not_zero = not_zero[0]
 
 r_cut = 10.0**((22.5-23.0)/2.5)    
@@ -39,8 +54,27 @@ r_z_cut = 10**(1.6/2.5)
 
 lrg_true = np.where((r_flux > r_cut) & (z_flux > z_cut) & (w1_flux>w1_cut) &(z_flux > r_flux*r_z_cut)
                     &((w1_flux * (r_flux**(1.33-1.0))) > (z_flux**1.33 * 10**(-0.33/2.5))))
-
+lrg_true = lrg_true[0]
 print np.size(lrg_true)/(np.pi*radius**2)
+
+n_lrg = np.size(lrg_true)
+
+
+
+#update arrays to write
+target_id = np.append(target_id, np.arange(n_lrg, dtype='int'))
+target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][lrg_true]))
+target_ra = np.append(target_ra, data_dic['RA'][lrg_true])
+target_dec = np.append(target_ra, data_dic['DEC'][lrg_true])
+target_priority = np.append(target_priority, np.int_(priority['LRG']*np.ones(n_lrg)))
+target_nobs = np.append(target_nobs, np.int_(nobs['LRG']*np.ones(n_lrg)))
+tmp_type = np.chararray(n_lrg, itemsize=8)
+tmp_type[:] = 'LRG'
+target_types = np.append(target_types, tmp_type)
+
+
+
+
 
 
     #ELG
@@ -67,7 +101,22 @@ w1_flux = data_dic['WFLUX'][not_zero]/data_dic['WFRAC'][not_zero]
 elg_true = np.where((r_flux>r_cut) & (z_flux > (10**(0.3/2.5)*r_flux)) & (z_flux < (10**(1.5/2.5))*r_flux)&
                     (r_flux**2 < (g_flux * z_flux * 10**(-0.2/2.5))) & (z_flux > (g_flux * 10**(1.2/2.5))))
 
+elg_true = elg_true[0]
+n_elg = np.size(elg_true)
 print np.size(elg_true)/(np.pi*radius**2)
+
+
+
+#update arrays to write
+target_id = np.append(target_id, np.arange(n_elg, dtype='int'))
+target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][elg_true]))
+target_ra = np.append(target_ra, data_dic['RA'][elg_true])
+target_dec = np.append(target_ra, data_dic['DEC'][elg_true])
+target_priority = np.append(target_priority, np.int_(priority['ELG']*np.ones(n_lrg)))
+target_nobs = np.append(target_nobs, np.int_(nobs['ELG']*np.ones(n_lrg)))
+tmp_type = np.chararray(n_elg, itemsize=8)
+tmp_type[:] = 'ELG'
+target_types = np.append(target_types, tmp_type)
 
     #QSO
 cur.execute("select candidate.id, candidate.ra, candidate.dec, decam.gflux, decam.rflux, decam.zflux, wise.w1flux, wise.w2flux, decam.gfracflux, decam.rfracflux, decam.zfracflux, wise.w1fracflux, wise.w2fracflux from  candidate, decam, wise where q3c_radial_query(candidate.ra, candidate.dec, %f, %f, %f) and decam.cand_id = candidate.id and wise.cand_id = candidate.id and decam.g_anymask =0  and decam.r_anymask =0 and candidate.type='PSF ';"%(ra,dec,radius))
@@ -92,10 +141,58 @@ w_flux = 0.25*data_dic['W1FLUX'][not_zero]/data_dic['W1FRAC'][not_zero] + 0.75*d
 
 qso_true = np.where((r_flux>r_cut)  & (r_flux < (g_flux * (10**(1.0/2.5)))) & 
                     (z_flux > 10**(-0.3/2.5)*r_flux)& (z_flux<10**(1.1/2.5)*r_flux) &((w_flux*(g_flux**1.2)) > (10**(-0.4/2.5) * (r_flux**(1.0+1.2)))))
+qso_true = qso_true[0]
 
 
+n_qso = np.size(qso_true)
 print np.size(qso_true)/(np.pi*radius**2)    
 
+
+
+#update arrays to write
+target_id = np.append(target_id, np.arange(n_qso, dtype='int'))
+target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][qso_true]))
+target_ra = np.append(target_ra, data_dic['RA'][qso_true])
+target_dec = np.append(target_ra, data_dic['DEC'][qso_true])
+target_priority = np.append(target_priority, np.int_(priority['ELG']*np.ones(n_qso)))
+target_nobs = np.append(target_nobs, np.int_(nobs['ELG']*np.ones(n_qso)))
+tmp_type = np.chararray(n_qso, itemsize=8)
+tmp_type[:] = 'QSO'
+target_types = np.append(target_types, tmp_type)
+
+#write the samples in FITS format
+tile_id = 341
+hash_id = int(sum(target_id))
+filename = "Candidates_Tile_%06d_.fits"%(tile_id, hash_id)
+c0=fits.Column(name='ID', format='I', array=target_id)
+c1=fits.Column(name='TARGETID', format='I', array=target_db_id)
+c2=fits.Column(name='RA', format='D', array=target_ra)
+c3=fits.Column(name='DEC', format='D', array=target_dec)
+c4=fits.Column(name='PRIORITY', format='D', array=target_priority)
+c5=fits.Column(name='NOBS', format='D', array=target_nobs)
+c6=fits.Column(name='OBJTYPE', format='8A', array=target_types)
+
+targetcat=fits.ColDefs([c0,c1,c2,c3,c4,c5,c6])
+table_targetcat_hdu=fits.TableHDU.from_columns(targetcat)
+
+
+c0=fits.Column(name='TILE_ID', format='I', array=np.array([tile_id]))
+c1=fits.Column(name='TILE_RA', format='D', array=np.array([ra]))
+c2=fits.Column(name='TILE_DEC', format='D', array=np.array([dec]))
+tile_info = fits.ColDefs([c0,c1,c2])
+table_tile_hdu=fits.TableHDU.from_columns(tile_info)
+
+hdu=fits.PrimaryHDU()
+hdulist=fits.HDUList([hdu])
+hdulist.append(table_targetcat_hdu)
+hdulist.append(table_tile_hdu)
+print("VERIFY")
+hdulist.verify()
+print("WRITING")
+hdulist.writeto(fitsname)
+print("DONE!")
+
+        
 if con:
     con.close()
         
