@@ -21,7 +21,7 @@ target_nobs = np.empty((0), dtype='int')
 target_types = np.empty((0))
 
 
-ra = 335.0
+ra = 334.0
 dec = 0.0
 radius = 1.0
 con = psycopg2.connect(host='scidb2.nersc.gov', user='desi_user', database='desi')
@@ -191,7 +191,7 @@ hdulist.verify()
 hdulist.writeto(filename)
 
 
-        
+print n_qso+n_lrg+n_elg        
 if con:
     con.close()
         
