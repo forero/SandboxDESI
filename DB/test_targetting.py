@@ -28,7 +28,7 @@ con = psycopg2.connect(host='scidb2.nersc.gov', user='desi_user', database='desi
 cur = con.cursor()
 
     #LRG
-cur.execute("select candidate.id, candidate.ra, candidate.dec, decam.gflux, decam.rflux, decam.zflux, wise.w1flux, decam.gfracflux, decam.rfracflux, decam.zfracflux, wise.w1fracflux from  candidate, decam, wise where q3c_radial_query(candidate.ra, candidate.dec, %f, %f, %f) and decam.cand_id = candidate.id and wise.cand_id = candidate.id and decam.g_anymask =0  and decam.r_anymask =0 and decam.z_anymask=0;"%(ra,dec,radius))
+cur.execute("select candidate.id, candidate.ra, candidate.dec, decam.gflux, decam.rflux, decam.zflux, wise.w1flux, decam.g_ext, decam.r_ext, decam.z_ext, wise.w1_ext from  candidate, decam, wise where q3c_radial_query(candidate.ra, candidate.dec, %f, %f, %f) and decam.cand_id = candidate.id and wise.cand_id = candidate.id and decam.g_anymask =0  and decam.r_anymask =0 and decam.z_anymask=0;"%(ra,dec,radius))
 
 m=cur.fetchall()
 data = np.array(m)
@@ -76,7 +76,7 @@ target_types = np.append(target_types, tmp_type)
 
 
     #ELG
-cur.execute("select candidate.id, candidate.ra, candidate.dec, decam.gflux, decam.rflux, decam.zflux, wise.w1flux, decam.gfracflux, decam.rfracflux, decam.zfracflux, wise.w1fracflux from  candidate, decam, wise where q3c_radial_query(candidate.ra, candidate.dec, %f, %f, %f) and decam.cand_id = candidate.id and wise.cand_id = candidate.id and decam.g_anymask =0  and decam.r_anymask =0 and decam.z_anymask=0;"%(ra,dec,radius))
+cur.execute("select candidate.id, candidate.ra, candidate.dec, decam.gflux, decam.rflux, decam.zflux, wise.w1flux, decam.g_ext, decam.r_ext, decam.z_ext, wise.w1_ext from  candidate, decam, wise where q3c_radial_query(candidate.ra, candidate.dec, %f, %f, %f) and decam.cand_id = candidate.id and wise.cand_id = candidate.id and decam.g_anymask =0  and decam.r_anymask =0 and decam.z_anymask=0;"%(ra,dec,radius))
 m=cur.fetchall()
 data = np.array(m)
 
@@ -117,7 +117,7 @@ tmp_type[:] = 'ELG'
 target_types = np.append(target_types, tmp_type)
 
     #QSO
-cur.execute("select candidate.id, candidate.ra, candidate.dec, decam.gflux, decam.rflux, decam.zflux, wise.w1flux, wise.w2flux, decam.gfracflux, decam.rfracflux, decam.zfracflux, wise.w1fracflux, wise.w2fracflux from  candidate, decam, wise where q3c_radial_query(candidate.ra, candidate.dec, %f, %f, %f) and decam.cand_id = candidate.id and wise.cand_id = candidate.id and decam.g_anymask =0  and decam.r_anymask =0 and candidate.type='PSF ';"%(ra,dec,radius))
+cur.execute("select candidate.id, candidate.ra, candidate.dec, decam.gflux, decam.rflux, decam.zflux, wise.w1flux, wise.w2flux, decam.g_ext, decam.r_ext, decam.z_ext, wise.w1_ext, wise.w2_ext from  candidate, decam, wise where q3c_radial_query(candidate.ra, candidate.dec, %f, %f, %f) and decam.cand_id = candidate.id and wise.cand_id = candidate.id and decam.g_anymask =0  and decam.r_anymask =0 and candidate.type='PSF ';"%(ra,dec,radius))
 m=cur.fetchall()
 data = np.array(m)
 
