@@ -23,7 +23,7 @@ target_types = np.empty((0))
 
 ra = 334.0
 dec = 0.0
-radius = 1.0
+radius = 1.5
 con = psycopg2.connect(host='scidb2.nersc.gov', user='desi_user', database='desi')
 cur = con.cursor()
 
