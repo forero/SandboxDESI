@@ -113,8 +113,8 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
             target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][elg_true]))
             target_ra = np.append(target_ra, data_dic['RA'][elg_true])
             target_dec = np.append(target_dec, data_dic['DEC'][elg_true])
-            target_priority = np.append(target_priority, np.int_(priority['ELG']*np.ones(n_lrg)))
-            target_nobs = np.append(target_nobs, np.int_(nobs['ELG']*np.ones(n_lrg)))
+            target_priority = np.append(target_priority, np.int_(priority['ELG']*np.ones(n_elg)))
+            target_nobs = np.append(target_nobs, np.int_(nobs['ELG']*np.ones(n_elg)))
             tmp_type = np.chararray(n_elg, itemsize=8)
             tmp_type[:] = 'ELG'
             target_types = np.append(target_types, tmp_type)
@@ -147,7 +147,7 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
         
 
         n_qso = np.size(qso_true)
-        print "QSO", np.size(qso_true)/(np.pi*radius**2)    
+        print "QSO", n_qso/(np.pi*radius**2)    
     
 
 
