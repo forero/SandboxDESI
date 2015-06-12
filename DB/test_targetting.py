@@ -24,7 +24,7 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
     target_types = np.empty((0))
 
 
-    con = psycopg2.connect(host='scidb2.nersc.gov', user='desi_user', database='desi', password='Arnez3NERSC')
+    con = psycopg2.connect(host='scidb2.nersc.gov', user='desi_user', database='desi', password='decals_Fun!')
     cur = con.cursor()
 
     #LRG
