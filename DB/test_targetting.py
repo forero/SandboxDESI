@@ -24,7 +24,7 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
     target_types = np.empty((0))
 
 
-    con = psycopg2.connect(host='scidb2.nersc.gov', user='desi_user', database='desi')
+    con = psycopg2.connect(host='scidb2.nersc.gov', user='desi_user', database='desi', password='Arnez3NERSC')
     cur = con.cursor()
 
     #LRG
@@ -157,8 +157,8 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
             target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][qso_true]))
             target_ra = np.append(target_ra, data_dic['RA'][qso_true])
             target_dec = np.append(target_dec, data_dic['DEC'][qso_true])
-            target_priority = np.append(target_priority, np.int_(priority['ELG']*np.ones(n_qso)))
-            target_nobs = np.append(target_nobs, np.int_(nobs['ELG']*np.ones(n_qso)))
+            target_priority = np.append(target_priority, np.int_(priority['QSO']*np.ones(n_qso)))
+            target_nobs = np.append(target_nobs, np.int_(nobs['QSO']*np.ones(n_qso)))
             tmp_type = np.chararray(n_qso, itemsize=8)
             tmp_type[:] = 'QSO'
             target_types = np.append(target_types, tmp_type)
