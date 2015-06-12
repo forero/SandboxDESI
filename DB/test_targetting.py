@@ -163,7 +163,7 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
             tmp_type[:] = 'QSO'
             target_types = np.append(target_types, tmp_type)
             
-            target_id = np.append(target_id, np.arange(np.size(target_ra), dtype='int'))
+    target_id = np.append(target_id, np.arange(np.size(target_ra), dtype='int'))
             
 #write the samples in FITS format
     print (n_qso+n_lrg+n_elg   )
