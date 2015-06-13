@@ -170,8 +170,8 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
     if((n_qso+n_lrg+n_elg)>0):
        filename = "../data/Targets_Tile_%06d.fits"%(tile_id)
        
-       c0=fits.Column(name='ID', format='I', array=target_id)
-       c1=fits.Column(name='TARGETID', format='I', array=target_db_id)
+       c0=fits.Column(name='ID', format='K', array=target_id)
+       c1=fits.Column(name='TARGETID', format='K', array=target_db_id)
        c2=fits.Column(name='RA', format='D', array=target_ra)
        c3=fits.Column(name='DEC', format='D', array=target_dec)
        c4=fits.Column(name='PRIORITY', format='D', array=target_priority)
