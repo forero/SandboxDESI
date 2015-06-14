@@ -5,6 +5,7 @@ import fitsio as F
 import test_targetting as tt
 from astropy.io import fits
 import os
+import multiprocessing
 
 def get_tiles():
     """
@@ -36,6 +37,8 @@ n_tiles = np.size(id_decals)
 for i in range(0,n_tiles):
     ra = ra_tiles[id_decals[i]]
     dec = dec_tiles[id_decals[i]]
-    tile = tileid[id_decals[i]]
+    radius = 1.6
+    tile = tileid[id_decals[i]]    
     print "working on ra %f dec %f, item %d"%(ra,dec, i)
-    tt.extract_targets(ra=ra, dec=dec, radius=1.6, tile_id=tile)
+    tt.extract_targets(ra, dec, radius, tile)
+
