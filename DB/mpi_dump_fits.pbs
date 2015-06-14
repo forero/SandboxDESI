@@ -1,0 +1,12 @@
+#PBS -q premium
+#PBS -l mppwidth=12
+#PBS -l walltime=10:00:00
+#PBS -N mpi_decals_dump
+#PBS -e mpi_decals_dump.$PBS_JOBID.err
+#PBS -o mpi_decals_dump.$PBS_JOBID.out
+
+
+cd $PBS_O_WORKDIR
+source ~/.cshrc.ext
+module load mpi4py
+aprun -n 12 python-mpi mpi_dump_desi_decals_tiles.py
