@@ -6,7 +6,7 @@ import os
 
 
 #arrays with target info
-def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
+def extract_targets(ra, dec, radius, tile_id):
     n_qso = 0 
     n_elg = 0
     n_lrg = 0
@@ -179,19 +179,16 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
        c6=fits.Column(name='OBJTYPE', format='8A', array=target_types)
        
        targetcat=fits.ColDefs([c0,c1,c2,c3,c4,c5,c6])
+
        table_targetcat_hdu=fits.TableHDU.from_columns(targetcat)
+       table_targetcat_hdu.header['TILE_ID'] = tile_id       
+       table_targetcat_hdu.header['TILE_RA'] = tile_id       
+       table_targetcat_hdu.header['TILE_DEC'] = tile_id       
        
-       
-       c0=fits.Column(name='TILE_ID', format='I', array=np.array([tile_id]))
-       c1=fits.Column(name='TILE_RA', format='D', array=np.array([ra]))
-       c2=fits.Column(name='TILE_DEC', format='D', array=np.array([dec]))
-       tile_info = fits.ColDefs([c0,c1,c2])
-       table_tile_hdu=fits.TableHDU.from_columns(tile_info)
-       
+
        hdu=fits.PrimaryHDU()
        hdulist=fits.HDUList([hdu])
        hdulist.append(table_targetcat_hdu)
-       hdulist.append(table_tile_hdu)
        hdulist.verify()
        hdulist.writeto(filename)
 
