@@ -41,7 +41,7 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
         
         
         not_zero = np.where((data_dic['RFLUX']>0) & (data_dic['ZFLUX']>0) & 
-                            (data_dic['WFLUX']>0))
+                            (data_dic['WFLUX']>0) & (data_dic['GFLUX']>0))
         not_zero = not_zero[0]
         
         r_cut = 10.0**((22.5-23.0)/2.5)    
@@ -58,16 +58,16 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
         lrg_true = np.where((r_flux > r_cut) & (z_flux > z_cut) & (w1_flux>w1_cut) &(z_flux > r_flux*r_z_cut)
                             &((w1_flux * (r_flux**(1.33-1.0))) > (z_flux**1.33 * 10**(-0.33/2.5))))
         lrg_true = lrg_true[0]
-        print "LRG", np.size(lrg_true)/(np.pi*radius**2)
+        print "LRG", np.size(lrg_true)
         
         n_lrg = np.size(lrg_true)
         
         
         if(n_lrg>0):
     #update arrays to write
-            target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][lrg_true]))
-            target_ra = np.append(target_ra, data_dic['RA'][lrg_true])
-            target_dec = np.append(target_dec, data_dic['DEC'][lrg_true])
+            target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][not_zero[lrg_true]]))
+            target_ra = np.append(target_ra, data_dic['RA'][not_zero[lrg_true]])
+            target_dec = np.append(target_dec, data_dic['DEC'][not_zero[lrg_true]])
             target_priority = np.append(target_priority, np.int_(priority['LRG']*np.ones(n_lrg)))
             target_nobs = np.append(target_nobs, np.int_(nobs['LRG']*np.ones(n_lrg)))
             tmp_type = np.chararray(n_lrg, itemsize=8)
@@ -104,15 +104,15 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
             
         elg_true = elg_true[0]
         n_elg = np.size(elg_true)
-        print "ELG", np.size(elg_true)/(np.pi*radius**2)
+        print "ELG", np.size(elg_true)
         
 
 
 #update arrays to write
         if(n_elg>0):
-            target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][elg_true]))
-            target_ra = np.append(target_ra, data_dic['RA'][elg_true])
-            target_dec = np.append(target_dec, data_dic['DEC'][elg_true])
+            target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][not_zero[elg_true]]))
+            target_ra = np.append(target_ra, data_dic['RA'][not_zero[elg_true]])
+            target_dec = np.append(target_dec, data_dic['DEC'][not_zero[elg_true]])
             target_priority = np.append(target_priority, np.int_(priority['ELG']*np.ones(n_elg)))
             target_nobs = np.append(target_nobs, np.int_(nobs['ELG']*np.ones(n_elg)))
             tmp_type = np.chararray(n_elg, itemsize=8)
@@ -147,16 +147,16 @@ def extract_targets(ra=334.0, dec=0.0, radius=1.6, tile_id=1):
         
 
         n_qso = np.size(qso_true)
-        print "QSO", n_qso/(np.pi*radius**2)    
+        print "QSO", n_qso
     
 
 
 #update arrays to write
         
         if(n_qso>0):
-            target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][qso_true]))
-            target_ra = np.append(target_ra, data_dic['RA'][qso_true])
-            target_dec = np.append(target_dec, data_dic['DEC'][qso_true])
+            target_db_id = np.append(target_db_id, np.int_(data_dic['ID'][not_zero[qso_true]]))
+            target_ra = np.append(target_ra, data_dic['RA'][not_zero[qso_true]])
+            target_dec = np.append(target_dec, data_dic['DEC'][not_zero[qso_true]])
             target_priority = np.append(target_priority, np.int_(priority['QSO']*np.ones(n_qso)))
             target_nobs = np.append(target_nobs, np.int_(nobs['QSO']*np.ones(n_qso)))
             tmp_type = np.chararray(n_qso, itemsize=8)
