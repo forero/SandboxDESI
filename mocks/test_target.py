@@ -127,9 +127,9 @@ def select_targets(ra_data, dec_data, gal_id,
         target_types = np.append(target_types, tmp_type)
         
 #ELG
-        elg_true = np.where((r_mags < 23.4) & ((r_mags - z_mags)>0.3) & ((r_mags - z_mags)<1.5) & ((g_mags - r_mags)<(r_mags - z_mags - 0.2)) & ((g_mags - r_mags)< 1.2 - (r_mags - z_mags)))
-        n_elg = np.size(elg_true) # goal is 2400/deg^2
-        print "ELG", n_elg
+    elg_true = np.where((r_mags < 23.4) & ((r_mags - z_mags)>0.3) & ((r_mags - z_mags)<1.5) & ((g_mags - r_mags)<(r_mags - z_mags - 0.2)) & ((g_mags - r_mags)< 1.2 - (r_mags - z_mags)))
+    n_elg = np.size(elg_true) # goal is 2400/deg^2
+    print "ELG", n_elg
         
     if(n_elg>0):
     #update arrays to write                                                                                     
