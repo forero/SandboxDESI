@@ -3,7 +3,6 @@ import h5py
 import sys
 import numpy as np
 from astropy.io import fits
-import fitsio as F
 import os
 
 def get_tiles():
@@ -13,12 +12,12 @@ def get_tiles():
     """
     tiling_file = os.path.join(os.environ['DESIMODEL'], 'data/footprint/', 'desi-tiles.fits')
     try:
-        dat = F.read(tiling_file,columns=('RA','DEC','PASS','IN_DESI', 'TILEID'))
-        ww  = np.nonzero( dat['IN_DESI'] )[0]
-        ra_desi  = (dat[  'RA'][ww]).astype('f4')
-        dec_desi  = (dat[ 'DEC'][ww]).astype('f4')
-        pass_desi = (dat[ 'PASS'][ww]).astype('int')
-        tileid_desi = (dat[ 'TILEID'][ww]).astype('int')
+        fin = fits.open(tiling_file)
+        ww  = np.nonzero( fin[1].data['IN_DESI'])[0]
+        ra_desi  = (fin[1].data['RA'][ww]).astype('f4')
+        dec_desi  = (fin[1].data['DEC'][ww]).astype('f4')
+        pass_desi = (fin[1].data['PASS'][ww]).astype('int')
+        tileid_desi = (fin[1].data['TILEID'][ww]).astype('int')
     except Exception, e:
         import traceback
         print 'ERROR in get_tiles'
@@ -27,7 +26,7 @@ def get_tiles():
     return ra_desi, dec_desi, pass_desi, tileid_desi
 
 
-single_fits = False
+single_fits = True
 
 tile_ra = 190.0
 tile_dec = 30.0
@@ -35,7 +34,10 @@ radius = 1.7
 tile_id = 1
 plate_radius_mm = 440
 
-mockfile="/global/project/projectdirs/desi/mocks/lightcone_galform/Generic.r25-v0/Generic.r25/Gonzalez13.DB.MillGas.field1.photometry.0.hdf5"                                                                           
+mockfile="/global/project/projectdirs/desi/mocks/lightcone_galform/Generic.r25-v0/Generic.r25/Gonzalez13.DB.MillGas.field1.photometry.0.hdf5"                                                                         
+
+mockfile="/gpfs/data/Lightcone/lightcone_out/LC144/GAL437a/Generic.r25/Gonzalez13.DB.MillGas.field1.photometry.0.hdf5"
+  
 print mockfile
 fin = h5py.File(mockfile, "r") 
 data = fin.require_group('/Data') 
