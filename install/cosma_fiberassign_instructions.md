@@ -1,3 +1,6 @@
+1. Setup DESIMODEL
+==================
+
 * Clone the basic information for the tiling and focal plane 
 ```
 svn --username jeforeroromero co https://desi.lbl.gov/svn/code/desimodel/trunk/ /gpfs/data/jeforero/desimodel
@@ -8,6 +11,9 @@ svn --username jeforeroromero co https://desi.lbl.gov/svn/code/desimodel/trunk/ 
 ```
 setenv DESIMODEL /gpfs/data/jeforero/desimodel/
 ```
+
+2. Make TARGET SELECTION
+========================
 
 * Clone the repository to manipulate mocks and make target selection
 ```
@@ -25,6 +31,9 @@ cat example.py # the function cut_example()
 cd /gpfs/data/jeforero/desitarget/py/desitarget
 cat example.py # the function fits_to_bin_example()
 ```
+
+3. Run FIBERASSIGN
+========================
 
 * Clone the repository for fiberassign (Bob Cahn's)
 
