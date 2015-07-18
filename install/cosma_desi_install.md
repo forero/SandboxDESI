@@ -1,4 +1,4 @@
-* Clone the basic information for the instrument's model 
+* Clone the basic information for the tiling and focal plane 
 ```
 svn --username jeforeroromero co https://desi.lbl.gov/svn/code/desimodel/trunk/ /gpfs/data/jeforero/desimodel
 ```
@@ -9,7 +9,7 @@ svn --username jeforeroromero co https://desi.lbl.gov/svn/code/desimodel/trunk/ 
 setenv DESIMODEL /gpfs/data/jeforero/desimodel/
 ```
 
-* Clone the repository for FiberAsssign (Bob Cahn's)
+* Clone the repository for fiberassign (Bob Cahn's)
 
 ```
 git clone https://github.com/desihub/fiberassign.git /gpfs/data/jeforero/fiberassign/
