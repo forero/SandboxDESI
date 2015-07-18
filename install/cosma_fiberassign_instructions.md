@@ -9,6 +9,23 @@ svn --username jeforeroromero co https://desi.lbl.gov/svn/code/desimodel/trunk/ 
 setenv DESIMODEL /gpfs/data/jeforero/desimodel/
 ```
 
+* Clone the repository to manipulate mocks and make target selection
+```
+git clone https://github.com/desihub/desitarget.git /gpfs/data/jeforero/desitarget/
+```
+
+* Check and run the example to read a lightcone and make the target selection 
+```
+cd /gpfs/data/jeforero/desitarget/py/desitarget
+cat example.py # the function cut_example()
+```
+
+* Check and run the example to translate the FITS file into binary format
+```
+cd /gpfs/data/jeforero/desitarget/py/desitarget
+cat example.py # the function fits_to_bin_example()
+```
+
 * Clone the repository for fiberassign (Bob Cahn's)
 
 ```
