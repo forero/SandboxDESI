@@ -41,6 +41,12 @@ cat example.py # the function fits_to_bin_example()
 git clone https://github.com/desihub/fiberassign.git /gpfs/data/jeforero/fiberassign/
 ```
 
+* Change to the stable branch
+
+```
+git checkout Vtalk0
+```
+
 * Go to the fiberassign directory, compile in src/ with Makefile.cosma
 ```
 cd /gpfs/data/jeforero/fiberassign/src
