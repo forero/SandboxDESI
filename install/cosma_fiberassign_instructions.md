@@ -20,13 +20,16 @@ setenv DESIMODEL /gpfs/data/jeforero/desimodel/
 git clone https://github.com/desihub/desitarget.git /gpfs/data/jeforero/desitarget/
 ```
 
-* Check and run the example to read a lightcone and make the target selection 
+* Check and run the example to read a lightcone and make the target selection. At this point you have to edit example.py and uncomment the line with the function ```cut_example()```
+
 ```
 cd /gpfs/data/jeforero/desitarget/py/desitarget
 cat example.py # the function cut_example()
 ```
 
-* Check and run the example to translate the FITS file into binary format
+
+
+* Check and run the example to translate the FITS file into binary format. At this point you have to edit example.py and uncomment the line with the function ```fits_to_bin_example()```
 ```
 cd /gpfs/data/jeforero/desitarget/py/desitarget
 cat example.py # the function fits_to_bin_example()
@@ -35,11 +38,13 @@ cat example.py # the function fits_to_bin_example()
 3. Run FIBERASSIGN
 ========================
 
-* Clone the repository for fiberassign (Bob Cahn's)
+* Clone the repository for fiberassign (Bob Cahn's) and move into the directory
 
 ```
 git clone https://github.com/desihub/fiberassign.git /gpfs/data/jeforero/fiberassign/
+cd /gpfs/data/jeforero/fiberassign/
 ```
+
 
 * Change to the stable branch
 
