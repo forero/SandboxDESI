@@ -101,6 +101,18 @@ char card[FLEN_CARD];
     fprintf(stderr, "error\n");
     exit(status);
   }
+
+  if ( fits_get_colnum(fptr, CASEINSEN, "RA", &colnum, &status) ){
+    fprintf(stderr, "error\n");
+    exit(status);
+  }
+ if (fits_read_col(fptr, TFLOAT, colnum, frow, felem, nrows, 
+		    &nullval, ra, &anynulls, &status) ){
+    fprintf(stderr, "error\n");
+    exit(status);
+  }
+
+
   int i;
   for(i=0;i<10;i++){
     fprintf(stdout, "TARGETID %ld\n", targetid[i]);
