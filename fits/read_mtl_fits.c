@@ -106,19 +106,53 @@ char card[FLEN_CARD];
     fprintf(stderr, "error\n");
     exit(status);
   }
- if (fits_read_col(fptr, TFLOAT, colnum, frow, felem, nrows, 
+  if (fits_read_col(fptr, TFLOAT, colnum, frow, felem, nrows, 
 		    &nullval, ra, &anynulls, &status) ){
+    fprintf(stderr, "error\n");
+    exit(status);
+  }
+
+  if ( fits_get_colnum(fptr, CASEINSEN, "DEC", &colnum, &status) ){
+    fprintf(stderr, "error\n");
+    exit(status);
+  }
+  if (fits_read_col(fptr, TFLOAT, colnum, frow, felem, nrows, 
+		    &nullval, dec, &anynulls, &status) ){
+    fprintf(stderr, "error\n");
+    exit(status);
+  }
+
+
+  if ( fits_get_colnum(fptr, CASEINSEN, "NUMOBS", &colnum, &status) ){
+    fprintf(stderr, "error\n");
+    exit(status);
+  }
+  if (fits_read_col(fptr, TINT, colnum, frow, felem, nrows, 
+		    &nullval, numobs, &anynulls, &status) ){
+    fprintf(stderr, "error\n");
+    exit(status);
+  }
+
+  if ( fits_get_colnum(fptr, CASEINSEN, "PRIORITY", &colnum, &status) ){
+    fprintf(stderr, "error\n");
+    exit(status);
+  }
+  if (fits_read_col(fptr, TINT, colnum, frow, felem, nrows, 
+		    &nullval, priority, &anynulls, &status) ){
     fprintf(stderr, "error\n");
     exit(status);
   }
 
 
   int i;
+  fprintf(stdout, "TARGETID RA DEC NUMOBS PRIORITY\n");
   for(i=0;i<10;i++){
-    fprintf(stdout, "TARGETID %ld\n", targetid[i]);
+    fprintf(stdout, "%ld %f %f %d %d\n", 
+	    targetid[i], ra[i], dec[i], numobs[i], priority[i]);
   }
   for(i=nrows-10;i<nrows;i++){
-    fprintf(stdout, "TARGETID %ld\n", targetid[i]);
+    fprintf(stdout, "%ld %f %f %d %d\n", 
+	    targetid[i], ra[i], dec[i], numobs[i], priority[i]);
   }
 
   return(status);
