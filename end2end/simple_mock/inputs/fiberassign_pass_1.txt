@@ -1,4 +1,4 @@
-Targfile /scratch1/scratchdirs/forero/end2end_mock/mtl/targets_0_mtl_0.fits
+Targfile /scratch1/scratchdirs/forero/end2end_mock/mtl/targets_0_mtl_1.fits
 SStarsfile /scratch1/scratchdirs/forero/end2end_mock/mtl/stdstar_0_mtl_0.fits
 SkyFfile  /scratch1/scratchdirs/forero/end2end_mock/mtl/sky_0_mtl_0.fits
 
