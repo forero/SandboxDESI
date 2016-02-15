@@ -1,10 +1,10 @@
-Targfile /scratch1/scratchdirs/forero/end2end_mock/mtl/targets_0_mtl_1.fits
+Targfile /scratch1/scratchdirs/forero/end2end_mock/mtl/targets_0_mtl_0.fits
 SStarsfile /scratch1/scratchdirs/forero/end2end_mock/mtl/stdstar_0_mtl_0.fits
 SkyFfile  /scratch1/scratchdirs/forero/end2end_mock/mtl/sky_0_mtl_0.fits
-
+Secretfile /scratch1/scratchdirs/forero/end2end_mock/mtl/truth_targets_0_mtl_0.fits
 tileFile /project/projectdirs/desi/software/edison/desimodel/0.3.1/data/footprint/desi-tiles.par
 fibFile /project/projectdirs/desi/software/edison/desimodel/0.3.1/data/focalplane/fiberpos.txt
-outDir /scratch1/scratchdirs/forero/end2end_mock/fiberassign/pass_1/
+outDir /scratch1/scratchdirs/forero/end2end_mock/fiberassign/pass_0/
 
 
 PrintAscii false
