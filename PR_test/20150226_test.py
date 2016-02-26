@@ -38,10 +38,10 @@ tiledir = '/project/projectdirs/desi/users/forero/fiberassign'
 tilefiles = sorted(glob(tiledir+'/tile*.fits'))
 len(tilefiles)
 
-# this ugly hack is here avoids import from desi stack
+# this ugly hack avoids import from desi stack
 import os
 os.chdir('/global/homes/f/forero/desisim/py')
 from desisim.quickcat import quickcat
-
 zcat = quickcat(tilefiles, targets, truth, zcat=None, perfect=False)
-zcat.write('zcat.fits', overwrite=True)
+
+#zcat.write('zcat.fits', overwrite=True)
