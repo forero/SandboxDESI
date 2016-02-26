@@ -1,4 +1,4 @@
-# testing this PR https://github.com/desihub/fiberassign/pull/24
+# testing different PRs
 # @home on the login node at Edison
 # executed line by line on IPython
 
@@ -41,6 +41,8 @@ len(tilefiles)
 # this ugly hack avoids import from desi stack
 import os
 os.chdir('/global/homes/f/forero/desisim/py')
+
+#testing this PR: https://github.com/desihub/desisim/pull/85
 from desisim.quickcat import quickcat
 zcat = quickcat(tilefiles, targets, truth, zcat=None, perfect=False)
 
