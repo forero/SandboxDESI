@@ -14,11 +14,19 @@ def write_epoch_file(desitiles="desi-tiles.par", epochfile="dark_epoch0.txt", ep
         else:
             tile = int(words[1])
             in_desi = int(words[4])
+            if in_desi == 0:
+                raise NameError('TileNotInDESI')
             if tile in tiles:
                 fileout.write("{}".format(line))
     fileout.close()
 
+def test():
+    desitiles = "/project/projectdirs/desi/software/edison/desimodel/0.3.1/data/footprint/desi-tiles.par"
+    epochfile = "/project/projectdirs/desi/datachallenge/Argonne2015/opsim2.1/epochs/dark_epoch0.txt"
+    import glob
+    epochfiles = glob.glob("/project/projectdirs/desi/datachallenge/Argonne2015/opsim2.1/epochs/dark_epoch*.txt")
 
-desitiles = "/project/projectdirs/desi/software/edison/desimodel/0.3.1/data/footprint/desi-tiles.par"
-epochfile = "/project/projectdirs/desi/datachallenge/Argonne2015/opsim2.1/epochs/dark_epoch0.txt"
-write_epoch_file(desitiles=desitiles, epochfile=epochfile)
+    for epochfile in epochfiles:
+        epochtiles = epochfile.split("/")[-1].replace("txt", "par")
+        write_epoch_file(desitiles=desitiles, epochfile=epochfile, epochtiles=epochtiles)
+
