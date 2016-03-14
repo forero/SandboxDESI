@@ -67,7 +67,7 @@ def assign_quickcat_mtl_loop(destination_dir=None, targets_file=None, truth_file
         zcat.write('zcat.fits', overwrite=True)
     else:
         zcat = Table.read(zcat_file, format='fits')
-        newzcat = quickcat(tilefiles, targets, truth, zcat=zcat, perfect=False)
+        newzcat = desisim.quickcat(tilefiles, targets, truth, zcat=zcat, perfect=False)
         newzcat.write('zcat.fits', format='fits', overwrite=True)
 
     shutil.copy('zcat.fits', "/project/projectdirs/desi/users/forero/zcat")
