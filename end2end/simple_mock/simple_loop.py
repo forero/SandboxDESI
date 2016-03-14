@@ -25,25 +25,29 @@ def make_targets():
     truth[iiobj].write('truth.fits', overwrite=True)
 
 
-
-
-def assign_quickcat_mtl_loop(destination_dir="./", targets_file="", truth_file=""):
+def assign_quickcat_mtl_loop(destination_dir=None, targets_file=None, truth_file=None, zcat_file=None):
     from astropy.table import Table, Column
     truth = Table.read(truth_file)
     targets = Table.read(targets_file)
     # this part tests another PR https://github.com/desihub/desitarget/pull/32
-    mtl = desitarget.mtl.make_mtl(targets)
-    mtl.write('mtl.fits', overwrite=True)
+    
+    if zcat_file is None:
+        mtl = desitarget.mtl.make_mtl(targets)
+        mtl.write('mtl.fits', overwrite=True)
+    else:
+        zcat = Table.read(zcat_file, format='fits')
+        mtl = desitarget.mtl.make_mtl(targets, zcat)
+        mtl.write('mtl.fits', overwrite=True)
 
     import glob
     import shutil
-    for f in glob.glob("*.fits"): 
-        shutil.copy(f, "/project/projectdirs/desi/users/forero/mtl")
+#    for f in glob.glob("*.fits"): 
+    shutil.copy('mtl.fits', "/project/projectdirs/desi/users/forero/mtl")
 
     # this now tests another PR https://github.com/desihub/fiberassign/pull/24
     # I had to go first into fiberassign to run make && make install 
     import subprocess
-    p = subprocess.call(["./fiberassign/bin/./fiberassign", "fa_features.txt"], stdout=subprocess.PIPE)
+    p = subprocess.call(["/global/homes/f/forero/fiberassign/bin/./fiberassign", "fa_features.txt"], stdout=subprocess.PIPE)
 
     #find the tiles
     from glob import glob
@@ -58,9 +62,21 @@ def assign_quickcat_mtl_loop(destination_dir="./", targets_file="", truth_file="
     # os.chdir('/global/homes/f/forero/desisim/py')
 
     #from desisim.quickcat import quickcat
-    zcat = desisim.quickcat(tilefiles, targets, truth, zcat=None, perfect=False)
-    zcat.write('zcat.fits', overwrite=True)
+    if zcat_file is None:
+        zcat = desisim.quickcat(tilefiles, targets, truth, zcat=None, perfect=False)
+        zcat.write('zcat.fits', overwrite=True)
+    else:
+        zcat = Table.read(zcat_file, format='fits')
+        newzcat = quickcat(tilefiles, targets, truth, zcat=zcat, perfect=False)
+        newzcat.write('zcat.fits', format='fits', overwrite=True)
 
+    shutil.copy('zcat.fits', "/project/projectdirs/desi/users/forero/zcat")
+    shutil.copy('zcat.fits', destination_dir)
+
+    #clean files
+    import os
+    for tilefile in tilefiles:
+        os.remove(tilefile)
 def write_epoch_file(desitiles="desi-tiles.par", epochfile="dark_epoch0.txt", epochtiles="epoch-desi-tiles.par"):
     filein = open(desitiles, "r")
     tilelines = filein.readlines()
@@ -84,7 +100,7 @@ def write_epoch_file(desitiles="desi-tiles.par", epochfile="dark_epoch0.txt", ep
 import os
 epochdir = "/project/projectdirs/desi/datachallenge/Argonne2015/opsim2.1/epochs/"
 base_output_dir = "/project/projectdirs/desi/users/forero/epochs/"
-n_epochs = 1
+n_epochs = 3
 for i in range(n_epochs):
 
     epochfile = os.path.join(epochdir, "dark_epoch{}.txt".format(i))
@@ -97,4 +113,12 @@ for i in range(n_epochs):
     desitiles = "/project/projectdirs/desi/software/edison/desimodel/0.3.1/data/footprint/desi-tiles.par"
     write_epoch_file(desitiles=desitiles, epochfile=epochfile)
     
-    assign_quickcat_mtl_loop()
+    if i==0:
+        assign_quickcat_mtl_loop(targets_file="/project/projectdirs/desi/users/forero/mtl/targets.fits", 
+                                 truth_file="/project/projectdirs/desi/users/forero/mtl/truth.fits", 
+                                 destination_dir=tmp_output_dir)
+    else:        
+        assign_quickcat_mtl_loop(targets_file="/project/projectdirs/desi/users/forero/mtl/targets.fits", 
+                                 truth_file="/project/projectdirs/desi/users/forero/mtl/truth.fits", 
+                                 zcat_file="/project/projectdirs/desi/users/forero/zcat/zcat.fits",
+                                 destination_dir=tmp_output_dir)
