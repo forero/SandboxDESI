@@ -98,27 +98,29 @@ def write_epoch_file(desitiles="desi-tiles.par", epochfile="dark_epoch0.txt", ep
     fileout.close()
 
 import os
-epochdir = "/project/projectdirs/desi/datachallenge/Argonne2015/opsim2.1/epochs/"
+
+epochdir = "/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/"
 base_output_dir = "/project/projectdirs/desi/users/forero/epochs/"
-n_epochs = 3
+n_epochs = 5
+
 for i in range(n_epochs):
 
-    epochfile = os.path.join(epochdir, "dark_epoch{}.txt".format(i))
+    epochfile = os.path.join(epochdir, "epoch{}.txt".format(i))
     tmp_output_dir = os.path.join(base_output_dir, "{}".format(i))
     print(tmp_output_dir)
     print(epochfile)
     if not os.path.exists(tmp_output_dir):
         os.makedirs(tmp_output_dir)
     
-    desitiles = "/project/projectdirs/desi/software/edison/desimodel/0.3.1/data/footprint/desi-tiles.par"
+    desitiles = "/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/lowfat-desi-tiles.par"
     write_epoch_file(desitiles=desitiles, epochfile=epochfile)
     
     if i==0:
-        assign_quickcat_mtl_loop(targets_file="/project/projectdirs/desi/users/forero/mtl/targets.fits", 
-                                 truth_file="/project/projectdirs/desi/users/forero/mtl/truth.fits", 
+        assign_quickcat_mtl_loop(targets_file="/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/targets.fits", 
+                                 truth_file="/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/truth.fits", 
                                  destination_dir=tmp_output_dir)
     else:        
-        assign_quickcat_mtl_loop(targets_file="/project/projectdirs/desi/users/forero/mtl/targets.fits", 
-                                 truth_file="/project/projectdirs/desi/users/forero/mtl/truth.fits", 
+        assign_quickcat_mtl_loop(targets_file="/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/targets.fits", 
+                                 truth_file="/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/truth.fits", 
                                  zcat_file="/project/projectdirs/desi/users/forero/zcat/zcat.fits",
                                  destination_dir=tmp_output_dir)
