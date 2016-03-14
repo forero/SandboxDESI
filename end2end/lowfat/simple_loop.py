@@ -1,7 +1,8 @@
 import numpy as np
-from fiberassign.mock import rdzipn2targets
-from desitarget.targets import desi_mask
 import desitarget.mtl
+import os
+import shutil
+import desisim
 
 def assign_quickcat_mtl_loop(destination_path=None, mtl_path = None, zcat_path =  None,
                              targets_file=None, truth_file=None, zcat_file=None,
@@ -26,18 +27,15 @@ def assign_quickcat_mtl_loop(destination_path=None, mtl_path = None, zcat_path =
     # I had to go first into fiberassign to run make && make install 
     import subprocess
     import os
-    p = subprocess.call([fiberassign_exec, fiberassign_features], stdout=subprocess.PIPE)
+#    p = subprocess.call([fiberassign_exec, fiberassign_features], stdout=subprocess.PIPE)
+    p = subprocess.call([fiberassign_exec, fiberassign_features])
 
     #find the tiles
     from glob import glob
     tilefiles = sorted(glob(fiberassign_output_path+'/tile*.fits'))
     print("{} tiles in fiberassign output".format(len(tilefiles)))
 
-    import imp
-    # this ugly hack avoids import from desi stack
-    desisim = imp.load_source("desisim.quickcat", quickcat_source_file)
-    # import os
-    # os.chdir('/global/homes/f/forero/desisim/py')
+
 
     #from desisim.quickcat import quickcat
     if zcat_file is None:
@@ -77,8 +75,6 @@ def write_epoch_file(desitiles="desi-tiles.par", epochfile="dark_epoch0.txt", ep
                 fileout.write("{}".format(line))
     fileout.close()
 
-import os
-
 epoch_path = "/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/"
 base_output_path = "/project/projectdirs/desi/users/forero/epochs/"
 targets_path = "/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/"
@@ -93,17 +89,17 @@ quickcat_source_file  = "/global/homes/f/forero/desisim/py/desisim/quickcat.py"
 n_epochs = 5
 
 for i in range(n_epochs):
-
     epochfile = os.path.join(epoch_path, "epoch{}.txt".format(i))
+    shutil.copy(epochfile, "/global/homes/f/forero/SandboxDESI/end2end/lowfat/surveyfile.txt")
     tmp_output_path = os.path.join(base_output_path, "{}".format(i))
     print(tmp_output_path)
     print(epochfile)
     if not os.path.exists(tmp_output_path):
         os.makedirs(tmp_output_path)
     
-    desitiles = os.path.join(desitiles_path, desitiles_file)
-    write_epoch_file(desitiles=desitiles, epochfile=epochfile)
-    
+#    desitiles = os.path.join(desitiles_path, desitiles_file)
+#    write_epoch_file(desitiles=desitiles, epochfile=epochfile)
+
     if i==0:
         assign_quickcat_mtl_loop(destination_path = tmp_output_path, mtl_path = mtl_path, zcat_path = zcat_path,
                                  targets_file = os.path.join(targets_path, "targets.fits"), 

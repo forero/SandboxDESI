@@ -1,9 +1,10 @@
 Targfile /project/projectdirs/desi/users/forero/mtl/mtl.fits
-tileFile /global/homes/f/forero/SandboxDESI/end2end/simple_mock/epoch-desi-tiles.par
+tileFile /project/projectdirs/desi/software/edison/desimodel/0.3.1/data/footprint/desi-tiles.par
 fibFile /project/projectdirs/desi/software/edison/desimodel/0.3.1/data/focalplane/fiberpos.txt
 outDir /project/projectdirs/desi/users/forero/fiberassign/
 SStarsfile /project/projectdirs/desi/users/forero/mtl/stdstars.fits
 SkyFfile  /project/projectdirs/desi/users/forero/mtl/sky.fits
+surveyFile /global/homes/f/forero/SandboxDESI/end2end/lowfat/surveyfile.txt
 
 PrintAscii false
 PrintFits true
