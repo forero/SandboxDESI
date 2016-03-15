@@ -58,27 +58,26 @@ def mtl_assign_quickcat_loop(destination_path=None, targets_path=None, zcat_file
 
     return zcat_file
 
-destination_path =  "/project/projectdirs/desi/users/forero/lowfat/"
+output_path =  "/project/projectdirs/desi/users/forero/lowfat/"
 epoch_path = "/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/"
 targets_path = "/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/"
 fiberassign_exec = "/global/homes/f/forero/fiberassign/bin/./fiberassign"
-fiberassign_features = "/global/homes/f/forero/SandboxDESI/end2end/lowfat/fa_features.txt"
 
-if not os.path.exists(destination_path):
-    os.makedirs(destination_path)
+if not os.path.exists(output_path):
+    os.makedirs(output_path)
 
 params = ''.join(open('template_fiberassign.txt').readlines())
-fx = open(os.path.join(destination_path, 'fa_features.txt'), 'w')
-fx.write(params.format(inputdir=destination_path, targetdir=targets_path))
+fx = open(os.path.join(output_path, 'fa_features.txt'), 'w')
+fx.write(params.format(inputdir=output_path, targetdir=targets_path))
 fx.close()
 
 n_epochs = 5
 zcat_file = None
 for i in range(n_epochs):
     epochfile = os.path.join(epoch_path, "epoch{}.txt".format(i))
-    shutil.copy(epochfile, os.path.join(destination_path, "survey_list.txt"))
+    shutil.copy(epochfile, os.path.join(output_path, "survey_list.txt"))
                 
-    zcat_file = mtl_assign_quickcat_loop(
-        destination_path = destination_path, targets_path = targets_path,
+    zcat_file = mtl_assign_quickcat_loop( 
+        destination_path = output_path, targets_path = targets_path,
         zcat_file = zcat_file, fiberassign_exec = fiberassign_exec, epoch_id = i)
 
