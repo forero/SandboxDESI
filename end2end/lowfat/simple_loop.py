@@ -27,17 +27,17 @@ def mtl_assign_quickcat_loop(output_path=None, targets_path=None, zcat_file=None
     if tilefiles:
         for tilefile in tilefiles:
             os.remove(tilefile)
-
+            
     # launch fiberassign
     p = subprocess.call([fiberassign_exec, os.path.join(output_path, 'fa_features.txt')], stdout=subprocess.PIPE)
     print("Finished fiberassign")
 
     #find the output fibermap tiles
     if not os.path.exists(fiberassign_output_path):
-            os.makedirs(fiberassign_output_path)
+        os.makedirs(fiberassign_output_path)
     tilefiles = sorted(glob.glob(fiberassign_output_path+'/tile*.fits'))
     print("{} tiles in fiberassign output".format(len(tilefiles)))
-
+    
     # write the zcat
     if zcat_file is None:
         zcat_file = os.path.join(output_path, 'zcat.fits')
@@ -53,7 +53,7 @@ def mtl_assign_quickcat_loop(output_path=None, targets_path=None, zcat_file=None
     # keep a copy of zcat.fits 
     tmp_output_path = os.path.join(output_path, '{}'.format(epoch_id))
     if not os.path.exists(tmp_output_path):
-            os.makedirs(tmp_output_path)
+        os.makedirs(tmp_output_path)
     shutil.copy(zcat_file, tmp_output_path)
 
     return zcat_file
