@@ -57,11 +57,23 @@ def mtl_assign_quickcat_loop(output_path=None, targets_path=None, zcat_file=None
         newzcat.write(zcat_file, format='fits', overwrite=True)
     print("Finished zcat")
 
-    # keep a copy of zcat.fits 
+    # keep a copy of zcat.fits per epoch
     epoch_output_path = os.path.join(output_path, '{}'.format(epoch_id))
     if not os.path.exists(epoch_output_path):
-        os.makedirs(epoch_output_path)
+        os.makedirs(epoch_output_path)        
     shutil.copy(zcat_file, epoch_output_path)
+
+    # keep a copy of mtl.fits per epoch
+    shutil.copy(os.path.join(tmp_output_path, 'mtl.fits'), epoch_output_path)
+
+    # keep a copy of all the fiberassign files per epoch
+    fiber_epoch_output_path = os.path.join(epoch_output_path, 'fiberassign')
+    if not os.path.exists(fiber_epoch_output_path):
+        os.makedirs(fiber_epoch_output_path)
+    tilefiles = sorted(glob.glob(tmp_fiber_path+'/tile*.fits'))
+    if tilefiles:
+        for tilefile in tilefiles:
+            shutil.copy(tilefile, fiber_epoch_output_path)
 
     return zcat_file
 
@@ -94,12 +106,18 @@ zcat_file = None
 for i in range(n_epochs):
     epochfile = os.path.join(epoch_path, "epoch{}.txt".format(i))
     shutil.copy(epochfile, os.path.join(tmp_output_path, "survey_list.txt"))
-                
     zcat_file = mtl_assign_quickcat_loop( 
         output_path = output_path, targets_path = targets_path,
         zcat_file = zcat_file, fiberassign_exec = fiberassign_exec, epoch_id = i)
 
+# run everything on a single epoch
+zcat_file = None
+epochfile = os.path.join(epoch_path, "epoch_all.txt")
+shutil.copy(epochfile, os.path.join(tmp_output_path, "survey_list.txt"))
+zcat_file = mtl_assign_quickcat_loop( 
+    output_path = output_path, targets_path = targets_path,
+    zcat_file = zcat_file, fiberassign_exec = fiberassign_exec, epoch_id = n_epochs)
 
 #clean up tmp directory
-if not os.path.exists(tmp_output_path):
+if os.path.exists(tmp_output_path):
     shutil.rmtree(tmp_output_path)
