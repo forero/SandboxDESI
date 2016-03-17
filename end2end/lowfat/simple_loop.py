@@ -55,7 +55,10 @@ def mtl_assign_quickcat_loop(output_path=None, targets_path=None, zcat_file=None
 
     # find all  the output fibermap tiles
     # all_tilefiles = sorted(glob.glob(tmp_fiber_path+'/tile*.fits'))
-     
+
+    # clean all fibermap fits files before running fiberassing
+    all_tilefiles = sorted(glob.glob(tmp_fiber_path+'/tile*.fits'))
+
     #create a list of fibermap tiles to read and update zcat
     ids = []
     for i in fiber_epochs:
@@ -65,18 +68,20 @@ def mtl_assign_quickcat_loop(output_path=None, targets_path=None, zcat_file=None
 
     tilefiles = []
     for i in ids:
-        tilefiles.append(os.path.join(tmp_fiber_path, 'tile_%05d.fits'%(i)))
+        tilename = os.path.join(tmp_fiber_path, 'tile_%05d.fits'%(i))
+        if tilename in all_tilefiles:
+            tilefiles.append(tilename)
     print("{} tiles to gather in fiberassign output".format(len(tilefiles)))
     
     # write the zcat
     if zcat_file is None:
         zcat_file = os.path.join(tmp_output_path, 'zcat.fits')
-        zcat = quickcat(tilefiles, targets, truth, zcat=None, perfect=False)
+        zcat = quickcat(tilefiles, targets, truth, zcat=None, perfect=True)
         zcat.write(zcat_file, overwrite=True)
     else:
         zcat_file = os.path.join(tmp_output_path, 'zcat.fits')
         zcat = Table.read(zcat_file, format='fits')
-        newzcat = quickcat(tilefiles, targets, truth, zcat=zcat, perfect=False)
+        newzcat = quickcat(tilefiles, targets, truth, zcat=zcat, perfect=True)
         newzcat.write(zcat_file, format='fits', overwrite=True)
     print("Finished zcat")
 
@@ -107,7 +112,51 @@ targets_path = "/project/projectdirs/desi/mocks/preliminary/mtl/lowfat/"
 fiberassign_exec = "/global/homes/f/forero/fiberassign/bin/./fiberassign"
 
 
-output_path =  "/project/projectdirs/desi/users/forero/lowfat_serial/"
+
+# new kind of setup
+output_path =  "/project/projectdirs/desi/users/forero/lowfat_perfect/"
+if not os.path.exists(output_path):
+    os.makedirs(output_path)
+
+tmp_output_path = os.path.join(output_path, 'tmp/')
+if not os.path.exists(tmp_output_path):
+    os.makedirs(tmp_output_path)
+
+tmp_fiber_path = os.path.join(tmp_output_path, 'fiberassign/')
+if not os.path.exists(tmp_fiber_path):
+    os.makedirs(tmp_fiber_path)
+
+# create temporaty input file for fiberassign
+params = ''.join(open('template_fiberassign.txt').readlines())
+fx = open(os.path.join(tmp_output_path, 'fa_features.txt'), 'w')
+fx.write(params.format(inputdir=tmp_output_path, targetdir=targets_path))
+fx.close()
+
+# loop over the epochs
+n_epochs = 5
+zcat_file = None
+for i in range(n_epochs):
+    zcat_file = mtl_assign_quickcat_loop( 
+        output_path = output_path, targets_path = targets_path,
+        zcat_file = zcat_file, fiberassign_exec = fiberassign_exec, epoch_path = epoch_path,
+        epoch_id = i, 
+        fiber_epochs = [i], mtl_epochs = range(i,n_epochs))
+
+# run everything on a single epoch
+zcat_file = None
+zcat_file = mtl_assign_quickcat_loop( 
+    output_path = output_path, targets_path = targets_path,
+    zcat_file = zcat_file, fiberassign_exec = fiberassign_exec, epoch_path = epoch_path,
+    epoch_id = n_epochs, 
+    fiber_epochs = range(n_epochs), mtl_epochs = range(n_epochs))
+
+#clean up tmp directory
+if os.path.exists(tmp_output_path):
+    shutil.rmtree(tmp_output_path)
+
+
+#new kind of setup
+output_path =  "/project/projectdirs/desi/users/forero/lowfat_serial_perfect/"
 if not os.path.exists(output_path):
     os.makedirs(output_path)
 
@@ -148,44 +197,3 @@ zcat_file = mtl_assign_quickcat_loop(
 if os.path.exists(tmp_output_path):
     shutil.rmtree(tmp_output_path)
 
-
-# new kind of setup
-output_path =  "/project/projectdirs/desi/users/forero/lowfat/"
-if not os.path.exists(output_path):
-    os.makedirs(output_path)
-
-tmp_output_path = os.path.join(output_path, 'tmp/')
-if not os.path.exists(tmp_output_path):
-    os.makedirs(tmp_output_path)
-
-tmp_fiber_path = os.path.join(tmp_output_path, 'fiberassign/')
-if not os.path.exists(tmp_fiber_path):
-    os.makedirs(tmp_fiber_path)
-
-# create temporaty input file for fiberassign
-params = ''.join(open('template_fiberassign.txt').readlines())
-fx = open(os.path.join(tmp_output_path, 'fa_features.txt'), 'w')
-fx.write(params.format(inputdir=tmp_output_path, targetdir=targets_path))
-fx.close()
-
-# loop over the epochs
-n_epochs = 5
-zcat_file = None
-for i in range(n_epochs):
-    zcat_file = mtl_assign_quickcat_loop( 
-        output_path = output_path, targets_path = targets_path,
-        zcat_file = zcat_file, fiberassign_exec = fiberassign_exec, epoch_path = epoch_path,
-        epoch_id = i, 
-        fiber_epochs = [i], mtl_epochs = range(i,n_epochs))
-
-# run everything on a single epoch
-zcat_file = None
-zcat_file = mtl_assign_quickcat_loop( 
-    output_path = output_path, targets_path = targets_path,
-    zcat_file = zcat_file, fiberassign_exec = fiberassign_exec, epoch_path = epoch_path,
-    epoch_id = n_epochs, 
-    fiber_epochs = range(n_epochs), mtl_epochs = range(n_epochs))
-
-#clean up tmp directory
-if os.path.exists(tmp_output_path):
-    shutil.rmtree(tmp_output_path)
