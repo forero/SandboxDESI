@@ -15,3 +15,4 @@ setup = qs.SimSetup(output_path = output_path,
                     n_epochs = n_epochs)
 
 qs.simulate_setup(setup)
+
