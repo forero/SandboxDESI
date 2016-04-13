@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+"""
+vanilla survey strategy
+"""
+
 import desisim.quicksurvey as qs
 import argparse 
 
