@@ -6,9 +6,9 @@
 | Mock catalog | nersc | 
 | Fiber assigment | [fiberassign](https://github.com/desihub/fiberassign)|
 | Survey simulator | | 
-|Pixsim | quickgen/specsim | | 
+|Pixsim | [quickgen/specsim](https://github.com/desihub/specsim) | | 
 | Spectro pipeline | | 
-|Backup system| | 
+| Backup system| | 
 | Documentation | |  
 | QA metrics | | 
 | Code to generate LSS catalog| | 
@@ -16,7 +16,9 @@
 
 
 ## Parts of survey simulator
+
 | Part | desiproduct |
+| ---- | ----- |
 | Weather simulator |  |
 | Field selection | | 
 | Glue for feedback from spectro pipeline| | 
