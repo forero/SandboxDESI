@@ -1,0 +1,57 @@
+Stephen Bailey, desi-data 1963, May 19, 2016
+
+This is a dump of whiteboard notes from a conversation with David Kirkby and Ben Weaver during the review.  This is the seed for the document we will write in preparation for further discussions and refinement at the DESI collaboration meeting in June.
+
+Motivations for doing the end-to-end full survey data challenge
+
+From the project / data systems perspective
+develop and test integration and dataflow (thus the "end-to-end" aspect)
+develop and test scaling (thus at least a large fraction of the "full survey" part)
+organization / motivation / focus for the development work
+develop and test documentation
+From the science collaboration perspective
+Generate realistic datasets for science analysis preparations
+"full survey", including datasets from interim years
+variations in depth and edge effects; systematics from cosmics, sky subtraction, flux calibration, etc.; complicated measured n(z); catastrophic failures
+Test usability and completeness of data formats, access methods, documentation, etc. (i.e. let's fix it now before real data are coming in...)
+Required code / inputs
+Some of these are already done, but trying to make a complete list:
+Footprint and tiling
+Mock catalog (current catalogs are good enough for project goals, but not for science goals)
+Fiber assigment
+Survey simulator
+Weather simulator (at the level of monthly averages)
+Field selection
+Glue for feedback from spectro pipeline
+Moon
+Sunrise/sunset/twilights
+Seeing
+Exposure time estimate given conditions
+Pixsim (backup plan if scaling is a problem is to use quickgen/specsim -> uncalibrated data and then proceed with pipeline)
+Spectro pipeline
+Backup system
+Documentation (esp. data model and access methods)
+QA metrics
+Code to generate large scale structure catalog
+Highly desired but not strictly required
+Input Lyman-alpha absorption signal with BAO correlations (definitely useful for the science goals, but I wouldn't postpone starting the data challenge if this wasn't ready)
+SurveyQA interface (I'm not sure which level this one should be at)
+Stretch goals
+including failures such as broken fibers, loss of CCDs, etc.
+more sophisticated weather model, e.g. including correlations for how quickly seeing could evolve throughout a night, or correlations of bad vs. good weather night-to-night
+better input catalogs, e.g.
+correlations between target classes
+magnitudes/colors/spectra in addition to just (RA,dec,z)
+LyA:QSO correlations
+Could use the data of the data challenge in parallel, but won't be part of the data challenge per-se
+Quicklook
+Collaboration provided data distribution interface (i.e. what the data distribution committee has been specing)
+Will not be part of this data challenge
+Dynamic exposure time calculator pixel-level simulation + actual ETC code
+KPNO -> NOAO -> NERSC data transfer
+Simulation of the human side of operations (e.g. mocking up an observer console, running quicklook, testing observer interfaces)
+There is probably a lot of items that aren't on these lists but should be.  Please comment!
+
+Regards,
+
+Stephen
