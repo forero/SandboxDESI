@@ -5,6 +5,6 @@ git checkout mocks
 
 cd ~/desisim/bin
 git checkout master
-./quicksurvey -O /project/projectdirs/desi/users/forero/large_mock_test/ -T /project/projectdirs/desi/users/forero/large_mock_test/mtl/ -f /global/homes/f/forero/fiberassign/bin/./fiberassign -E /project/projectdirs/desi/mocks/preliminary/mtl/lowfat/ -t /global/homes/f/forero/SandboxDESI/end2end/quicksurvey/template_fiberassign.txt -N 3
-./quicksurvey_stats -O /project/projectdirs/desi/users/forero/large_mock_test/ -T /project/projectdirs/desi/users/forero/large_mock_test/mtl/ -f /global/homes/f/forero/fiberassign/bin/./fiberassign -E /project/projectdirs/desi/mocks/preliminary/mtl/lowfat/ -t /global/homes/f/forero/SandboxDESI/end2end/quicksurvey/template_fiberassign.txt -N 3
+./quicksurvey -O /project/projectdirs/desi/users/forero/large_mock_test/ -T /project/projectdirs/desi/users/forero/large_mock_test/mtl/ -f /global/homes/f/forero/fiberassign/bin/./fiberassign -E /project/projectdirs/desi/users/forero/large_mock_test/mtl/ -t /global/homes/f/forero/SandboxDESI/end2end/quicksurvey/template_fiberassign.txt -N 3
+./quicksurvey_stats -O /project/projectdirs/desi/users/forero/large_mock_test/ -T /project/projectdirs/desi/users/forero/large_mock_test/mtl/ -f /global/homes/f/forero/fiberassign/bin/./fiberassign -E /project/projectdirs/desi/users/forero/large_mock_test/mtl/ -t /global/homes/f/forero/SandboxDESI/end2end/quicksurvey/template_fiberassign.txt -N 3
 
