@@ -59,5 +59,16 @@ On NERSC here `/project/projectdirs/desi/users/forero/large_mock_test/input/epoc
 
 `Fiberassign` takes a configuration file as an input. The python code running the simulation will update that file as needed based on a template. Here is an example of such file: `/project/projectdirs/desi/users/forero/large_mock_test/input/template/template_fiberassign.txt`.
 
+### 6. Running quicksurvey
 
+With all the sofware and files described in the previous software it is possible to run a the `quicksurvey` script in `desisim/bin`. It could be run as follows
+
+```bash
+./quicksurvey -O /project/projectdirs/desi/users/forero/large_mock_test/ -T /project/projectdirs/desi/users/forero/large_mock_test/input/files/ -f /global/homes/f/forero/fiberassign/bin/./fiberassign -E /project/projectdirs/desi/users/forero/large_mock_test/input/epochs/ -t /project/projectdirs/desi/users/forero/large_mock_test/input/template/template_fiberassign.txt -N 3
+```
+where 
+
+* `/project/projectdirs/desi/users/forero/large_mock_test/` is the directory where all the outputs will be written.
+* `/project/projectdirs/desi/users/forero/large_mock_test/files/` is the directory that hosts all the input `fits` files.
+* `/project/projectdirs/desi/users/forero/large_mock_test/input/epochs/` is the directory with the `epochs*.dat` files.
 
