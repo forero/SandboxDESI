@@ -69,9 +69,9 @@ With all the sofware and files described in the previous software it is possible
 ```
 where 
 
-* `/project/projectdirs/desi/users/forero/large_mock_test/` is the directory where all the outputs will be written.
-* `/project/projectdirs/desi/users/forero/large_mock_test/files/` is the directory that hosts all the input `fits` files.
-* `/project/projectdirs/desi/users/forero/large_mock_test/input/epochs/` is the directory with the `epochs*.dat` files.
+* `-O /project/projectdirs/desi/users/forero/large_mock_test/` indicates the directory where all the outputs will be written.
+* `-T /project/projectdirs/desi/users/forero/large_mock_test/files/` indicates the directory that hosts all the input `fits` files.
+* `-E /project/projectdirs/desi/users/forero/large_mock_test/input/epochs/` indicates the directory with the `epochs*.dat` files.
 
 
 This should produce the following kind of output
