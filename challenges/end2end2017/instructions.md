@@ -88,4 +88,7 @@ Fri Jul  8 06:48:56 2016 Finished zcat
 Epoch 1
 578 tiles to be included in fiberassign
 Fri Jul  8 06:49:08 2016 Starting MTL
+Fri Jul  8 07:01:19 2016 Finished MTL
+Fri Jul  8 07:01:20 2016 Launching fiberassign
+
 ```
