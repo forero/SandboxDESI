@@ -49,6 +49,7 @@ Total in targetid 23206875
 
 There must be now two new files `stdstars.fits` and `sky.fits` in the working directory.
 
+
 ### 4. Epochs files
 
 Epochs files list the IDs of the tiles that will be observed in a period of time before an updated version of the redshift catalog is available.
@@ -72,3 +73,19 @@ where
 * `/project/projectdirs/desi/users/forero/large_mock_test/files/` is the directory that hosts all the input `fits` files.
 * `/project/projectdirs/desi/users/forero/large_mock_test/input/epochs/` is the directory with the `epochs*.dat` files.
 
+
+This should produce the following kind of output
+
+```bash
+Epoch 0
+690 tiles to be included in fiberassign
+Fri Jul  8 06:38:26 2016 Starting MTL
+Fri Jul  8 06:42:11 2016 Finished MTL
+Fri Jul  8 06:42:11 2016 Launching fiberassign
+Fri Jul  8 06:47:32 2016 Finished fiberassign
+Fri Jul  8 06:47:32 2016 112 tiles to gather in zcat
+Fri Jul  8 06:48:56 2016 Finished zcat
+Epoch 1
+578 tiles to be included in fiberassign
+Fri Jul  8 06:49:08 2016 Starting MTL
+```
