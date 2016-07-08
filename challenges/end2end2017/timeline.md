@@ -1,3 +1,7 @@
+### 8.07.2016
+
+* Succesful testing of the new mocks through `quicksurvey`.
+
 ### 7.07.2016
 
 * First mock files for dark time survey from David Kirkby & Javier Sanchez.
