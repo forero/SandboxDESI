@@ -1,3 +1,11 @@
+### 0. Software
+
+The following desihub products need to be installed.
+
+* [desitarget](https://github.com/desihub/desitarget)
+* [desisim](https://github.com/desihub/desisim)
+* [fiberassign](https://github.com/desihub/fiberassign)
+
 ### 1. Mocks
 
 Mocks for the Dark Time Survey have been generated using [CoLoRe](https://github.com/damonge/CoLoRe) (Cosmological Lognormal Realizations code by David Alonso). There are mockfiles stored in `$DESI_ROOT/mocks/GaussianRandomField/2048/`. 
