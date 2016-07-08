@@ -35,7 +35,7 @@ There must be now two new files `targets.fits` and `truth.fits` in the working d
 ### 3. Standard Stars and Sky Positions
 
 Standard Stars and Sky Positions can be generated from the random mocks using the `mock_skypos_stdstars_darktime` script in `desitarget/bin` .
-
+ 
 ```bash
 ./mock_skypos_stdstars_darktime -R $DESI_ROOT/mocks/GaussianRandomField/2048/random.fits
 ```
@@ -48,3 +48,16 @@ Total in targetid 23206875
 ```
 
 There must be now two new files `stdstars.fits` and `sky.fits` in the working directory.
+
+### 4. Epochs files
+
+Epochs files list the IDs of the tiles that will be observed in a period of time before an updated version of the redshift catalog is available.
+
+On NERSC here `/project/projectdirs/desi/users/forero/large_mock_test/input/epochs/` is a sample of 4 of such files. These re copies of the first four (out of 35) files prepared by Kyle Dawson here `/project/projectdirs/desi/datachallenge/Argonne2015/opsim2`.
+
+### 5. Fiberassign template
+
+`Fiberassign` takes a configuration file as an input. The python code running the simulation will update that file as needed based on a template. Here is an example of such file: `/project/projectdirs/desi/users/forero/large_mock_test/input/template/template_fiberassign.txt`.
+
+
+
