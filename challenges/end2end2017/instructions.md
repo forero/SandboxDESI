@@ -11,7 +11,7 @@ The following desihub products need to be installed.
 Mocks for the Dark Time Survey have been generated using [CoLoRe](https://github.com/damonge/CoLoRe) (Cosmological Lognormal Realizations code by David Alonso). There are mockfiles stored in `$DESI_ROOT/mocks/GaussianRandomField/2048/`. 
 
 
-### 2. Target and truth files
+### 2. Target and truth 
 
 Targets and truth can be generated from the Mocks using the `mock_targets_darktime` script in `desitarget/bin`.
 
@@ -32,7 +32,7 @@ The second `WARNING` indicates that the number density in the mock is slightly b
 There must be now two new files `targets.fits` and `truth.fits` in the working directory.
 
 
-### 3. Standard Stars and Sky Positions.
+### 3. Standard Stars and Sky Positions
 
 Standard Stars and Sky Positions can be generated from the random mocks using the `mock_skypos_stdstars_darktime` script in `desitarget/bin` .
 
