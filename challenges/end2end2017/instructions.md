@@ -28,7 +28,7 @@ Total in targetid 48575429
 ```
 
 The first `WARNING` is there because at the moment Lya QSOs with redshift z>2.1 have not been included in the mocks. 
-The second `WARNING` indicates that the number density in the mock is slightly below the goal number density.
+The second `WARNING` indicates that the estimated number density in the mock is slightly below the goal number density.
 There must be now two new files `targets.fits` and `truth.fits` in the working directory.
 
 
@@ -90,5 +90,11 @@ Epoch 1
 Fri Jul  8 06:49:08 2016 Starting MTL
 Fri Jul  8 07:01:19 2016 Finished MTL
 Fri Jul  8 07:01:20 2016 Launching fiberassign
+Fri Jul  8 07:07:22 2016 Finished fiberassign
+Fri Jul  8 07:07:22 2016 382 tiles to gather in zcat
+Fri Jul  8 07:10:03 2016 Finished zcat
+Epoch 2
+196 tiles to be included in fiberassign
+Fri Jul  8 07:10:15 2016 Starting MTL
 
 ```
