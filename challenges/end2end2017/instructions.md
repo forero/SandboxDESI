@@ -16,7 +16,7 @@ Mocks for the Dark Time Survey have been generated using [CoLoRe](https://github
 Targets and truth can be generated from the Mocks using the `mock_targets_darktime` script in `desitarget/bin`.
 
 ```bash
-./mock_targets_darktime  -Q $DESI_ROOT/mocks/GaussianRandomField/2048/QSO.fits -L $DESI_ROOT/mocks/GaussianRandomField/2048/LRG.fits -E $DESI_ROOT/mocks/GaussianRandomField/2048/ELG.fits  -C $DESI_ROOT/mocks/GaussianRandomField/2048/random.fits
+./mock_targets_darktime  -Q $DESI_ROOT/mocks/GaussianRandomField/2048/QSO.fits -L $DESI_ROOT/mocks/GaussianRandomField/2048/LRG.fits -E $DESI_ROOT/mocks/GaussianRandomField/2048/ELG.fits  -C $DESI_ROOT/mocks/GaussianRandomField/2048/random.fits -O /project/projectdirs/desi/users/forero/large_mock_test/input/files/
 ```
 
 This should produce the following kind of output
@@ -37,7 +37,7 @@ There must be now two new files `targets.fits` and `truth.fits` in the working d
 Standard Stars and Sky Positions can be generated from the random mocks using the `mock_skypos_stdstars_darktime` script in `desitarget/bin` .
  
 ```bash
-./mock_skypos_stdstars_darktime -R $DESI_ROOT/mocks/GaussianRandomField/2048/random.fits
+./mock_skypos_stdstars_darktime -R $DESI_ROOT/mocks/GaussianRandomField/2048/random.fits -O /project/projectdirs/desi/users/forero/large_mock_test/input/files/
 ```
 
 This should produce the following kind of output.
