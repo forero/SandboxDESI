@@ -1,3 +1,5 @@
 | Objects | (ra, dec, z) files on NERSC | Code to read Positions | Code to generate Spectra | Contact |
 | ----- | -----------------------------| --------------------------| ---------------------------|---------|
 | ELG |  `$DESI_ROOT/mocks/GaussianRandomField/2048/ELG.fits` | **Done** [Part of desitarget:master](https://github.com/desihub/desitarget/blob/master/py/desitarget/mock/io.py)| **Pending** Needs to be coupled to [desisim](https://github.com/desihub/desisim) | Javier Sanchez & David Kirkby|
+| LRG |  `$DESI_ROOT/mocks/GaussianRandomField/2048/LRG.fits` | **Done** [Part of desitarget:master](https://github.com/desihub/desitarget/blob/master/py/desitarget/mock/io.py)| **Pending** Needs to be coupled to [desisim](https://github.com/desihub/desisim) | Javier Sanchez & David Kirkby|
+| QSO tracer |  `$DESI_ROOT/mocks/GaussianRandomField/2048/QSO.fits` | **Done** [Part of desitarget:master](https://github.com/desihub/desitarget/blob/master/py/desitarget/mock/io.py)| **Pending** Needs to be coupled to [desisim](https://github.com/desihub/desisim) | Javier Sanchez & David Kirkby|
