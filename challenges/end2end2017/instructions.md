@@ -36,7 +36,7 @@ On NERSC here `/project/projectdirs/desi/users/forero/large_mock_test/input/epoc
 With all the sofware and files described in the previous software it is possible to run a the `quicksurvey` script in `desisim/bin`. It could be run as follows
 
 ```bash
-./quicksurvey -O /project/projectdirs/desi/users/forero/large_mock_test/ -T /project/projectdirs/desi/users/forero/large_mock_test/input/files/ -f /global/homes/f/forero/fiberassign/bin/./fiberassign -E /project/projectdirs/desi/users/forero/large_mock_test/input/epochs/ -t /project/projectdirs/desi/users/forero/large_mock_test/input/template/template_fiberassign.txt -N 3
+./quicksurvey -O /project/projectdirs/desi/users/forero/datachallenge2017/test/ -T /project/projectdirs/desi/users/forero/datachallenge2017/test/input/ -f ~/fiberassign/bin/./fiberassign -E /project/projectdirs/desi/users/forero/datachallenge2017/test/input/epochs/ -t /project/projectdirs/desi/users/forero/datachallenge2017/test/input/template/template_fiberassign.txt -N 8
 ```
 where 
 
