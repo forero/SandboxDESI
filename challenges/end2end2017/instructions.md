@@ -25,11 +25,11 @@ Where the `input.yaml` file can be found in `desitarget/doc/mock_example`
 
 Epochs files list the IDs of the tiles that will be observed in a period of time before an updated version of the redshift catalog is available.
 
-On NERSC here `/project/projectdirs/desi/users/forero/large_mock_test/input/epochs/` is a sample of 4 of such files. These re copies of the first four (out of 35) files prepared by Kyle Dawson here `/project/projectdirs/desi/datachallenge/Argonne2015/opsim2`.
+On NERSC here `/project/projectdirs/desi/users/forero/datachallenge2017/test/input/epochs/` is a sample of 8 of such files. Those correspond to a small patch in RA,DEC (~400 deg^2) matching the input mock files in `/project/projectdirs/desi/users/forero/datachallenge2017/test/input/`.
 
 ### 4. Fiberassign template
 
-`Fiberassign` takes a configuration file as an input. The python code running the simulation will update that file as needed based on a template. Here is an example of such file: `/project/projectdirs/desi/users/forero/large_mock_test/input/template/template_fiberassign.txt`.
+`Fiberassign` takes a configuration file as an input. The python code running the simulation will update that file as needed based on a template. Here is an example of such file: `/project/projectdirs/desi/users/forero/datachallenge2017/test/input/template/template_fiberassign.txt`.
 
 ### 5. Running quicksurvey
 
@@ -40,9 +40,9 @@ With all the sofware and files described in the previous software it is possible
 ```
 where 
 
-* `-O /project/projectdirs/desi/users/forero/large_mock_test/` indicates the directory where all the outputs will be written.
-* `-T /project/projectdirs/desi/users/forero/large_mock_test/files/` indicates the directory that hosts all the input `fits` files.
-* `-E /project/projectdirs/desi/users/forero/large_mock_test/input/epochs/` indicates the directory with the `epochs*.dat` files.
+* `-O /project/projectdirs/desi/users/forero/datachallenge2017/test/` indicates the directory where all the outputs will be written.
+* `-T /project/projectdirs/desi/users/forero/datachallenge2017/test/input/` indicates the directory that hosts all the input `fits` files.
+* `-E /project/projectdirs/desi/users/forero/datachallenge2017/test/input/epochs/` indicates the directory with the `epochs*.dat` files.
 
 
 This should produce the following kind of output
