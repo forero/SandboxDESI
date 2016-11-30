@@ -29,7 +29,7 @@ Notes:
 
 `Multiprocess` keeps on running well after reading of QSOs finished.
 
-#Bright
+### Bright
 
 setup
 
@@ -57,6 +57,17 @@ source MWS_WD target MWS_WD truth MWS_WD: selected 742445 (0.7M) out of 930721
 Notes:
 
 MWS selection used a one magnitude brighter cut for the faint targets.
+
+### Fake QSO
+
+Ntargets:
+```bash
+source BADQSO target QSO truth STD_FSTAR: selected 80727977 (80M) out of 318380785
+```
+Notes:
+
+The number of targets it's too large. The mismatch comes from the number density estimation which is done on a small 
+patch and is not representative of the whole number density.
 
 ### Sky
 
