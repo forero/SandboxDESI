@@ -57,3 +57,33 @@ source MWS_WD target MWS_WD truth MWS_WD: selected 742445 (0.7M) out of 930721
 Notes:
 
 MWS selection used a one magnitude brighter cut for the faint targets.
+
+### Sky
+
+
+total time
+```bash
+real	4m9.603s
+user	3m51.918s
+sys	0m22.477s
+```
+
+Ntargets
+```bash
+source SKY target SKY truth SKY: selected 23202610 (23M) out of 33128599
+```
+
+###stardard stars
+
+Ntargets
+```bash
+source STD_FSTAR target STD_FSTAR truth STD_FSTAR: selected 5661443 (5M) out of 201477132
+```
+
+Time
+```bash
+real	11m28.199s
+user	6m45.713s
+sys	3m35.773s
+```
+
