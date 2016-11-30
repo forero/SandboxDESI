@@ -73,7 +73,7 @@ Ntargets
 source SKY target SKY truth SKY: selected 23202610 (23M) out of 33128599
 ```
 
-###stardard stars
+###standard stars
 
 Ntargets
 ```bash
