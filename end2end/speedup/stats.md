@@ -98,3 +98,43 @@ user	6m45.713s
 sys	3m35.773s
 ```
 
+#All
+
+```bash
+No Fluctuations for this target SKY
+mock area [ 16844.24500773] mock density [ 1966.76069392] - desired num density 1400.0
+target_name STD_FSTAR : type: STD_FSTAR select: mag
+Collects information across mock files
+source BADQSO target QSO truth STD_FSTAR: selected 1804728 out of 318380785
+source BGS target BGS truth BGS: selected 22387083 out of 45136543
+source ELG target ELG truth ELG: selected 40471862 out of 79422779
+source LRG target LRG truth LRG: selected 6092563 out of 11607022
+source LYA target QSO truth QSO: selected 822990 out of 1526512
+source MWS_MAIN target MWS_MAIN truth MWS_MAIN: selected 5046973 out of 318380785
+source MWS_WD target MWS_WD truth MWS_WD: selected 742445 out of 930721
+source QSO target QSO truth QSO: selected 2564894 out of 2695849
+source SKY target SKY truth SKY: selected 23582478 out of 33128599
+source STD_FSTAR target STD_FSTAR truth STD_FSTAR: selected 10626032 out of 318380785
+Great total of 79933538 targets 10626032 stdstars 23582478 sky pos
+Started writing StdStars file
+Finished writing stdstars file
+Started writing sky to file
+Finished writing sky file
+Started writing Targets file
+WARNING: no real target catalog provided; adding columns of zeros for DECAM_FLUX, SHAPE*
+Finished writing Targets file
+Started computing the MTL file
+DEBUG: before targets.calc_priority slow copy
+DEBUG: seconds for targets.calc_priority slow copy: 37.28541016578674
+DEBUG: calc_priority has 79933538 unobserved targets
+0 of 79933538 targets have priority zero, setting N_obs=0.
+Started writing the first MTL file
+Finished writing mtl file
+Started writing Truth file
+Finished writing Truth file
+done!
+
+real	148m39.681s
+user	171m35.327s
+sys	12m24.475s
+```
