@@ -137,4 +137,12 @@ done!
 real	148m39.681s
 user	171m35.327s
 sys	12m24.475s
+
+
+forero@edison02:/project/projectdirs/desi/users/forero/quicksurvey_example/input> ls -lh *.fits
+-rw-rw---- 1 forero desi 8.2G Nov 30 18:38 mtl.fits
+-rw-rw---- 1 forero desi 1.5G Nov 30 18:09 sky.fits
+-rw-rw---- 1 forero desi 669M Nov 30 18:05 stdstars.fits
+-rw-rw---- 1 forero desi 7.3G Nov 30 18:24 targets.fits
+-rw-rw---- 1 forero desi 5.1G Nov 30 19:01 truth.fits
 ```
