@@ -1,5 +1,9 @@
 What if we split the run in bright/dark-gray? Here are the results.
 
+```bash
+forero@edison03:/project/projectdirs/desi/users/forero/datachallenge2017/split
+```
+
 ### mock creation
 
 | Target | RAM (GB)| time (min) | Filesize (GB) | Target number (M)|
@@ -16,5 +20,5 @@ What if we split the run in bright/dark-gray? Here are the results.
 ### running quicksurvey
 
 * First epoch
- BRIGHT: 90GB
- DARK: 55GB 
+ - BRIGHT: 92GB ()  
+ - DARK: 55GB  
