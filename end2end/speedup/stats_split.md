@@ -21,7 +21,7 @@ forero@edison03:/project/projectdirs/desi/users/forero/datachallenge2017/split
 
 * First epoch
  - DARK: 55GB  (python) / 67GB (fiberassign)
- - BRIGHT: 92GB (python)  / 73GB (fiberassign)
+ - BRIGHT: 92GB (python)  / 81GB (fiberassign)
 
 ### dark
 
