@@ -13,3 +13,8 @@ What if we split the run in bright/dark-gray? Here are the results.
 
  ~/desisim/bin/quicksurvey -O outputlarge/bright/ -T inputlarge/bright/ -f ~/fiberassign/bin/./fiberassign -E inputlarge/ -t inputlarge/template_fiberassign.txt -N 8
  ```
+### running quicksurvey
+
+* First epoch
+ BRIGHT: 90GB
+ DARK: 55GB 
