@@ -6,5 +6,5 @@ What if we split the run in bright/dark-gray? Here are the results.
 | ------ | ----- | -------- | --- | ------ |
 |Standards (SKY, STARS)| 20GB| 12 | stars: 0.8, sky: 1.5 | stars: 10, sky:24 | 
 |BRIGHT | 54GB| 40 | 6.4 | bgs: 21, mws: 47 , wd: 0.7| 
-|DARK | 42GB| 54 | 4.7 | elg: 40, lrg: 6, qso: 2.5, lya:-/8,badqso: 0.9| 
+|DARK | 42GB| 54 | 4.7 | elg:40, lrg:6, qso:2.5, lya:0.8, badqso:0.9| 
 
