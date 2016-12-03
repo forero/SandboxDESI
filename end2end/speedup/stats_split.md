@@ -20,8 +20,8 @@ forero@edison03:/project/projectdirs/desi/users/forero/datachallenge2017/split
 ### running quicksurvey
 
 * First epoch
- - BRIGHT: 92GB (python)  / 
- - DARK: 55GB  (python) / 65GB (fiberassign)
+ - DARK: 55GB  (python) / 67GB (fiberassign)
+ - BRIGHT: 92GB (python)  / 73GB (fiberassign)
 
 ### dark
 
