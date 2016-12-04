@@ -1,5 +1,5 @@
 ```bash
-forero@edison03:/project/projectdirs/desi/users/forero/datachallenge2017/fastsplit/quicksurvey_example> ~/desisim/bin/quicksurvey -O outputlarge/bright/ -T inputlarge/bright/ -f ~/fiberassign/bin/./fiberassign -E inputlarge/bright/ -t inputlarge/template_fiberassign.txt -N 3
+forero@edison09:/project/projectdirs/desi/users/forero/datachallenge2017/fastsplit/quicksurvey_example> ~/desisim/bin/quicksurvey -O outputlarge/dark/ -T inputlarge/dark/ -f ~/fiberassign/bin/./fiberassign -E inputlarge/dark/ -t inputlarge/template_fiberassign.txt -N 5
 --- Epoch 0 ---
 10043 tiles to be included in fiberassign
 Sat Dec  3 14:49:18 2016 Starting MTL
@@ -86,5 +86,55 @@ Sun Dec  4 07:22:48 2016 Finished zcat
 ```
 
 ```bash
-forero@edison09:/project/projectdirs/desi/users/forero/datachallenge2017/fastsplit/quicksurvey_example> ~/desisim/bin/quicksurvey -O outputlarge/dark/ -T inputlarge/dark/ -f ~/fiberassign/bin/./fiberassign -E inputlarge/dark/ -t inputlarge/template_fiberassign.txt -N 5
+
+forero@edison03:/project/projectdirs/desi/users/forero/datachallenge2017/fastsplit/quicksurvey_example> ~/desisim/bin/quicksurvey -O outputlarge/bright/ -T inputlarge/bright/ -f ~/fiberassign/bin/./fiberassign -E inputlarge/bright/ -t inputlarge/template_fiberassign.txt -N 3
+--- Epoch 0 ---
+6028 tiles to be included in fiberassign
+Sat Dec  3 14:51:44 2016 Starting MTL
+DEBUG: before targets.calc_priority slow copy
+DEBUG: seconds for targets.calc_priority slow copy: 30.601342916488647
+DEBUG: calc_priority has 69852026 unobserved targets
+0 of 69852026 targets have priority zero, setting N_obs=0.
+Sat Dec  3 15:04:07 2016 Finished MTL
+Sat Dec  3 15:04:07 2016 Launching fiberassign
+Sat Dec  3 15:31:42 2016 Finished fiberassign
+Sat Dec  3 15:31:42 2016 2007 tiles to gather in zcat
+WARNING:quickcat.py:225:get_redshift_efficiency: using default redshift efficiency of 0.98 for STAR
+WARNING:quickcat.py:96:get_zeff_obs: No model for how observing conditions impact STAR redshift efficiency
+WARNING:quickcat.py:96:get_zeff_obs: No model for how observing conditions impact BGS redshift efficiency
+Sat Dec  3 17:56:42 2016 Finished zcat
+--- Epoch 1 ---
+4021 tiles to be included in fiberassign
+Sat Dec  3 17:57:23 2016 Starting MTL
+DEBUG: before targets.calc_priority slow copy
+DEBUG: seconds for targets.calc_priority slow copy: 32.882493019104004
+DEBUG: calc_priority has 60921635 unobserved targets
+7073608 of 69852026 targets have priority zero, setting N_obs=0.
+/global/common/edison/contrib/desi/conda/conda_3.5-20160829/lib/python3.5/site-packages/astropy/table/column.py:1095: MaskedArrayFutureWarning: setting an item on a masked array which has a shared mask will not copy the mask and also change the original mask array in the future.
+Check the NumPy 1.11 release notes for more information.
+  ma.MaskedArray.__setitem__(self, index, value)
+Sat Dec  3 18:29:50 2016 Finished MTL
+Sat Dec  3 18:29:52 2016 Launching fiberassign
+Sat Dec  3 18:51:37 2016 Finished fiberassign
+Sat Dec  3 18:51:38 2016 2011 tiles to gather in zcat
+WARNING:quickcat.py:225:get_redshift_efficiency: using default redshift efficiency of 0.98 for STAR
+WARNING:quickcat.py:96:get_zeff_obs: No model for how observing conditions impact STAR redshift efficiency
+WARNING:quickcat.py:96:get_zeff_obs: No model for how observing conditions impact BGS redshift efficiency
+Sat Dec  3 21:12:07 2016 Finished zcat
+--- Epoch 2 ---
+2010 tiles to be included in fiberassign
+Sat Dec  3 21:12:51 2016 Starting MTL
+DEBUG: before targets.calc_priority slow copy
+DEBUG: seconds for targets.calc_priority slow copy: 35.98475503921509
+DEBUG: calc_priority has 52162201 unobserved targets
+13852505 of 69852026 targets have priority zero, setting N_obs=0.
+Sat Dec  3 21:45:04 2016 Finished MTL
+Sat Dec  3 21:45:06 2016 Launching fiberassign
+Sat Dec  3 21:57:05 2016 Finished fiberassign
+Sat Dec  3 21:57:05 2016 2010 tiles to gather in zcat
+WARNING:quickcat.py:225:get_redshift_efficiency: using default redshift efficiency of 0.98 for STAR
+WARNING:quickcat.py:96:get_zeff_obs: No model for how observing conditions impact STAR redshift efficiency
+WARNING:quickcat.py:96:get_zeff_obs: No model for how observing conditions impact BGS redshift efficiency
+Sun Dec  4 00:20:09 2016 Finished zcat
+
 ```
