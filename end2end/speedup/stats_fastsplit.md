@@ -1,3 +1,5 @@
+### dark
+
 ```bash
 forero@edison09:/project/projectdirs/desi/users/forero/datachallenge2017/fastsplit/quicksurvey_example> ~/desisim/bin/quicksurvey -O outputlarge/dark/ -T inputlarge/dark/ -f ~/fiberassign/bin/./fiberassign -E inputlarge/dark/ -t inputlarge/template_fiberassign.txt -N 5
 --- Epoch 0 ---
@@ -85,6 +87,8 @@ Sun Dec  4 04:21:03 2016 1995 tiles to gather in zcat
 Sun Dec  4 07:22:48 2016 Finished zcat
 ```
 
+
+### bright
 ```bash
 
 forero@edison03:/project/projectdirs/desi/users/forero/datachallenge2017/fastsplit/quicksurvey_example> ~/desisim/bin/quicksurvey -O outputlarge/bright/ -T inputlarge/bright/ -f ~/fiberassign/bin/./fiberassign -E inputlarge/bright/ -t inputlarge/template_fiberassign.txt -N 3
