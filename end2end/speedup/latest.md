@@ -58,4 +58,32 @@ sys	114m27.477s
 forero@edison10:/project/projectdirs/desi/users/forero/datachallenge2017/test/quicksurvey_example> date
 Wed Dec  7 16:36:07 PST 2016
 forero@edison10:/project/projectdirs/desi/users/forero/datachallenge2017/test/quicksurvey_example> time ~/desisim/bin/./quicksurvey --output_dir output/brightepochs/ --targets_dir input/bright/ --fiberassign_exec ~/fiberassign/bin/./fiberassign --template_fiberassign input/template_fiberassign.txt --n_epochs 3 --epochs_dir input/bright/
+--- Epoch 2 ---
+2010 tiles to be included in fiberassign
+Wed Dec  7 23:48:37 2016 Starting MTL
+DEBUG: before targets.calc_priority slow copy
+DEBUG: seconds for targets.calc_priority slow copy: 22.54221820831299
+DEBUG: calc_priority has 52196917 unobserved targets
+13847491 of 69887555 targets have priority zero, setting N_obs=0.
+Thu Dec  8 00:16:52 2016 Finished MTL
+Thu Dec  8 00:16:55 2016 Launching fiberassign
+Thu Dec  8 00:29:09 2016 Finished fiberassign
+Thu Dec  8 00:29:09 2016 2010 tiles to gather in zcat
+Thu Dec  8 00:29:09 2016 starting quickcat
+Thu Dec  8 00:29:09 2016 QC Reading 2010 tiles
+Thu Dec  8 00:30:19 2016 QC Trimming truth to just observed targets
+Thu Dec  8 00:31:37 2016 QC Constructing new redshift catalog
+Thu Dec  8 00:31:38 2016 QC Adding ZERR and ZWARN
+WARNING:quickcat.py:97:get_zeff_obs: No model for how observing conditions impact BGS redshift efficiency
+WARNING:quickcat.py:226:get_redshift_efficiency: using default redshift efficiency of 0.98 for STAR
+WARNING:quickcat.py:97:get_zeff_obs: No model for how observing conditions impact STAR redshift efficiency
+Thu Dec  8 02:52:46 2016 QC Adding NUMOBS column
+Thu Dec  8 02:55:44 2016 QC Merging previous zcat
+Thu Dec  8 02:56:39 2016 QC done
+Thu Dec  8 02:56:41 2016 writing zcat
+Thu Dec  8 03:01:33 2016 Finished zcat
+
+real	622m34.570s
+user	600m4.218s
+sys	57m26.715s
 ```
