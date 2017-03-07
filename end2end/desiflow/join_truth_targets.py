@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from desitarget import mtl
 import fitsio
 import os
 import desitarget.io as dtio
@@ -22,8 +23,15 @@ for truth_file, target_file in zip(iter_truth, iter_target):
 
 targets = vstack(alltargets)
 truth = vstack(alltruth)
+mtl = mtl.make_mtl(targets)
 
 out_targets = os.path.join(ns.dest,'targets.fits')
 out_truth = os.path.join(ns.dest,'truth.fits')
+out_mtl = os.path.join(ns.dest,'mtl.fits')
 targets.write(out_targets, overwrite=True)
 truth.write(out_truth, overwrite=True)
+mtl.write(out_mtl, overwrite=True)
+
+
+
+
