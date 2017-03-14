@@ -1,18 +1,26 @@
 import numpy as np
 from astropy.table import Table
+import desimodel.io
 
-def write_tile_file(desitiles="desi-tiles.par", epochtiles="lowfat-desi-tiles.par"):
-    desi_tiles = Table.read(desitiles)
+def write_tile_file():
+    desi_tiles = desimodel.io.load_tiles()
     epochs = list(set(desi_tiles['PASS']))
-    
+    min_dec = -4.0
+    max_dec = 1.0
+    min_ra = 207.0
+    max_ra = 211.0
+
 
     for epoch in epochs:
-        epoch_name = 'epoch{}.dat'.format(epoch)
+        epoch_name = 'epoch{}.txt'.format(epoch)
         epoch_file = open(epoch_name, 'w')
         ii = desi_tiles['PASS'] == epoch
-        ii &= desi_tiles['RA']<30.0
-        ii &= desi_tiles['DEC']<20.0
-        ii &= desi_tiles['DEC']>0
+        ii &= desi_tiles['RA']<=max_ra
+        ii &= desi_tiles['RA']>=min_ra
+        ii &= desi_tiles['DEC']<=max_dec
+        ii &= desi_tiles['DEC']>=min_dec
+        ii &= desi_tiles['IN_DESI']==1
+        ii &= desi_tiles['PROGRAM']=='BRIGHT'
 
         tiles_in = desi_tiles['TILEID'][ii]
         for tile in tiles_in:
@@ -20,5 +28,5 @@ def write_tile_file(desitiles="desi-tiles.par", epochtiles="lowfat-desi-tiles.pa
 
         epoch_file.close()
 
-desitiles = "/project/projectdirs/desi/software/edison/desimodel/0.4.5/data/footprint/desi-tiles.fits"
-write_tile_file(desitiles=desitiles)
+
+write_tile_file()
