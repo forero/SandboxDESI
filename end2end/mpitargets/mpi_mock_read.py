@@ -32,6 +32,8 @@ from desitarget.targetmask import desi_mask, bgs_mask, mws_mask
 from desispec.log import get_logger, DEBUG
 from desispec.parallel import dist_uniform
 
+import desitarget.mock.build as mockbuild
+
 log = get_logger(DEBUG)
 
 def countrows_gaussianfield(mock_dir_name, target_name):
@@ -110,7 +112,7 @@ def add_GMM_gaussianfield(input, target_name, rand):
         elif target_name == 'LRG':
             """Selected in the z-band with r-z, r-W1 colors."""
             vdisp = 10**rand.normal(2.3, 0.1, nobj)
-            out.update({'TRUESPECTYPE': 'GALAXY', 'TEMPLATETYPE': 'LRG', 'TEMPLATESUBTYPE': '',
+            input.update({'TRUESPECTYPE': 'GALAXY', 'TEMPLATETYPE': 'LRG', 'TEMPLATESUBTYPE': '',
                         'VDISP': vdisp, 'MAG': mags[:, 2], 'FILTERNAME': 'decam2014-z'})
             
         elif target_name == 'QSO':
@@ -122,33 +124,73 @@ def add_GMM_gaussianfield(input, target_name, rand):
             log.fatal('Unrecognized target type {}!'.format(target_name))
             raise ValueError
 
-
-def do_it(comm):
+def get_mock_spectra(mock_dir, target_name, mockformat, rand=None, comm=None):
     rank = comm.Get_rank()
-    nproc = comm.Get_size()
-    
-    mock_path = "/project/projectdirs/desi/mocks/GaussianRandomField/v0.0.4/"
-    target_name = "ELG"    
-    mockformat = "gaussianfield"
+    nproc = comm.Get_size()    
     nrows = None
-    rand = np.random.RandomState()
     Spectra = MockSpectra(rand=rand)
+    SelectTargets = mockselect.SelectTargets(rand=rand)
 
     if rank ==0:
 #        nrows = countrows_gaussianfield(mock_path, target_name)
-        nrows = 200 * nproc
+        nrows = 1000 * nproc
 
     nrows = comm.bcast(nrows, root=0)
     row_start, nrow = dist_uniform(nrows, nproc, rank)    
     print(rank, row_start, nrow)
 
     rows = range(row_start, row_start+nrow)
-    mock_data = read_gaussianfield(mock_path, target_name, rows=rows)
+    mock_data = read_gaussianfield(mock_dir, target_name, rows=rows)
     add_GMM_gaussianfield(mock_data, target_name, rand)
     add_seed(mock_data, rand=rand)
+
+    nobj = len(mock_data['RA'])
+    targets = mockbuild.empty_targets_table(nobj)
+    truth = mockbuild.empty_truth_table(nobj)
     trueflux, meta = getattr(Spectra, target_name.lower())(mock_data, mockformat=mockformat)
 
-    print(rank, 'RA', len(mock_data['RA']), mock_data['RA'][0])
+    for key in ('TEMPLATEID', 'SEED', 'MAG', 'DECAM_FLUX', 'WISE_FLUX',
+                'OIIFLUX', 'HBETAFLUX', 'TEFF', 'LOGG', 'FEH'):
+        truth[key] = meta[key]
+
+    # Perturb the photometry based on the variance on this brick.  Hack!  Assume
+    # a constant depth (22.3-->1.2 nanomaggies, 23.8-->0.3 nanomaggies) in the
+    # WISE bands for now.
+    wise_onesigma = np.zeros((nobj, 2))
+    wise_onesigma[:, 0] = 1.2
+    wise_onesigma[:, 1] = 0.3
+    targets['WISE_FLUX'] = truth['WISE_FLUX'] + rand.normal(scale=wise_onesigma)
+    
+    for band in (1, 2, 4):
+        targets['DECAM_FLUX'][:, band] = truth['DECAM_FLUX'][:, band] 
+
+    selection_function = '{}_select'.format(target_name.lower())
+    getattr(SelectTargets, selection_function)(targets, truth)    
+    targkeep = np.where(targets['DESI_TARGET'] != 0)[0]
+    
+    targets['RA'] = mock_data['RA']
+    targets['DEC'] = mock_data['DEC']
+    
+    truth['TRUEZ'] = mock_data['Z'].astype('f4')
+    truth['TEMPLATETYPE'] = mock_data['TEMPLATETYPE']
+    truth['TEMPLATESUBTYPE'] = mock_data['TEMPLATESUBTYPE']
+    truth['TRUESPECTYPE'] = mock_data['TRUESPECTYPE']
+
+    return targets, truth, trueflux, targkeep
+
+def do_it(comm):
+    rand = np.random.RandomState()
+    rank = comm.Get_rank()
+    nproc = comm.Get_size()    
+    mockpaths = ["/project/projectdirs/desi/mocks/GaussianRandomField/v0.0.4/",
+                 "/project/projectdirs/desi/mocks/GaussianRandomField/v0.0.4/"]
+    targetnames = ["ELG", "LRG"]
+    mockformats = ["gaussianfield", "gaussianfield"]
+
+    for mock_path, target_name, mock_format in zip(mockpaths, targetnames, mockformats):
+        
+        targets, truth, trueflux, targkeep = get_mock_spectra(mock_path, target_name, mock_format, rand=rand, comm=comm)        
+        print(rank, target_name, 'RA', len(targets['RA']), targets['RA'][0])
 
     return 0
 
