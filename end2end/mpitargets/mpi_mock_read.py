@@ -11,6 +11,24 @@ from desitarget.io import check_fitsio_version, iter_files
 from desitarget.mock.sample import SampleGMM
 from desispec.brick import brickname as get_brickname_from_radec
 
+import os
+from time import time
+
+import yaml
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table, Column, vstack
+
+from desispec.io.util import fitsheader, write_bintable
+from desispec.brick import brickname as get_brickname_from_radec
+
+import desitarget.mock.io as mockio
+import desitarget.mock.selection as mockselect
+from desitarget.mock.spectra import MockSpectra
+from desitarget.internal import sharedmem
+from desitarget.targetmask import desi_mask, bgs_mask, mws_mask
+
+
 from desispec.log import get_logger, DEBUG
 from desispec.parallel import dist_uniform
 
@@ -30,7 +48,7 @@ def countrows_gaussianfield(mock_dir_name, target_name):
     nrows = fitsio.FITS(mockfile)[1].get_nrows()
     return nrows
 
-def read_gaussianfield(mock_dir_name, target_name, rand=None, bricksize=0.25,
+def read_gaussianfield(mock_dir_name, target_name,
                bounds=None, magcut=None, rows=None):
     if target_name == 'SKY':
         mockfile = mock_dir_name
@@ -66,16 +84,59 @@ def read_gaussianfield(mock_dir_name, target_name, rand=None, bricksize=0.25,
     out = {'RA': ra, 'DEC': dec, 'Z': zz}
     return out
 
+def add_seed(input, rand):
+    nobj = len(input['RA'])
+    seed = rand.randint(2**32, size=nobj)
+    input.update({'SEED':seed})
+
+def add_GMM_gaussianfield(input, target_name, rand):
+    if target_name == 'SKY':
+        input.update({'TRUESPECTYPE': 'SKY', 'TEMPLATETYPE': 'SKY', 'TEMPLATESUBTYPE': ''})
+    else:
+        nobj = len(input['RA'])
+        log.info('Sampling from Gaussian mixture model.')
+        GMM = SampleGMM(random_state=rand)
+        mags = GMM.sample(target_name, nobj) # [g, r, z, w1, w2, w3, w4]
+
+        input.update({'GR': mags[:, 0]-mags[:, 1], 'RZ': mags[:, 1]-mags[:, 2],
+                    'RW1': mags[:, 1]-mags[:, 3], 'W1W2': mags[:, 3]-mags[:, 4]})
+    
+        if target_name == 'ELG':
+            """Selected in the r-band with g-r, r-z colors."""
+            vdisp = 10**rand.normal(1.9, 0.15, nobj)
+            input.update({'TRUESPECTYPE': 'GALAXY', 'TEMPLATETYPE': 'ELG', 'TEMPLATESUBTYPE': '',
+                        'VDISP': vdisp, 'MAG': mags[:, 1], 'FILTERNAME': 'decam2014-r'})
+
+        elif target_name == 'LRG':
+            """Selected in the z-band with r-z, r-W1 colors."""
+            vdisp = 10**rand.normal(2.3, 0.1, nobj)
+            out.update({'TRUESPECTYPE': 'GALAXY', 'TEMPLATETYPE': 'LRG', 'TEMPLATESUBTYPE': '',
+                        'VDISP': vdisp, 'MAG': mags[:, 2], 'FILTERNAME': 'decam2014-z'})
+            
+        elif target_name == 'QSO':
+            """Selected in the r-band with g-r, r-z, and W1-W2 colors."""
+            input.update({'TRUESPECTYPE': 'QSO', 'TEMPLATETYPE': 'QSO', 'TEMPLATESUBTYPE': '',
+                        'MAG': mags[:, 1], 'FILTERNAME': 'decam2014-r'})
+            
+        else:
+            log.fatal('Unrecognized target type {}!'.format(target_name))
+            raise ValueError
+
+
 def do_it(comm):
     rank = comm.Get_rank()
     nproc = comm.Get_size()
     
     mock_path = "/project/projectdirs/desi/mocks/GaussianRandomField/v0.0.4/"
     target_name = "ELG"    
+    mockformat = "gaussianfield"
     nrows = None
+    rand = np.random.RandomState()
+    Spectra = MockSpectra(rand=rand)
+
     if rank ==0:
-        nrows = countrows_gaussianfield(mock_path, target_name)
-        nrows = 100000
+#        nrows = countrows_gaussianfield(mock_path, target_name)
+        nrows = 200 * nproc
 
     nrows = comm.bcast(nrows, root=0)
     row_start, nrow = dist_uniform(nrows, nproc, rank)    
@@ -83,117 +144,13 @@ def do_it(comm):
 
     rows = range(row_start, row_start+nrow)
     mock_data = read_gaussianfield(mock_path, target_name, rows=rows)
+    add_GMM_gaussianfield(mock_data, target_name, rand)
+    add_seed(mock_data, rand=rand)
+    trueflux, meta = getattr(Spectra, target_name.lower())(mock_data, mockformat=mockformat)
+
     print(rank, 'RA', len(mock_data['RA']), mock_data['RA'][0])
-#    for k in mock_data.keys():
-#        print(rank, k, len(mock_data[k]))
-#        print(rank, k, mock_data[k])
 
-#    i_buffer = 2
-#    rows = range(buffer_size * i_buffer, buffer_size * (i_buffer+1))
-#    mock_data = read_gaussianfield(mock_path, target_name, rows=rows)
-#    for k in mock_data.keys():
-#        print(k, len(mock_data[k]))
-#        print(k, mock_data[k])
     return 0
-
-def load_objects(path, comm=None, buffersize=5000):
-    """
-    Read objects from a file in a buffered way.
-
-    Each process is assigned some contiguous range of bricks.  Then the
-    first process reads the file and broadcasts chunks of data.  For
-    each chunk, all processes extract out the objects for their assigned
-    bricks.
-
-    Args:
-        path (str): the path to the file.
-        comm (mpi4py.Comm): the communicator to use.
-        buffersize (int): the number of objects to read in each chunk.
-
-    Returns:
-        a dictionary on each process containing the assigned bricks
-            for that process and a list of all the objects for each
-            brick.
-    """
-
-    nproc = 1
-    rank = 0
-    if comm is not None:
-        nproc = comm.size
-        rank = comm.rank
-
-    # Get the total number of objects from the file(s), as well
-    # as the total number of bricks (maybe that is known a priori?).
-
-    total_objs = None
-    total_bricks = None
-
-    if rank == 0:
-        # Open the files and get metadata info (number of HDUs,
-        # number of objects, etc)
-        total_objs = foo
-        total_bricks = bar
-
-    if comm is not None:
-        total_objs = comm.bcast(total_objs, root=0)
-        total_bricks = comm.bcast(total_bricks, root=0)
-
-    # Compute what our range of bricks is
-
-    brick_start, nbrick = dist_uniform(total_bricks, nproc, rank)
-
-    # Make a list of brick IDs based on the start/number of the bricks.
-    # Pretend for now this is just a string, but I know the naming is more
-    # complicated.
-
-    brick_list = [ "{:08d}".format(x) for x in range(brick_start, brick_start+nbrick) ]
-
-    # Now read and broadcast the objects in a buffered way, so no process
-    # ever stores all objects.
-
-    # This is a dictionary keyed on bricks where the value is a list of
-    # objects.
-    brick_data = {}
-
-    offset = 0
-    nread = buffersize
-
-    while offset < total_bricks:
-
-        # check if we are reading a partial buffer
-        if offset + buffersize > total_bricks:
-            nread = total_bricks - offset
-
-        buffer = None
-        if rank == 0:
-            # Here is where the root process would open files, and read
-            # the appropriate range of objects.  If there are multiple files,
-            # then the bookkeeping could become tedious.  We are reading big
-            # chunks of data, it should be OK to open and close the file here.
-            buffer = list_of_object_data_from_the_file(offset, nread)
-            # buffer now has "nread" number of objects.
-
-        if comm is not None:
-            buffer = comm.bcast(buffer, root=0)
-
-        # Now each process grabs the objects in this buffer that are in 
-        # their assigned bricks
-
-        for obj in buffer:
-            # Find the brick for this object.  Call some function or manually
-            # check the RA/DEC here...
-            objbrick = get_brick_id(obj.ra, obj.dec) # or something...
-            
-            if objbrick in brick_list:
-                # This is one of our bricks!  Add it to our local dictionary
-                brick_data[objbrick].append(obj)
-
-        offset += buffersize
-
-    # Now every process returns a dictionary with its assigned bricks and
-    # the relevant objects in a list for each brick.
-
-    return brick_data
 
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
