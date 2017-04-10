@@ -132,8 +132,8 @@ def get_mock_spectra(mock_dir, target_name, mockformat, rand=None, comm=None):
     SelectTargets = mockselect.SelectTargets(rand=rand)
 
     if rank ==0:
-#        nrows = countrows_gaussianfield(mock_path, target_name)
-        nrows = 1000 * nproc
+#        nrows = countrows_gaussianfield(mock_dir, target_name)
+        nrows = 100 * nproc
 
     nrows = comm.bcast(nrows, root=0)
     row_start, nrow = dist_uniform(nrows, nproc, rank)    
@@ -187,10 +187,25 @@ def do_it(comm):
     targetnames = ["ELG", "LRG"]
     mockformats = ["gaussianfield", "gaussianfield"]
 
-    for mock_path, target_name, mock_format in zip(mockpaths, targetnames, mockformats):
-        
+    #open fits files
+    targetsfile = 'targets_proc_{}.fits'.format(rank)
+
+    alltargets = list()
+    alltruth = list()
+    alltrueflux  = list()
+    for mock_path, target_name, mock_format in zip(mockpaths, targetnames, mockformats):        
         targets, truth, trueflux, targkeep = get_mock_spectra(mock_path, target_name, mock_format, rand=rand, comm=comm)        
         print(rank, target_name, 'RA', len(targets['RA']), targets['RA'][0])
+
+        alltargets.append(targets)
+        alltruth.append(truth)
+        alltrueflux.append(trueflux)
+    
+    targets = vstack(alltargets)
+    truth = vstack(alltruth)
+    trueflux = np.concatenate(alltrueflux)
+
+    targets.write(targetsfile, overwrite=True)
 
     return 0
 
