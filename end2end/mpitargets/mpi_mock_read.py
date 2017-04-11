@@ -50,6 +50,89 @@ def countrows_gaussianfield(mock_dir_name, target_name):
     nrows = fitsio.FITS(mockfile)[1].get_nrows()
     return nrows
 
+def cut_to_bounds(ra, dec, zz, bounds):
+    nobj = len(ra)
+    min_ra, max_ra, min_dec, max_dec = bounds
+    cut = (ra >= min_ra) * (ra <= max_ra) * (dec >= min_dec) * (dec <= max_dec)
+    if np.count_nonzero(cut) == 0:
+        log.fatal('No objects in range RA={}, {}, Dec={}, {}!'.format(nobj, min_ra, max_ra, min_dec, max_dec))
+        raise ValueError
+    ra = ra[cut]
+    dec = dec[cut]
+    zz = zz[cut]
+    nobj = len(ra)
+    log.info('Trimmed to {} objects in range RA={}, {}, Dec={}, {}'.format(nobj, min_ra, max_ra, min_dec, max_dec))
+
+def countrows_durham_mxxl_hdf5(mock_dir_name):
+    import h5py
+
+    mockfile = mock_dir_name
+    try:
+        os.stat(mockfile)
+    except:
+        log.fatal('Mock file {} not found!'.format(mockfile))
+        raise IOError
+
+    f = h5py.File(mockfile)
+    ra  = f['Data/ra'][...].astype('f8') % 360.0
+    nobj = len(ra)
+    return nobj
+
+def _sample_vdisp(logvdisp_meansig, nmodel=1, rand=None):
+    """Choose a subset of velocity dispersions."""
+    if rand is None:
+        rand = np.random.RandomState()
+
+    fracvdisp = (0.1, 40)
+
+    nvdisp = int(np.max( ( np.min( ( np.round(nmodel * fracvdisp[0]), fracvdisp[1] ) ), 1 ) ))
+    vvdisp = 10**rand.normal(logvdisp_meansig[0], logvdisp_meansig[1], nvdisp)
+    vdisp = rand.choice(vvdisp, nmodel)
+
+    return vdisp
+
+
+def read_durham_mxxl_hdf5(mock_dir_name, target_name, 
+                          bounds=None, magcut=None, rows=None):
+    import h5py
+
+    mockfile = mock_dir_name
+    try:
+        os.stat(mockfile)
+    except:
+        log.fatal('Mock file {} not found!'.format(mockfile))
+        raise IOError
+
+    f = h5py.File(mockfile)
+    if rows is None:
+        ra  = f['Data/ra'][...].astype('f8') % 360.0
+        dec = f['Data/dec'][...].astype('f8')
+        zz = f['Data/z_obs'][...].astype('f8')
+        rmag = f['Data/app_mag'][...].astype('f8')
+        absmag = f['Data/abs_mag'][...].astype('f8')
+        gr = f['Data/g_r'][...].astype('f8')
+    else:
+        ra  = f['Data/ra'][rows].astype('f8') % 360.0
+        dec = f['Data/dec'][rows].astype('f8')
+        zz = f['Data/z_obs'][rows].astype('f8')
+        rmag = f['Data/app_mag'][rows].astype('f8')
+        absmag = f['Data/abs_mag'][rows].astype('f8')
+        gr = f['Data/g_r'][rows].astype('f8')
+
+    f.close()
+
+    nobj = len(ra)
+    vdisp = _sample_vdisp((1.9, 0.15), nmodel=nobj)
+    log.info('Read {} objects from {}.'.format(nobj, mockfile))
+
+    if bounds is not None:
+        cut_to_bounds(ra, dec, zz, bounds)
+    out = {'RA': ra, 'DEC': dec, 'Z': zz, 'MAG': rmag, 'VDISP':vdisp, 'SDSS_absmag_r01': absmag,
+           'SDSS_01gr': gr, 'FILTERNAME': 'sdss2010-r','TEMPLATETYPE': 'BGS', 'TEMPLATESUBTYPE': '','TRUESPECTYPE': 'GALAXY'}
+    return out
+
+
+
 def read_gaussianfield(mock_dir_name, target_name,
                bounds=None, magcut=None, rows=None):
     if target_name == 'SKY':
@@ -82,6 +165,9 @@ def read_gaussianfield(mock_dir_name, target_name,
         zz = (data['Z_COSMO'].astype('f8') + data['DZ_RSD'].astype('f8')).astype('f4')
     else:
         zz = np.zeros_like(ra).astype('f4')
+
+    if bounds is not None:
+        cut_to_bounds(ra, dec, zz, bounds)
 
     out = {'RA': ra, 'DEC': dec, 'Z': zz}
     return out
@@ -128,20 +214,29 @@ def get_mock_spectra(mock_dir, target_name, mockformat, rand=None, comm=None):
     rank = comm.Get_rank()
     nproc = comm.Get_size()    
     nrows = None
+    bounds = None
     Spectra = MockSpectra(rand=rand)
     SelectTargets = mockselect.SelectTargets(rand=rand)
 
     if rank ==0:
 #        nrows = countrows_gaussianfield(mock_dir, target_name)
+#        bounds = (0,1,-3,3)
         nrows = 100 * nproc
+
 
     nrows = comm.bcast(nrows, root=0)
     row_start, nrow = dist_uniform(nrows, nproc, rank)    
     print(rank, row_start, nrow)
 
     rows = range(row_start, row_start+nrow)
-    mock_data = read_gaussianfield(mock_dir, target_name, rows=rows)
-    add_GMM_gaussianfield(mock_data, target_name, rand)
+
+    read_function = 'read_{}'.format(mockformat)
+    func = globals()[read_function]
+    mock_data = func(mock_dir, target_name, rows=rows, bounds=bounds)
+
+    if target_name not in ['BGS']:
+        add_GMM_gaussianfield(mock_data, target_name, rand)
+
     add_seed(mock_data, rand=rand)
 
     nobj = len(mock_data['RA'])
@@ -183,9 +278,10 @@ def do_it(comm):
     rank = comm.Get_rank()
     nproc = comm.Get_size()    
     mockpaths = ["/project/projectdirs/desi/mocks/GaussianRandomField/v0.0.4/",
-                 "/project/projectdirs/desi/mocks/GaussianRandomField/v0.0.4/"]
-    targetnames = ["ELG", "LRG"]
-    mockformats = ["gaussianfield", "gaussianfield"]
+                 "/project/projectdirs/desi/mocks/GaussianRandomField/v0.0.4/",
+                 "/project/projectdirs/desi/mocks/bgs/MXXL/desi_footprint/v0.0.3/BGS_new_footprint.hdf5"]
+    targetnames = ["ELG", "LRG", "BGS"]
+    mockformats = ["gaussianfield", "gaussianfield", "durham_mxxl_hdf5"]
 
     #open fits files
     targetsfile = 'targets_proc_{}.fits'.format(rank)
