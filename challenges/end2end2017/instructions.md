@@ -8,6 +8,8 @@ The following desihub products need to be installed.
 * [desisurvey](https://github.com/desihub/desisurvey)
 * [surveysim](https://github.com/desihub/surveysim)
 
+Tutorials on [Getting started at NERSC](https://desi.lbl.gov/trac/wiki/Pipeline/GettingStarted/NERSC) and [Installing DESI code on your laptop or other machine](https://desi.lbl.gov/trac/wiki/Pipeline/GettingStarted/Laptop/JuneMeeting).  
+
 ### 1. Survey Strategy
 
 Follow the instructions in [this tutorial](https://github.com/desihub/surveysim/blob/master/doc/tutorial.md) to 
