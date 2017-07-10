@@ -5,6 +5,15 @@ The following desihub products need to be installed.
 * [desitarget](https://github.com/desihub/desitarget)
 * [desisim](https://github.com/desihub/desisim)
 * [fiberassign](https://github.com/desihub/fiberassign)
+* [desisurvey](https://github.com/desihub/desisurvey)
+* [surveysim](https://github.com/desihub/surveysim)
+
+### 1. Survey Strategy
+
+Follow the instructions in [this tutorial](https://github.com/desihub/surveysim/blob/master/doc/tutorial.md) to 
+generate a sequence of tile exposures together with its weather conditions.
+
+========
 
 ### 1. Mocks
 
