@@ -1,3 +1,6 @@
+Latest outputs after following these steps are stored in
+`/global/project/projectdirs/desi/users/forero/datachallenge2017/test_20170710`
+
 ### 0. Software
 
 The following desihub products need to be installed.
@@ -5,6 +8,19 @@ The following desihub products need to be installed.
 * [desitarget](https://github.com/desihub/desitarget)
 * [desisim](https://github.com/desihub/desisim)
 * [fiberassign](https://github.com/desihub/fiberassign)
+* [desisurvey](https://github.com/desihub/desisurvey)
+* [surveysim](https://github.com/desihub/surveysim)
+
+Tutorials on:
+* [Getting started at NERSC](https://desi.lbl.gov/trac/wiki/Pipeline/GettingStarted/NERSC) 
+* [Installing DESI code on your laptop or other machine](https://desi.lbl.gov/trac/wiki/Pipeline/GettingStarted/Laptop/JuneMeeting).  
+
+### 1. Survey Strategy
+
+Follow the instructions in [this tutorial](https://github.com/desihub/surveysim/blob/master/doc/tutorial.md) to 
+generate a sequence of tile exposures together with its weather conditions.
+
+========
 
 ### 1. Mocks
 
