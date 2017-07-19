@@ -11,10 +11,13 @@ PLAN_ARGS='--verbose --nopt 0'
 SIM_ARGS='--verbose --seed 123 --strategy HA+fallback --plan plan.fits'
 
 export DESISURVEY=$PWD/output
+export SURVEYPLAN=surveyplan
+export SURVEYSIM=surveysim
 surveyplan --create ${PLAN_ARGS}
 surveysim ${SIM_ARGS}
 
 while :
 do
-    (${SURVEYPLAN} ${PLAN_ARGS}) || break
-    (${SURVEYSIM} --resume ${SIM_ARGS}) || break
+    (surveyplan ${PLAN_ARGS}) || break
+    (surveysim --resume ${SIM_ARGS}) || break
+done
