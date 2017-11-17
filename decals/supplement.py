@@ -5,7 +5,8 @@ import numpy as np
 from desitarget.targetmask import desi_mask, bgs_mask, mws_mask
 import desitarget.mtl
 
-targetsfilename = "/Users/forero/data/DESI/decals/dr5/small_chunk_targets-dr5.0-0.16.2.fits"
+targetsfilename = "targets-dr5.0-0.16.2.fits"
+targetsfilename = "small_chunk_targets-dr5.0-0.16.2.fits"
 targets = Table.read(targetsfilename)
 nobj = len(targets)
 truth = mb.empty_truth_table(nobj=nobj)
@@ -32,12 +33,15 @@ for m in masks:
 
 n_unassigned = np.count_nonzero(truth['MOCKID']==0)
 print('unassigned', n_unassigned)
+
+mtl = desitarget.mtl.make_mtl(targets)
+mtl.meta['EXTNAME'] = 'MTL'
+
 isstd = (targets['DESI_TARGET'] & desi_mask.mask('STD_BRIGHT'))!=0
 isstd |= (targets['DESI_TARGET'] & desi_mask.mask('STD_FSTAR'))!=0
 print('standards', np.count_nonzero(isstd))
-standards = targets[isstd]
-mtl = desitarget.mtl.make_mtl(targets)
-mtl.meta['EXTNAME'] = 'MTL'
+standards = mtl[isstd]
+
 
 standards.write('standards.fits', overwrite=True)
 mtl.write('mtl.fits', overwrite=True)
