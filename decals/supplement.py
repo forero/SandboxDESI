@@ -5,7 +5,7 @@ import numpy as np
 from desitarget.targetmask import desi_mask, bgs_mask, mws_mask
 import desitarget.mtl
 
-targetsfilename = "targets-dr5.0-0.16.2.fits"
+#targetsfilename = "targets-dr5.0-0.16.2.fits"
 targetsfilename = "small_chunk_targets-dr5.0-0.16.2.fits"
 targets = Table.read(targetsfilename)
 nobj = len(targets)
@@ -24,11 +24,12 @@ dict_truspectype = {'BGS_ANY':'GALAXY', 'ELG':'GALAXY', 'LRG':'GALAXY', 'QSO':'Q
                     'STD_FSTAR':'STAR', 'STD_BRIGHT':'STAR'}
 dict_truetemplatetype = {'BGS_ANY':'BGS', 'ELG':'ELG', 'LRG':'LRG', 'QSO':'QSO', 
                         'STD_FSTAR':'STAR', 'STD_BRIGHT':'STAR'}
+
 for m in masks:
     istype = (targets['DESI_TARGET'] & desi_mask.mask(m))!=0
     print(m, np.count_nonzero(istype))
-    truth['TRUESPECTYPE'] = np.repeat(dict_truspectype[m], nobj)
-    truth['TEMPLATETYPE'] = np.repeat(dict_truetemplatetype[m], nobj)
+    truth['TRUESPECTYPE'][istype] = np.repeat(dict_truspectype[m], np.count_nonzero(istype))
+    truth['TEMPLATETYPE'][istype] = np.repeat(dict_truspectype[m], np.count_nonzero(istype))
     truth['MOCKID'][istype] = targets['TARGETID'][istype]
 
 n_unassigned = np.count_nonzero(truth['MOCKID']==0)
