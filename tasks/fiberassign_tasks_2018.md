@@ -30,7 +30,7 @@
 ### Algorithm (Weeks 21)
 18. don't assign stdstar and sky next to each other on CCD #97.  
 
-### External (22, 23)
+### External (Weeks 22, 23)
 19. Python code to check for collisions #91.  
 
 
