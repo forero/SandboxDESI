@@ -4,31 +4,31 @@
 3. Missing positioner data or tile definitions should be logged #77.  
 
 ### Data Structures (Weeks 3, 4, 5)
-Sky Camera positions #95.  
-Guide/Focus/Alignment targets #94.  
-Standard star DESI_TARGET mask in features file #64.  
-Accounting for broken fibers and stuck positioners. #92.  
+5. Guide/Focus/Alignment targets #94.  
+6. Sky Camera positions #95.  
+8. Accounting for broken fibers and stuck positioners. #92.  
+7. Standard star DESI_TARGET mask in features file #64.  
 add light trap assignments #42.  
 
-### Software testing
-fiberassign doesn't produce reproducible results #31.  
+### Software testing (Weeks 6, 7)
+9. fiberassign doesn't produce reproducible results #31.  
 
-### Memory 
-fiberassign crashes valgrind. #35.  
-add constructor for class target #8.  
+### Memory  (Weeks 8,9)
+10. fiberassign crashes valgrind. #35.  
+11. add constructor for class target #8. 
 
-### Bookkeeping
-track targets that got added by later optimization passes #3.  
+### Algorithm (Weeks 10, 11, 12, 13, 14, 15)
+Priorities for standard stars #78.  
+fill unused fibers with stdstars and sky #82.  
+Swapping logic flexibility #93.  
+don't assign stdstar and sky next to each other on CCD #97.  
+
+### Bookkeeping (16, 17, 18)
+12. track targets that got added by later optimization passes #3.  
 Output row index in input target list #51 . 
 propagating input target information #96.  
 
-### Algorithm
-Swapping logic flexibility #93.  
-don't assign stdstar and sky next to each other on CCD #97.  
-fill unused fibers with stdstars and sky #82.  
-Priorities for standard stars #78.  
-
-### External
+### External (19, 20)
 Python code to check for collisions #91.  
 
 
