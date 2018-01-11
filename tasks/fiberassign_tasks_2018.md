@@ -1,14 +1,14 @@
-###  User Interface
-cleanup features files #23.  
-cleaner user interface #89.  
-Missing positioner data or tile definitions should be logged #77.  
+###  User Interface (Weeks 1, 2)
+1. cleanup features files #23.  
+2. cleaner user interface #89.  
+3. Missing positioner data or tile definitions should be logged #77.  
 
-### Data Structures
+### Data Structures (Weeks 3, 4, 5)
 Sky Camera positions #95.  
 Guide/Focus/Alignment targets #94.  
+Standard star DESI_TARGET mask in features file #64.  
 Accounting for broken fibers and stuck positioners. #92.  
 add light trap assignments #42.  
-Standard star DESI_TARGET mask in features file #64.  
 
 ### Software testing
 fiberassign doesn't produce reproducible results #31.  
