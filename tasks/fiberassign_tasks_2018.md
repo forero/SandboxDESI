@@ -18,19 +18,19 @@
 11. fill unused fibers with stdstars and sky #82.  
 12. Swapping logic flexibility #93.  
 
-### Bookkeeping (16, 17, 18)
+### Bookkeeping (15, 16, 17)
 13. track targets that got added by later optimization passes #3.  
 14. Output row index in input target list #51 . 
 15. propagating input target information #96.  
 
-### Data Structures (Weeks 3, 4, 5)
+### Data Structures (Weeks 18, 19, 20)
 16. Accounting for broken fibers and stuck positioners. #92.  
 17. add light trap assignments #42. 
 
-### Algorithm (Weeks 9, 10, 11, 12, 13, 14)
+### Algorithm (Weeks 21)
 18. don't assign stdstar and sky next to each other on CCD #97.  
 
-### External (19, 20)
+### External (22, 23)
 19. Python code to check for collisions #91.  
 
 
