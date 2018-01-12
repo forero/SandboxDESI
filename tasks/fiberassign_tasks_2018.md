@@ -11,12 +11,14 @@
 ### Algorithm (Weeks 5, 6)
 7. fill unused fibers with stdstars and sky #82.  
 
-### Software testing (Weeks 7, 8, 9, 10)
+**MILESTONE ON WEEK 7: MARCH'S SOFTWARE RELEASE**
+
+### Software testing (Weeks 7, 8, 9)
 8. fiberassign doesn't produce reproducible results #31.  
 9. fiberassign crashes valgrind. #35.  
 10. add constructor for class target #8. 
 
-### Algorithm (Weeks 11, 12, 13, 14)
+### Algorithm (Weeks 10, 11, 12, 13, 14)
 11. Priorities for standard stars #78.  
 12. Swapping logic flexibility #93.  
 
