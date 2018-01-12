@@ -8,14 +8,16 @@
 5. Guide/Focus/Alignment targets #94.  
 6. Sky Camera positions #95.  
  
-### Software testing (Weeks 5, 6, 7, 8)
-7. fiberassign doesn't produce reproducible results #31.  
-8. fiberassign crashes valgrind. #35.  
-9. add constructor for class target #8. 
+### Algorithm (Weeks 5, 6)
+7. fill unused fibers with stdstars and sky #82.  
 
-### Algorithm (Weeks 9, 10, 11, 12, 13, 14)
-10. Priorities for standard stars #78.  
-11. fill unused fibers with stdstars and sky #82.  
+### Software testing (Weeks 7, 8, 9, 10)
+8. fiberassign doesn't produce reproducible results #31.  
+9. fiberassign crashes valgrind. #35.  
+10. add constructor for class target #8. 
+
+### Algorithm (Weeks 11, 12, 13, 14)
+11. Priorities for standard stars #78.  
 12. Swapping logic flexibility #93.  
 
 ### Bookkeeping (15, 16, 17)
