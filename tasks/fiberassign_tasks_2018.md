@@ -4,9 +4,16 @@
 3. cleaner user interface #89.  
 4. Standard star DESI_TARGET mask in features file #64.  
 
+Status: 
+* 29.01.2017 Nothing was done.
+
 ### Data Structures (Weeks 3, 4) (Deadline Feb. 10)
 5. Guide/Focus/Alignment targets #94.  
 6. Sky Camera positions #95.  
+ 
+Status:
+* 29.01.2017: [First version of the GFA script](https://github.com/forero/SandboxDESI/blob/547cf2b7ffa663536660b09fc8ece9473ba09ab0/gfa/format_gfa_targets.ipynb)
+ 
  
 ### Algorithm (Weeks 5, 6) (Deadline Feb 24.)
 7. fill unused fibers with stdstars and sky #82.  
