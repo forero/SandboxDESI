@@ -18,11 +18,11 @@ parser.add_argument('-t', '--input_tiles', help='Input file with the tileid gfa 
 
 args = parser.parse_args()
 
-# list tilefiles
+# list tilefiles already available
 fiberassign_tilefiles = glob.glob(os.path.join(args.input_fiberassign,"tile*.fits"))
 print(len(fiberassign_tilefiles))
 
-# list sweep files
+# list sweep files to be used
 sweep_files = desitarget.io.list_sweepfiles(args.input_sweep)
 n_sweep = len(sweep_files)
 print(len(sweep_files))
@@ -33,7 +33,7 @@ print(len(gfa_tiles))
 
 #load all sweep data
 sweep_data = []
-n_sweep = 10
+#n_sweep = 10
 for i in range(n_sweep):
     sweep_file = sweep_files[i]
     sweep_data.append(fitsio.read(sweep_file, columns=['RA', 'DEC', 'FLUX_R']))
@@ -51,3 +51,23 @@ for tile_id in gfa_tiles:
     targetindices, gfaindices = desimodel.focalplane.on_tile_gfa(tile_id, all_sweep)
     all_targetindices[tile_id] = targetindices
     print('Found {:05d} targets on TILEID {:d}'.format(len(targetindices), tile_id))
+    
+    
+#write gfa to file
+for k in all_targetindices.keys():
+    tt = all_targetindices[k]
+    filename = os.path.join(args.output_dir, "gfa_targets_tile_{:05d}.fits".format(k))
+    print("writing to {}".format(filename))
+    a = fitsio.write(filename, all_sweep[tt])
+    
+    
+# create the list of tilefilenames (from fiberassign) corresponding to the GFA tiles already computed
+tilefiles = []
+for k in all_targetindices.keys():
+    print(k)
+    for f in fiberassign_tilefiles:
+        string_id = '{:05d}'.format(k)
+        if string_id in f:
+            tilefiles.append(f)
+print('Found {} tilefiles corresponding to the GFA files computed'.format(len(tilefiles)))
+#print(tilefiles)
