@@ -37,6 +37,7 @@ sweep_data = []
 for i in range(n_sweep):
     sweep_file = sweep_files[i]
     sweep_data.append(fitsio.read(sweep_file, columns=['RA', 'DEC', 'FLUX_R']))
+    print('Loaded file {} out of {}'.format(i, n_sweep))
 all_sweep = np.concatenate(sweep_data, axis=0)
 
 print('There are {:.2f}M targets in the sweeps'.format(len(all_sweep)/1E6))
@@ -49,16 +50,16 @@ for tile_id in gfa_tiles:
     ii = desi_tiles['TILEID'] == tile_id
     print('computing TILEID {:05d} on RA {} DEC {}'.format(tile_id, desi_tiles['RA'][ii], desi_tiles['DEC'][ii]))
     targetindices, gfaindices = desimodel.focalplane.on_tile_gfa(tile_id, all_sweep)
-    all_targetindices[tile_id] = targetindices
+
     print('Found {:05d} targets on TILEID {:d}'.format(len(targetindices), tile_id))
-    
-    
-#write gfa to file
-for k in all_targetindices.keys():
-    tt = all_targetindices[k]
-    filename = os.path.join(args.output_dir, "gfa_targets_tile_{:05d}.fits".format(k))
-    print("writing to {}".format(filename))
-    a = fitsio.write(filename, all_sweep[tt])
+
+    if len(targetindices):
+        all_targetindices[tile_id] = targetindices
+        filename = os.path.join(args.output_dir, "gfa_targets_tile_{:05d}.fits".format(k))        
+        print("writing to {}".format(filename))
+        a = fitsio.write(filename, all_sweep[targetindices])
+            
+
     
     
 # create the list of tilefilenames (from fiberassign) corresponding to the GFA tiles already computed
