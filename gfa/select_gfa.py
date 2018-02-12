@@ -45,17 +45,27 @@ print('There are {:.2f}M targets in the sweeps'.format(len(all_sweep)/1E6))
 desi_tiles = desimodel.io.load_tiles()
 
 #find IDs of targets on every individual tile
+
 all_targetindices = dict()
 for tile_id in gfa_tiles:
     ii = desi_tiles['TILEID'] == tile_id
     print('computing TILEID {:05d} on RA {} DEC {}'.format(tile_id, desi_tiles['RA'][ii], desi_tiles['DEC'][ii]))
-    targetindices, gfaindices = desimodel.focalplane.on_tile_gfa(tile_id, all_sweep)
+    
+    window_ra = 4.0 / np.cos(np.deg2rad(desi_tiles['DEC'][ii]))
+    window_dec = 4.0
+    print(window_ra, window_dec)
+    jj = np.abs(all_sweep['RA'] - desi_tiles['RA'][ii])<window_ra
+    jj = jj | ((all_sweep['RA'] - desi_tiles['RA'][ii] +360.0) < window_ra)
+    jj = jj & (np.fabs(all_sweep['DEC']-desi_tiles['DEC'][ii])<window_dec)
+    mini_sweep = all_sweep[jj]
+    print('Inside mini_sweep: {:.2f}M targets'.format(len(mini_sweep)/1E6))
+    targetindices, gfaindices = desimodel.focalplane.on_tile_gfa(tile_id, mini_sweep)
 
-    print('Found {:05d} targets on TILEID {:d}'.format(len(targetindices), tile_id))
+    print('Found {:d} targets on TILEID {:05d}'.format(len(targetindices), tile_id))
 
     if len(targetindices):
         all_targetindices[tile_id] = targetindices
-        filename = os.path.join(args.output_dir, "gfa_targets_tile_{:05d}.fits".format(k))        
+        filename = os.path.join(args.output_dir, "gfa_targets_tile_{:05d}.fits".format(tile_id))        
         print("writing to {}".format(filename))
         a = fitsio.write(filename, all_sweep[targetindices])
             
