@@ -33,7 +33,7 @@ print(len(gfa_tiles))
 
 #load all sweep data
 sweep_data = []
-n_sweep = 10
+#n_sweep = 10
 for i in range(n_sweep):
     sweep_file = sweep_files[i]
     sweep_data.append(fitsio.read(sweep_file, columns=['RA', 'DEC', 'FLUX_R']))
