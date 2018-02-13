@@ -56,22 +56,23 @@ for tile_id in gfa_tiles:
     print(window_ra, window_dec)
     jj = np.abs(all_sweep['RA'] - desi_tiles['RA'][ii])<window_ra
     jj = jj | ((all_sweep['RA'] - desi_tiles['RA'][ii] +360.0) < window_ra)
+    jj = jj | ((desi_tiles['RA'][ii] - all_sweep['RA'] +360.0) < window_ra)
     jj = jj & (np.fabs(all_sweep['DEC']-desi_tiles['DEC'][ii])<window_dec)
-    mini_sweep = all_sweep[jj]
-    print('Inside mini_sweep: {:.2f}M targets'.format(len(mini_sweep)/1E6))
-    targetindices, gfaindices = desimodel.focalplane.on_tile_gfa(tile_id, mini_sweep)
+    
+    if np.count_nonzero(jj):
+        mini_sweep = all_sweep[jj]
+        print('Inside mini_sweep: {:.2f}M targets'.format(len(mini_sweep)/1E6))
+        
+        targetindices, gfaindices = desimodel.focalplane.on_tile_gfa(tile_id, mini_sweep)
+        print('Found {:d} targets on TILEID {:05d}'.format(len(targetindices), tile_id))
 
-    print('Found {:d} targets on TILEID {:05d}'.format(len(targetindices), tile_id))
-
-    if len(targetindices):
-        all_targetindices[tile_id] = targetindices
-        filename = os.path.join(args.output_dir, "gfa_targets_tile_{:05d}.fits".format(tile_id))        
-        print("writing to {}".format(filename))
-        a = fitsio.write(filename, all_sweep[targetindices])
+        if len(targetindices):
+            all_targetindices[tile_id] = targetindices
+            filename = os.path.join(args.output_dir, "gfa_targets_tile_{:05d}.fits".format(tile_id))        
+            print("writing to {}".format(filename))
+            a = fitsio.write(filename, all_sweep[targetindices])
             
 
-    
-    
 # create the list of tilefilenames (from fiberassign) corresponding to the GFA tiles already computed
 tilefiles = []
 for k in all_targetindices.keys():
