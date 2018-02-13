@@ -33,7 +33,7 @@ print(len(gfa_tiles))
 
 #load all sweep data
 sweep_data = []
-#n_sweep = 10
+n_sweep = 10
 for i in range(n_sweep):
     sweep_file = sweep_files[i]
     sweep_data.append(fitsio.read(sweep_file, columns=['RA', 'DEC', 'FLUX_R']))
@@ -73,3 +73,30 @@ for tile_id in gfa_tiles:
             a = fitsio.write(filename, mini_sweep[targetindices])
             
 
+#rewrite a new tilefile with all the info in three HDUs
+gfa_files = glob.glob(os.path.join(args.output_dir, "gfa_targets_*.fits"))
+gfa_tile_id = {}
+for gfa_file in gfa_files:
+    f = gfa_file.split('/')[-1]
+    fileid = f.split("_")[-1]
+    fileid = fileid[0:5]
+    gfa_tile_id[fileid] = gfa_file
+    
+fa_tile_id = {}
+for fa_file in fiberassign_tilefiles:
+    f = fa_file.split('/')[-1]
+    fileid = f.split("_")[-1]
+    fileid = fileid[0:5]
+    fa_tile_id[fileid] = fa_file
+    
+for gfa_id in gfa_tile_id.keys():
+    if gfa_id in fa_tile_id.keys():
+        print('rewriting tilefile for tileid {}'.format(gfa_id))
+        gfa_data = fitsio.read(gfa_tile_id[gfa_id])
+        fiber_data = fitsio.read(fa_tile_id[gfa_id], ext=1)
+        potential_data = fitsio.read(fa_tile_id[gfa_id], ext=2)
+
+        tileout = os.path.join(args.output_dir, 'tile_{}.fits'.format(gfa_id))
+        fitsio.write(tileout, fiber_data, extname='FIBERASSIGN')
+        fitsio.write(tileout, potential_data, extname='POTENTIAL')
+        fitsio.write(tileout, gfa_data, extname='GFA')
