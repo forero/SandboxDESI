@@ -7,8 +7,8 @@
 
 ### Data Structures 
 * [x] Guide/Focus/Alignment targets #94.  
-* [x] Sky Camera positions #95.  
 * [x] Accounting for broken fibers and stuck positioners. #92.  
+* [ ] Sky Camera positions #95.  
 * [ ] add light trap assignments #42. 
 * [ ] add inner exclusion radius for fiber patrol area #98
 * [ ] add constructor for class target #8.
