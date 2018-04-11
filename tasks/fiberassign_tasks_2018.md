@@ -25,7 +25,7 @@
 * [ ] fiberassign crashes valgrind. #35.  
 * [ ] Python code to check for collisions #91.  
 
-### Bookkeeping (15, 16, 17) (Deadline May 12)
+### Bookkeeping
 * [ ] track targets that got added by later optimization passes #3.  
 * [ ] Output row index in input target list #51 . 
 * [ ] propagating input target information #96.  
