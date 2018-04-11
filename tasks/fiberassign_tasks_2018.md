@@ -1,9 +1,10 @@
 ###  User Interface 
-* [x] Missing positioner data or tile definitions should be logged #77.  
 * [x] cleanup features files #23.  
 * [x] cleaner user interface #89.  
-* [ ] Standard star DESI_TARGET mask in features file #64.  
+* [ ] Missing positioner data or tile definitions should be logged #77.  
 * [ ] re-add optional config file #108
+* [ ] Standard star DESI_TARGET mask in features file #64.  
+
 
 ### Data Structures 
 * [x] Guide/Focus/Alignment targets #94.  
