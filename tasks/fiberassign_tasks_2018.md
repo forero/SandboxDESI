@@ -4,6 +4,7 @@
 * [ ] Missing positioner data or tile definitions should be logged #77.  
 * [ ] re-add optional config file #108
 * [ ] Standard star DESI_TARGET mask in features file #64.  
+* [ ] fiberassign on arbitrary pointings #99
 
 ### Bookkeeping
 * [ ] Output row index in input target list #51 . 
@@ -23,7 +24,6 @@
 * [ ] Priorities for standard stars #78.  
 * [ ] Swapping logic flexibility #93.  
 * [ ] don't assign stdstar and sky next to each other on CCD #97.  
-* [ ] fiberassign on arbitrary pointings #99
 * [ ] track targets that got added by later optimization passes #3.  
 
 ### Sofware testing
@@ -34,20 +34,20 @@
 
 ---
 
-# By the end of April (Finish User Interface and Bookkeeping)
+# By the end of April (Finish ONSKY issues)
+* [ ] unassigned fibers RA, dec, x, y #109 - ONSKY
+* [ ] Standard star DESI_TARGET mask in features file #64.  - ONSKY
+* [ ] Sky Camera positions #95.  - ONSKY
+* [ ] propagating input target information #96.  - ONSKY
+* [ ] fiberassign on arbitrary pointings #99 - ONSKY
 
-* [ ] re-add optional config file #108
-* [ ] Missing positioner data or tile definitions should be logged #77.  
-* [ ] Standard star DESI_TARGET mask in features file #64.  
-* [ ] Output row index in input target list #51 . 
-* [ ] propagating input target information #96.  
-* [ ] unassigned fibers RA, dec, x, y #109
-
-# By the end of May (Finish Data Structures)
-* [ ] Sky Camera positions #95.  
+# By the end of May (Finish User Interface, Bookkeeping and Data Structures)
 * [ ] add light trap assignments #42. 
 * [ ] add inner exclusion radius for fiber patrol area #98
 * [ ] add constructor for class target #8.
+* [ ] re-add optional config file #108
+* [ ] Missing positioner data or tile definitions should be logged #77.  
+* [ ] Output row index in input target list #51 . 
 
 # By the end of June (Finish Software Testing)
 * [ ] fiberassign doesn't produce reproducible results #31.  
