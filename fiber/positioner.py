@@ -16,12 +16,12 @@ def rot_displ_shape(shape_coords, angle=0.0, radius=0.0):
     return tmp
 
 class positioner(object):
-    def __init__(self, offset_x = 0.0, offset_y=0.0, Theta=0.0, Phi=0.0):
+    def __init__(self, offset_x = 0.0, offset_y=0.0, Theta=0.0, Phi=0.0, R1=3.0, R2=3.0):
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.ferrule_radius = 1.250/2.0
-        self.R1 = 3.000 # distance from central axis to eccentric axis
-        self.R2 = 3.000 # distance from eccentric axis to ferrule axis
+        self.R1 = R1 # distance from central axis to eccentric axis
+        self.R2 = R2 # distance from eccentric axis to ferrule axis
         self.Ei = 6.800 # inner clear rotation envelope
         self.Eo = 9.990 # outer clear rotation envelope
         self.Theta = Theta
