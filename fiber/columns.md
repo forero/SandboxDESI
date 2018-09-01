@@ -9,3 +9,8 @@ https://desidatamodel.readthedocs.io/en/mockobserving/DESI_TARGET/fiberassign/ti
 | PETAL_LOC	 | fiberpos_all |
 | DEVICE_LOC | fiberpos_all |
 | LOCATION | fiberpos_all |
+| FIBERSTATUS	 | tilefile |
+| OBJTYPE | |
+| DESI_TARGET| tilefile |
+| BGS_TARGET | tilefile |
+| MWS_TARGET | tilefile |
