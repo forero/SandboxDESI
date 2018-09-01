@@ -14,3 +14,31 @@ https://desidatamodel.readthedocs.io/en/mockobserving/DESI_TARGET/fiberassign/ti
 | DESI_TARGET| tilefile |
 | BGS_TARGET | tilefile |
 | MWS_TARGET | tilefile |
+| SECONDARY_TARGET	| |
+| COMM_TARGET | |
+| SV1_DESI_TARGET	| | 
+| SV1_BGS_TARGET | |
+| SV1_MWS_TARGET | |
+| TARGET_RA	 | tilefile |
+| TARGET_DEC | tilefile |
+| TARGET_RA_IVAR	| targets |
+| TARGET_DEC_IVAR	| targets |
+| LAMBDA_REF | |
+| DESIGN_X | |
+| DESIGN_Y	| |
+| DESIGN_Q	| |
+| DESIGN_S	| |
+| BRICKID | targets |
+| BRICK_OBJID | targets |
+| TYPE | targets |
+| PRIORITY | mtl |
+| SUBPRIORITY | mtl|
+| NUMTARGET | tilefile |
+| REF_ID | targets|
+| PMRA | targets|
+| PMDEC | targets|
+| PMRA_IVAR | targets |
+| PMDEC_IVAR	|targets|
+
+
+
