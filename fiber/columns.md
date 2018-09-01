@@ -2,6 +2,8 @@ Info that must be present in the tile files after fiberassign runs.
 Second column indicates the current location
 https://desidatamodel.readthedocs.io/en/mockobserving/DESI_TARGET/fiberassign/tile-TILEID-FIELDNUM.html
 
+HDU1 : FIBERASSIGN
+
 | FIELD | Source |
 | --- | ---|
 |TARGETID	| tilefile |
@@ -39,6 +41,22 @@ https://desidatamodel.readthedocs.io/en/mockobserving/DESI_TARGET/fiberassign/ti
 | PMDEC | targets|
 | PMRA_IVAR | targets |
 | PMDEC_IVAR	|targets|
+| FLUX_G | targets |
+| FLUX_R | targets |
+| FLUX_Z	| targets |
+| FLUX_W1 | targets |
+| FLUX_W2 | targets |
+| FLUX_IVAR_G	| targets |
+| FLUX_IVAR_R	| targets |
+| FLUX_IVAR_Z	 | targets |
+| FLUX_IVAR_W1 | targets |
+| FLUX_IVAR_W2 | targets |
+| FIBERFLUX_G |  |
+| FIBERFLUX_R |  |
+| FIBERFLUX_Z | |
+| FIBERTOTFLUX_G |  |
+| FIBERTOTFLUX_R | | 
+| FIBERTOTFLUX_Z | | 
 
 
 
