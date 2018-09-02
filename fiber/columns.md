@@ -16,9 +16,9 @@ HDU1 : FIBERASSIGN
 | TARGET_DEC | tilefile |
 | NUMTARGET | tilefile |
 | LOCATION | tilefile |
+| PRIORITY | tilefile |
 | PETAL_LOC	 | fiberpos_all |
 | DEVICE_LOC | fiberpos_all |
-| PRIORITY | mtl |
 | SUBPRIORITY | mtl|
 | BRICKID | targets |
 | BRICK_OBJID | targets |
