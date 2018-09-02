@@ -8,34 +8,21 @@ HDU1 : FIBERASSIGN
 | --- | ---|
 |TARGETID	| tilefile |
 | FIBER | tilefile |
-| PETAL_LOC	 | fiberpos_all |
-| DEVICE_LOC | fiberpos_all |
-| LOCATION | fiberpos_all |
 | FIBERSTATUS	 | tilefile |
-| OBJTYPE | |
 | DESI_TARGET| tilefile |
 | BGS_TARGET | tilefile |
 | MWS_TARGET | tilefile |
-| SECONDARY_TARGET	| |
-| COMM_TARGET | |
-| SV1_DESI_TARGET	| | 
-| SV1_BGS_TARGET | |
-| SV1_MWS_TARGET | |
 | TARGET_RA	 | tilefile |
 | TARGET_DEC | tilefile |
-| TARGET_RA_IVAR	| targets |
-| TARGET_DEC_IVAR	| targets |
-| LAMBDA_REF | |
-| DESIGN_X | |
-| DESIGN_Y	| |
-| DESIGN_Q	| |
-| DESIGN_S	| |
+| NUMTARGET | tilefile |
+| PRIORITY | mtl |
+| SUBPRIORITY | mtl|
+| PETAL_LOC	 | fiberpos_all |
+| DEVICE_LOC | fiberpos_all |
+| LOCATION | fiberpos_all |
 | BRICKID | targets |
 | BRICK_OBJID | targets |
 | TYPE | targets |
-| PRIORITY | mtl |
-| SUBPRIORITY | mtl|
-| NUMTARGET | tilefile |
 | REF_ID | targets|
 | PMRA | targets|
 | PMDEC | targets|
@@ -51,6 +38,19 @@ HDU1 : FIBERASSIGN
 | FLUX_IVAR_Z	 | targets |
 | FLUX_IVAR_W1 | targets |
 | FLUX_IVAR_W2 | targets |
+| TARGET_RA_IVAR	| targets |
+| TARGET_DEC_IVAR	| targets |
+| OBJTYPE | |
+| DESIGN_X | |
+| DESIGN_Y	| |
+| DESIGN_Q	| |
+| DESIGN_S	| |
+| LAMBDA_REF | |
+| SECONDARY_TARGET	| |
+| COMM_TARGET | |
+| SV1_DESI_TARGET	| | 
+| SV1_BGS_TARGET | |
+| SV1_MWS_TARGET | |
 | FIBERFLUX_G |  |
 | FIBERFLUX_R |  |
 | FIBERFLUX_Z | |
