@@ -30,16 +30,16 @@ Rationale: This is done for sky fibers. Standard stars need updated cuts to have
 * Propagation of full input targeting information
 * OTHER?
 
-Check list (Y or N, + optionally link to document) 
-Existing working version: Yes. Y/N? links/details
-Ready to go on sky: Yes. Y/N? links/details
-Installed: Yes. Y/N? links/details
-Test run demonstrating functionalities: No. Y/N? links/details
-Meets requirements: Yes. Y/N? links/details
-Input and output data model: Yes. Y/N? links/details
-Documentation for developers: No. Y/N? links/details
-Documentation for users: No. Y/N? links/details
-Documentation of performances: No. Y/N? links/details
+### Check list (Y or N, + optionally link to document) 
+* Existing working version: Yes. Y/N? links/details
+* Ready to go on sky: Yes. Y/N? links/details
+* Installed: Yes. Y/N? links/details
+* Test run demonstrating functionalities: No. Y/N? links/details
+* Meets requirements: Yes. Y/N? links/details
+* Input and output data model: Yes. Y/N? links/details
+* Documentation for developers: No. Y/N? links/details
+* Documentation for users: No. Y/N? links/details
+* Documentation of performances: No. Y/N? links/details
 
 
 
