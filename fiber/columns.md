@@ -2,6 +2,10 @@ Info that must be present in the tile files after fiberassign runs.
 Second column indicates the current location
 https://desidatamodel.readthedocs.io/en/mockobserving/DESI_TARGET/fiberassign/tile-TILEID-FIELDNUM.html
 
+
+see
+https://github.com/desihub/desitarget/issues/369#issuecomment-420693555
+
 HDU1 : FIBERASSIGN
 
 | FIELD | Source |
