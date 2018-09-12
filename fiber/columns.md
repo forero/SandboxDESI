@@ -17,6 +17,10 @@ HDU1 : FIBERASSIGN
 | NUMTARGET | tilefile |
 | LOCATION | tilefile |
 | PRIORITY | tilefile |
+| DESIGN_X | tilefile |
+| DESIGN_Y	| tilefile |
+| DESIGN_Q	| computed |
+| DESIGN_S	| computed |
 | PETAL_LOC	 | fiberpos_all |
 | DEVICE_LOC | fiberpos_all |
 | SUBPRIORITY | mtl|
@@ -41,10 +45,6 @@ HDU1 : FIBERASSIGN
 | TARGET_RA_IVAR	| targets |
 | TARGET_DEC_IVAR	| targets |
 | OBJTYPE | |
-| DESIGN_X | |
-| DESIGN_Y	| |
-| DESIGN_Q	| |
-| DESIGN_S	| |
 | LAMBDA_REF | |
 | SECONDARY_TARGET	| |
 | COMM_TARGET | |
