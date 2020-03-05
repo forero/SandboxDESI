@@ -127,6 +127,12 @@ def test_problem():
         if len(t[name].shape) > 1:
             cols = cols+1
             print(name, t[name].shape)
+            
+    t = fitsio.read('fiberassign-000010.fits', 'TARGETS')
+    for name in t.dtype.names:
+        if len(t[name].shape) > 1:
+            cols = cols+1
+            print(name, t[name].shape)
     if cols==0:
         problem = False
     else:
