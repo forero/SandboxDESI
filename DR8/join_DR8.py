@@ -16,7 +16,7 @@ from desitarget.targetmask import desi_mask, obsconditions
 from collections import Counter
 import subprocess
 
-def write_initial_mtl_file(output_path="./"):
+def write_initial_mtl_files(output_path="./"):
     
     # List all the fits files to read
     path_to_targets = '/global/cfs/cdirs/desi/target/catalogs/dr8/0.31.1/targets/main/resolve/'
@@ -30,7 +30,7 @@ def write_initial_mtl_file(output_path="./"):
     data.close()
     
     # Read all the other files
-    for i, i_name in enumerate(target_files[30:]): #FIXME - should start at 1
+    for i, i_name in enumerate(target_files[25:]): #FIXME - should start at 1
         data = fitsio.FITS(i_name, 'r')
         tmp_data = data[1].read(columns=['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME'])
         target_data = np.hstack((target_data, tmp_data))
@@ -47,26 +47,48 @@ def write_initial_mtl_file(output_path="./"):
     
     print("Writing DARK + GRAY NORTH cap")
     mtl_file = os.path.join(output_path, "dark_gray_north.fits")
-    full_mtl[(ii_mtl_dark | ii_mtl_gray) & ii_north].write(mtl_file, overwrite=True)
-    print("Wrote output to {}".format(mtl_file))
+    if os.path.exists(mtl_file):
+        print("File {} already exists".format(mtl_file))
+    else:
+        full_mtl[(ii_mtl_dark | ii_mtl_gray) & ii_north].write(mtl_file, overwrite=True)
+        print("Wrote output to {}".format(mtl_file))
+    
     
     print("Writing BRIGHT NORTH cap")
     mtl_file = os.path.join(output_path, "bright_north.fits")
-    full_mtl[~(ii_mtl_dark | ii_mtl_gray) & ii_north].write(mtl_file, overwrite=True)
-    print("Wrote output to {}".format(mtl_file))
+    if os.path.exists(mtl_file):
+        print("File {} already exists".format(mtl_file))
+    else:
+        full_mtl[~(ii_mtl_dark | ii_mtl_gray) & ii_north].write(mtl_file, overwrite=True)
+        print("Wrote output to {}".format(mtl_file))
     
     print("Writing DARK + GRAY SOUTH cap")
     mtl_file = os.path.join(output_path, "dark_gray_south.fits")
-    full_mtl[(ii_mtl_dark | ii_mtl_gray) & ~ii_north].write(mtl_file, overwrite=True)
-    print("Wrote output to {}".format(mtl_file))
+    if os.path.exists(mtl_file):
+        print("File {} already exists".format(mtl_file))
+    else:
+        full_mtl[(ii_mtl_dark | ii_mtl_gray) & ~ii_north].write(mtl_file, overwrite=True)
+        print("Wrote output to {}".format(mtl_file))
     
     print("Writing BRIGHT SOUTH cap")
     mtl_file = os.path.join(output_path, "bright_south.fits")
-    full_mtl[~(ii_mtl_dark | ii_mtl_gray) & ~ii_north].write(mtl_file, overwrite=True)
-    print("Wrote output to {}".format(mtl_file))
+    if os.path.exists(mtl_file):
+        print("File {} already exists".format(mtl_file))
+    else:
+        full_mtl[~(ii_mtl_dark | ii_mtl_gray) & ~ii_north].write(mtl_file, overwrite=True)
+        print("Wrote output to {}".format(mtl_file))
 
-write_initial_mtl_file(output_path="targets")
-#    print("Writing subset in the northern cap")
-#    mtl_data = Table.read(mtl_file)
-#    subset_ii = ra_dec_subset(mtl_data)
-#    mtl_data[subset_ii].write(initial_mtl_file, overwrite=True)
+targets_path = "targets"
+mtl_files = {}
+mtl_files['dark_gray_north']  = os.path.join(targets_path, "dark_gray_north.fits")
+mtl_files['dark_gray_south']  = os.path.join(targets_path, "dark_gray_south.fits")
+mtl_files['bright_north']  = os.path.join(targets_path, "bright_north.fits")
+mtl_files['bright_south'] = os.path.join(targets_path, "bright_south.fits")
+
+all_exist = True
+for k in mtl_files.values():
+    all_exist &= os.path.exists(k)
+print(all_exist)
+
+if not all_exist:
+    write_initial_mtl_files(output_path=targets_path)
