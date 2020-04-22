@@ -40,6 +40,7 @@ def write_initial_mtl_files(output_path="./"):
 
     ii_mtl_dark = (full_mtl['OBSCONDITIONS'] & obsconditions.DARK)!=0
     ii_mtl_gray = (full_mtl['OBSCONDITIONS'] & obsconditions.GRAY)!=0
+    ii_mtl_bright = (full_mtl['OBSCONDITIONS'] & obsconditions.BRIGHT)!=0
     ii_north = (full_mtl['RA']>85) & (full_mtl['RA']<300) & (full_mtl['DEC']>-15)
 
     # Create output directory
@@ -59,7 +60,7 @@ def write_initial_mtl_files(output_path="./"):
     if os.path.exists(mtl_file):
         print("File {} already exists".format(mtl_file))
     else:
-        full_mtl[~(ii_mtl_dark | ii_mtl_gray) & ii_north].write(mtl_file, overwrite=True)
+        full_mtl[ii_mtl_bright & ii_north].write(mtl_file, overwrite=True)
         print("Wrote output to {}".format(mtl_file))
     
     print("Writing DARK + GRAY SOUTH cap")
@@ -75,7 +76,7 @@ def write_initial_mtl_files(output_path="./"):
     if os.path.exists(mtl_file):
         print("File {} already exists".format(mtl_file))
     else:
-        full_mtl[~(ii_mtl_dark | ii_mtl_gray) & ~ii_north].write(mtl_file, overwrite=True)
+        full_mtl[ii_mtl_bright & ~ii_north].write(mtl_file, overwrite=True)
         print("Wrote output to {}".format(mtl_file))
 
 def split_sky(output_path="./"):
