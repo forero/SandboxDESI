@@ -1,0 +1,29 @@
+# Parameter file for desitarget/bin/select_mock_targets, including contaminants.
+targets:
+    BGS: {
+        target_type: BGS,
+        mockfile: '{DESI_ROOT}/mocks/bgs/MXXL/full_sky/v0.0.4/BGS_r20.6.hdf5',
+        format: durham_mxxl_hdf5,
+        magcut: 20.3,
+    }
+    MWS_MAIN: {
+        target_type: STAR,
+        mockfile: '{DESI_ROOT}/mocks/mws/galaxia/alpha/v0.0.6/healpix',
+        nside_galaxia: 8,
+        format: galaxia,
+    }
+    MWS_NEARBY: {
+        target_type: STAR,
+        mockfile: '{DESI_ROOT}/mocks/mws/100pc/v0.0.4/mock_100pc.fits',
+        format: mws_100pc,
+    }
+    WD: {
+        target_type: WD,
+        mockfile: '{DESI_ROOT}/mocks/mws/wd/v1.0.0/mock_wd.fits',
+        format: mws_wd,
+    }
+    SKY: {
+        target_type: SKY,
+        mockfile: '{DESI_ROOT}/mocks/uniformsky/0.2/uniformsky-2048-0.2.fits',
+        format: uniformsky,
+    }
