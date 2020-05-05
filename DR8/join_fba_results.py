@@ -9,6 +9,8 @@ from astropy.table import Table
 import os
 
 def join_fba_targets(program="bright", hemisphere="south"):
+    
+    print("program {} hemisphere {}".format(program, hemisphere))
     summary_filename = "fba_summary_{}_{}.fits".format(program, hemisphere)
     if os.path.exists(summary_filename):
         print("Files {} {} already exist".format(summary_filename))
@@ -89,7 +91,7 @@ def join_fba_targets(program="bright", hemisphere="south"):
         
     print('finished table')
     print('Writing to {}'.format(summary_filename))
-    targettable.write(filename, overwrite=True)
+    targettable.write(summary_filename, overwrite=True)
     print('Done writing to {}'.format(summary_filename))
 
 join_fba_targets(program="dark", hemisphere="south")
