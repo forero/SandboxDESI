@@ -16,6 +16,47 @@ from desitarget.targetmask import desi_mask, obsconditions
 from collections import Counter
 import subprocess
 
+def cut_mtl_sky_tiles(output_path="./", tile_path="./"):
+    cut_mtl_dark_file = os.path.join(output_path, "cut_dark_north.fits")
+    cut_mtl_bright_file = os.path.join(output_path, "cut_dark_bright.fits")
+    cut_sky_file = os.path.join(output_path, "cut_sky_north.fits")
+    
+    if os.path.exists(cut_mtl_file) and os.path.exists(cut_sky_file) and os.path.exists(cut_mtl_bright_file):
+        return
+    
+    filename = os.path.join(output_path, "dark_north.fits")
+    filein = fitsio.FITS(filename)
+    mtl_data = filein[1].read()
+    ii = (mtl_data['RA']>150) & (mtl_data['RA']<200) & (mtl_data['DEC']<10) & (mtl_data['DEC']>-10)
+    cut_mtl = Table(mtl_data[ii]).write(cut_mtl_dark_file, overwrite=True)
+    
+    filename = os.path.join(output_path, "bright_north.fits")
+    filein = fitsio.FITS(filename)
+    mtl_data = filein[1].read()
+    ii = (mtl_data['RA']>150) & (mtl_data['RA']<200) & (mtl_data['DEC']<10) & (mtl_data['DEC']>-10)
+    cut_mtl = Table(mtl_data[ii]).write(cut_mtl_bright_file, overwrite=True)
+
+    north_sky_file = os.path.join(output_path, "sky_north.fits")
+    filein = fitsio.FITS(north_sky_file)
+    sky_data = filein[1].read()
+    ii = (sky_data['RA']>150) & (sky_data['RA']<200) & (sky_data['DEC']<10) & (sky_data['DEC']>-10)
+    cut_sky = Table(sky_data[ii]).write(cut_sky_file, overwrite=True)
+    
+    tilefile = os.path.join(tile_path, "tiles_bright_north.fits")
+    cut_tilefile = os.path.join(tile_path, "tiles_cut_bright_north.fits")
+    tiles = Table.read(tilefile)
+    ii = (tiles['RA']>105) & (tiles['RA']<195) & (tiles['DEC']<5) & (tiles['DEC']>-5)
+    tiles[ii].write(cut_tilefile, overwrite='True')
+    print("Wrote tiles to {}".format(cut_tilefile))
+    
+    tilefile = os.path.join(tile_path, "tiles_dark_north.fits")
+    cut_tilefile = os.path.join(tile_path, "tiles_cut_dark_north.fits")
+    tiles = Table.read(tilefile)
+    ii = (tiles['RA']>105) & (tiles['RA']<195) & (tiles['DEC']<5) & (tiles['DEC']>-5)
+    tiles[ii].write(cut_tilefile, overwrite='True')
+    print("Wrote tiles to {}".format(cut_tilefile))
+    
+    
 def write_initial_mtl_files(output_path="./", program='bright'):
     north_mtl_file = os.path.join(output_path, "{}_north.fits".format(program))
     south_mtl_file = os.path.join(output_path, "{}_south.fits".format(program))
@@ -30,15 +71,17 @@ def write_initial_mtl_files(output_path="./", program='bright'):
     print('target files to read:', len(target_files))
     target_files.sort()
     
+    columns = ['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME', 'FLUX_R', 'MW_TRANSMISSION_R']
+    
     # Read the first file, only the columns that are useful for MTL
     data = fitsio.FITS(target_files[0], 'r')
-    target_data = data[1].read(columns=['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME'])
+    target_data = data[1].read(columns=columns)
     data.close()
     
     # Read all the other files
     for i, i_name in enumerate(target_files[1:]): 
         data = fitsio.FITS(i_name, 'r')
-        tmp_data = data[1].read(columns=['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME'])
+        tmp_data = data[1].read(columns=columns)
         target_data = np.hstack((target_data, tmp_data))
         data.close()
         print('reading file', i, len(target_files), len(tmp_data))
@@ -146,3 +189,4 @@ write_initial_mtl_files(output_path=targets_path, program="dark")
 write_initial_mtl_files(output_path=targets_path, program="bright")
 write_sky_files(output_path=targets_path)
 split_tiles("footprint")
+cut_mtl_sky_tiles(output_path=targets_path, tile_path="footprint")
