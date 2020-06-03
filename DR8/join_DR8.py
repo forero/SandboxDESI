@@ -17,44 +17,53 @@ from collections import Counter
 import subprocess
 
 def cut_mtl_sky_tiles(output_path="./", tile_path="./"):
-    cut_mtl_dark_file = os.path.join(output_path, "cut_dark_north.fits")
-    cut_mtl_bright_file = os.path.join(output_path, "cut_dark_bright.fits")
-    cut_sky_file = os.path.join(output_path, "cut_sky_north.fits")
-    
-    if os.path.exists(cut_mtl_file) and os.path.exists(cut_sky_file) and os.path.exists(cut_mtl_bright_file):
-        return
-    
-    filename = os.path.join(output_path, "dark_north.fits")
-    filein = fitsio.FITS(filename)
-    mtl_data = filein[1].read()
-    ii = (mtl_data['RA']>150) & (mtl_data['RA']<200) & (mtl_data['DEC']<10) & (mtl_data['DEC']>-10)
-    cut_mtl = Table(mtl_data[ii]).write(cut_mtl_dark_file, overwrite=True)
-    
-    filename = os.path.join(output_path, "bright_north.fits")
-    filein = fitsio.FITS(filename)
-    mtl_data = filein[1].read()
-    ii = (mtl_data['RA']>150) & (mtl_data['RA']<200) & (mtl_data['DEC']<10) & (mtl_data['DEC']>-10)
-    cut_mtl = Table(mtl_data[ii]).write(cut_mtl_bright_file, overwrite=True)
-
-    north_sky_file = os.path.join(output_path, "sky_north.fits")
-    filein = fitsio.FITS(north_sky_file)
-    sky_data = filein[1].read()
-    ii = (sky_data['RA']>150) & (sky_data['RA']<200) & (sky_data['DEC']<10) & (sky_data['DEC']>-10)
-    cut_sky = Table(sky_data[ii]).write(cut_sky_file, overwrite=True)
+    min_ra = 160.0
+    max_ra = 200.0
+    min_dec = -10.0
+    max_dec = 10.0
     
     tilefile = os.path.join(tile_path, "tiles_bright_north.fits")
     cut_tilefile = os.path.join(tile_path, "tiles_cut_bright_north.fits")
     tiles = Table.read(tilefile)
-    ii = (tiles['RA']>105) & (tiles['RA']<195) & (tiles['DEC']<5) & (tiles['DEC']>-5)
+    ii = (tiles['RA']>(min_ra)) & (tiles['RA']<(max_ra)) & (tiles['DEC']<max_dec) & (tiles['DEC']>min_dec)
     tiles[ii].write(cut_tilefile, overwrite='True')
     print("Wrote tiles to {}".format(cut_tilefile))
     
     tilefile = os.path.join(tile_path, "tiles_dark_north.fits")
     cut_tilefile = os.path.join(tile_path, "tiles_cut_dark_north.fits")
     tiles = Table.read(tilefile)
-    ii = (tiles['RA']>105) & (tiles['RA']<195) & (tiles['DEC']<5) & (tiles['DEC']>-5)
+    ii = (tiles['RA']>min_ra) & (tiles['RA']<max_ra) & (tiles['DEC']<max_dec) & (tiles['DEC']>min_dec)
     tiles[ii].write(cut_tilefile, overwrite='True')
     print("Wrote tiles to {}".format(cut_tilefile))
+    
+    
+    cut_mtl_dark_file = os.path.join(output_path, "cut_dark_north.fits")
+    cut_mtl_bright_file = os.path.join(output_path, "cut_bright_north.fits")
+    cut_sky_file = os.path.join(output_path, "cut_sky_north.fits")
+    
+    if os.path.exists(cut_mtl_dark_file) and os.path.exists(cut_sky_file) and os.path.exists(cut_mtl_bright_file):
+        return
+    
+
+    filename = os.path.join(output_path, "dark_north.fits")
+    filein = fitsio.FITS(filename)
+    mtl_data = filein[1].read()
+    ii = (mtl_data['RA']>min_ra) & (mtl_data['RA']<max_ra) & (mtl_data['DEC']<max_dec) & (mtl_data['DEC']>min_dec)
+    cut_mtl = Table(mtl_data[ii]).write(cut_mtl_dark_file, overwrite=True)
+    
+    filename = os.path.join(output_path, "bright_north.fits")
+    filein = fitsio.FITS(filename)
+    mtl_data = filein[1].read()
+    ii = (mtl_data['RA']>min_ra) & (mtl_data['RA']<max_ra) & (mtl_data['DEC']<max_dec) & (mtl_data['DEC']>min_dec)
+    cut_mtl = Table(mtl_data[ii]).write(cut_mtl_bright_file, overwrite=True)
+
+    north_sky_file = os.path.join(output_path, "sky_north.fits")
+    filein = fitsio.FITS(north_sky_file)
+    sky_data = filein[1].read()
+    ii = (sky_data['RA']>min_ra) & (sky_data['RA']<max_ra) & (sky_data['DEC']<max_dec) & (sky_data['DEC']>min_dec)
+    cut_sky = Table(sky_data[ii]).write(cut_sky_file, overwrite=True)
+    
+
     
     
 def write_initial_mtl_files(output_path="./", program='bright'):
