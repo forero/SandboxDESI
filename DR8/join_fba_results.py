@@ -8,20 +8,19 @@ from collections import Counter
 from astropy.table import Table
 import os
 
-def join_fba_targets(path_to_data="./", program="bright", hemisphere="south"):
+def join_fba_targets(targets_file="./targets.fits", fba_path="./", summary_filename="fba_summary.fits"):
     
     print("program {} hemisphere {}".format(program, hemisphere))
-    summary_filename = "{}/fba_summary_{}_{}.fits".format(path_to_data, program, hemisphere)
     if os.path.exists(summary_filename):
         print("File  {} already exists".format(summary_filename))
         return
     
     # read and sort targets
-    targetdata = fitsio.read("{}/targets/{}_{}.fits".format(path_to_data, program, hemisphere))
+    targetdata = fitsio.read(targets_file)
     targetdata = np.sort(targetdata, order='TARGETID')
     
     # list fba files
-    fba_files = glob.glob("{}/fba_{}_{}/fba-*.fits".format(path_to_data, program, hemisphere))
+    fba_files = glob.glob("{}/fba-*.fits".format(fba_path))
     print('{} fba_files to read'.format(len(fba_files)))
     # read fba files and list assigned and available targets
     t_assigned = []
@@ -137,7 +136,9 @@ def join_fba_targets(path_to_data="./", program="bright", hemisphere="south"):
     targettable.write(summary_filename, overwrite=True)
     print('Done writing to {}'.format(summary_filename))
 
-join_fba_targets(path_to_data="0.38.0", program="dark", hemisphere="north")
-join_fba_targets(path_to_data="0.38.0", program="bright", hemisphere="north")
-join_fba_targets(path_to_data="0.38.0", program="dark", hemisphere="south")
-join_fba_targets(path_to_data="0.38.0", program="bright", hemisphere="south")
+join_fba_targets(targets_file="targets/cut_dark_north.fits", 
+                 fba_path="fba_cut_dark_north/", 
+                 summary_filename="fba_summary_cut_dark_north.fits")
+join_fba_targets(targets_file="targets/cut_dark_north_elg_30_gray_70_dark.fits", 
+                 fba_path="fba_cut_dark_north_30_70_split/", 
+                 summary_filename="fba_summary_cut_dark_north_30_70_split.fits")
