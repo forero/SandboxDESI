@@ -21,7 +21,34 @@ def ra_dec_subset(data, ra_min=130, ra_max=180, dec_min=-10, dec_max=40):
     subset_ii &= (data['DEC']>dec_min) & (data['DEC']<dec_max)
     return subset_ii
 
-def assign_lya_qso(initial_mtl_file, pixweight_file):
+def random_assign_ly_qso(initial_mtl_file, fraction=0.25):
+    """
+    Assign a fraction of all QSOs to by a Lya QSO.
+    """
+    
+    print('Random Assignment of targets that will be in the truth file')
+    print('started reading targets')
+    targets = Table.read(initial_mtl_file)
+    print('finished reading targets')
+    
+    # what target are QSOs?
+    is_qso = (targets['DESI_TARGET'] & desi_mask.QSO)!=0
+    
+    ii_targets = is_qso & (pixnumber_targets==pixnumber_target_list[i])
+    n_qso_in_pixel = np.count_nonzero(ii_targets)
+    n_lya_desired = n_lya_desired_pixel_targets[i]
+    if n_lya_desired >= n_qso_in_pixel:
+        is_lya_qso[ii_targets] = True
+    else:
+        #print(len(target_ids[ii_targets]), n_lya_desired)
+        ii_lya_qso = np.random.choice(target_ids[ii_targets], n_lya_desired, replace=False)
+        is_lya_qso[ii_lya_qso] = True
+    return is_lya_qso
+
+    
+
+
+def accurate_assign_lya_qso(initial_mtl_file, pixweight_file):
     print("Finding targets that will be lya in the truth file")
     print('started reading targets')
     targets = Table.read(initial_mtl_file)
@@ -98,35 +125,44 @@ def assign_lya_qso(initial_mtl_file, pixweight_file):
             is_lya_qso[ii_lya_qso] = True
     return is_lya_qso
 
-def write_initial_mtl_file(initial_mtl_file):
-    path_to_targets = '/project/projectdirs/desi/target/catalogs/dr8/0.31.1/targets/main/resolve/'
+def make_global_DR8_mtl(output_path='./', program='dark'):
+    os.makedirs(output_path, exist_ok=True)
+    
+    global_DR8_mtl_file = os.path.join(output_path, 'global_DR8_mtl_{}.fits'.format(program))
+    if os.path.exists(global_DR8_mtl_file):
+        print("File {} already exists".format(global_DR8_mtl_file))
+        return global_DR8_mtl_file
+    
+    print('Preparing file {}'.format(global_DR8_mtl_file))
+    # List all the fits files to read
+    path_to_targets = '/global/cfs/projectdirs/desi/target/catalogs/dr8/0.39.0/targets/main/resolve/'+program+'/'
     target_files = glob.glob(os.path.join(path_to_targets, "targets*fits"))
     print('target files to read:', len(target_files))
     target_files.sort()
     
+    columns = ['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME', 'FLUX_R', 'MW_TRANSMISSION_R']
+
     data = fitsio.FITS(target_files[0], 'r')
-    target_data = data[1].read(columns=['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME'])
+    target_data = data[1].read(columns=columns)
     data.close()
     for i, i_name in enumerate(target_files[1:]):
         data = fitsio.FITS(i_name, 'r')
-        tmp_data = data[1].read(columns=['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME'])
+        tmp_data = data[1].read(columns=columns)
         target_data = np.hstack((target_data, tmp_data))
         data.close()
         print('reading file', i, len(target_files), len(tmp_data))
-    full_mtl = desitarget.mtl.make_mtl(target_data, 'DARK|GRAY')
-
-    ii_mtl_dark = (full_mtl['OBSCONDITIONS'] & obsconditions.DARK)!=0
-    ii_mtl_gray = (full_mtl['OBSCONDITIONS'] & obsconditions.GRAY)!=0
-    ii_north = (full_mtl['RA']>85) & (full_mtl['RA']<300) & (full_mtl['DEC']>-15)
-
-    print("Writing nothern cap")
-    mtl_file = "targets/dr8_mtl_dark_gray_NGC.fits"
-    full_mtl[(ii_mtl_dark | ii_mtl_gray) & ii_north].write(mtl_file, overwrite=True)
     
-    print("Writing subset in the northern cap")
-    mtl_data = Table.read(mtl_file)
-    subset_ii = ra_dec_subset(mtl_data)
-    mtl_data[subset_ii].write(initial_mtl_file, overwrite=True)
+    if program=='dark':
+        full_mtl = desitarget.mtl.make_mtl(target_data, 'DARK|GRAY')
+    if program=='bright':
+        full_mtl = desitarget.mtl.make_mtl(target_data, 'BRIGHT')
+
+    print('Started writing file {}'.format(global_DR8_mtl_file))
+    full_mtl.write(global_DR8_mtl_file, overwrite=True)
+    print('Finished writing file {}'.format(global_DR8_mtl_file))
+
+    del full_mtl
+    return global_DR8_mtl_file
 
 def write_initial_std_file(initial_mtl_file, initial_std_file):
     mtl_data = Table.read(initial_mtl_file)
@@ -350,32 +386,37 @@ def run_strategy(footprint_names, pass_names, obsconditions, strategy, initial_m
         mtl.write(new_mtl_filename, overwrite=True)
 
         
-os.makedirs('targets', exist_ok=True)
-os.makedirs('footprint', exist_ok=True)
-
-initial_mtl_file = "targets/subset_dr8_mtl_dark_gray_NGC.fits"
-if not os.path.exists(initial_mtl_file):
-    print("Preparing MTL file")
-    write_initial_mtl_file(initial_mtl_file)
         
-initial_std_file = "targets/subset_dr8_std.fits"
-if not os.path.exists(initial_std_file):
-    print("Preparing the inital std file")
-    write_initial_std_file(initial_mtl_file, initial_std_file)
-    
-initial_truth_file = "targets/subset_truth_dr8_mtl_dark_gray_NGC.fits"
-if not os.path.exists(initial_truth_file):
-    print("Preparing Truth File")
-    write_initial_truth_file(initial_truth_file)
+global_DR8_mtl_file_dark = make_global_DR8_mtl(output_path='targets', program='dark')
+global_DR8_mtl_file_bright = make_global_DR8_mtl(output_path='targets', program='bright')
 
-initial_sky_file = "targets/subset_dr8_sky.fits"
-if not os.path.exists(initial_sky_file):
-    print("Preparing the inital sky file")
-    write_initial_sky_file(initial_sky_file)
+
+#os.makedirs('targets', exist_ok=True)
+#os.makedirs('footprint', exist_ok=True)
+
+#initial_mtl_file = "targets/subset_dr8_mtl_dark_gray_NGC.fits"
+#if not os.path.exists(initial_mtl_file):
+#    print("Preparing MTL file")
+#    write_initial_mtl_file(initial_mtl_file)
+        
+#initial_std_file = "targets/subset_dr8_std.fits"
+#if not os.path.exists(initial_std_file):
+#    print("Preparing the inital std file")
+#    write_initial_std_file(initial_mtl_file, initial_std_file)
+    
+#initial_truth_file = "targets/subset_truth_dr8_mtl_dark_gray_NGC.fits"
+#if not os.path.exists(initial_truth_file):
+#    print("Preparing Truth File")
+#    write_initial_truth_file(initial_truth_file)
+
+#initial_sky_file = "targets/subset_dr8_sky.fits"
+#if not os.path.exists(initial_sky_file):
+#    print("Preparing the inital sky file")
+#    write_initial_sky_file(initial_sky_file)
         
 #print("Preparing tiles")
-sim_path = "/project/projectdirs/desi/datachallenge/surveysim2018/weather/081"
-footprint_path = "./footprint"
+#sim_path = "/project/projectdirs/desi/datachallenge/surveysim2018/weather/081"
+#footprint_path = "./footprint"
 #subsetnames = create_multi_footprint(sim_path, footprint_path, cadence=180)
 
 #prepare_tiles()
@@ -393,13 +434,13 @@ footprint_path = "./footprint"
 #run_strategy(footprint_names, pass_names, obsconditions, 'legacy_noimprove_strategy_B', initial_mtl_file, initial_sky_file, initial_std_file,
 #             fiberassign_script='fiberassign_legacy_noimprove', legacy=True)
 
-footprint_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
-pass_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
-obsconditions = ['DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY']
-run_strategy(footprint_names, pass_names, obsconditions, 'strategy_A', initial_mtl_file, initial_sky_file, initial_std_file , legacy=False)
+#footprint_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
+#pass_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
+#obsconditions = ['DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY']
+#run_strategy(footprint_names, pass_names, obsconditions, 'strategy_A', initial_mtl_file, initial_sky_file, initial_std_file , legacy=False)
 
-footprint_names = ['gray_dark0_dark1_dark2_dark3', 'dark0_dark1_dark2_dark3', 'dark1_dark2_dark3', 'dark2_dark3', 'full']
-pass_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
-obsconditions = ['DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY']
-run_strategy(footprint_names, pass_names, obsconditions, 'strategy_B', initial_mtl_file, initial_sky_file, initial_std_file , legacy=False)
+#footprint_names = ['gray_dark0_dark1_dark2_dark3', 'dark0_dark1_dark2_dark3', 'dark1_dark2_dark3', 'dark2_dark3', 'full']
+#pass_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
+#obsconditions = ['DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY']
+#run_strategy(footprint_names, pass_names, obsconditions, 'strategy_B', initial_mtl_file, initial_sky_file, initial_std_file , legacy=False)
 
