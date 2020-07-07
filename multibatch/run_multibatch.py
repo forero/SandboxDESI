@@ -125,6 +125,45 @@ def accurate_assign_lya_qso(initial_mtl_file, pixweight_file):
             is_lya_qso[ii_lya_qso] = True
     return is_lya_qso
 
+def make_global_DR8_sky(output_path="./"):
+    # Create output directory
+    os.makedirs(output_path, exist_ok=True)
+    global_DR8_sky_file = os.path.join(output_path, "global_DR8_sky.fits")
+
+    if os.path.exists(global_DR8_sky_file):
+        print("Files {} {} already exist".format(global_DR8_sky_file))
+        return global_DR8_sky_file
+    
+    print('Preparing file {}'.format(global_DR8_sky_file))
+
+    columns = ['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME', 'OBSCONDITIONS']
+    
+    # List all the fits files to read
+    path_to_targets = '/global/cfs/projectdirs/desi/target/catalogs/dr8/0.39.0/skies/'
+    target_files = glob.glob(os.path.join(path_to_targets, "skies-*.fits"))
+    print('sky files to read:', len(target_files))
+    target_files.sort()
+    
+    # Read the first file, only the columns that are useful for MTL
+    data = fitsio.FITS(target_files[0], 'r')
+    target_data = data[1].read(columns=columns)
+    data.close()
+    
+    # Read all the other files
+    for i, i_name in enumerate(target_files[1:]): 
+        data = fitsio.FITS(i_name, 'r')
+        tmp_data = data[1].read(columns=columns)
+        target_data = np.hstack((target_data, tmp_data))
+        data.close()
+        print('reading file', i, len(target_files), len(tmp_data))
+
+    target_data = Table(target_data)
+
+    target_data.write(global_DR8_sky_file, overwrite=True)
+    print("Wrote output to {}".format(global_DR8_sky_file))
+    return global_DR8_sky_file
+
+
 def make_global_DR8_mtl(output_path='./', program='dark'):
     os.makedirs(output_path, exist_ok=True)
     
@@ -389,7 +428,7 @@ def run_strategy(footprint_names, pass_names, obsconditions, strategy, initial_m
         
 global_DR8_mtl_file_dark = make_global_DR8_mtl(output_path='targets', program='dark')
 global_DR8_mtl_file_bright = make_global_DR8_mtl(output_path='targets', program='bright')
-
+global_DR8_sky_file = make_global_DR8_sky(output_path="targets")
 
 #os.makedirs('targets', exist_ok=True)
 #os.makedirs('footprint', exist_ok=True)
