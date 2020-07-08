@@ -16,324 +16,6 @@ from desitarget.targetmask import desi_mask, obsconditions
 from collections import Counter
 import subprocess
 
-def ra_dec_subset(data, ra_min=130, ra_max=180, dec_min=-10, dec_max=40):
-    subset_ii = (data['RA']>ra_min) & (data['RA']<ra_max)
-    subset_ii &= (data['DEC']>dec_min) & (data['DEC']<dec_max)
-    return subset_ii
-
-
-    
-
-
-def accurate_assign_lya_qso(initial_mtl_file, pixweight_file):
-    print("Finding targets that will be lya in the truth file")
-    print('started reading targets')
-    targets = Table.read(initial_mtl_file)
-    print('finished reading targets')
-
-    pixweight, header = fits.getdata(pixweight_file, 'PIXWEIGHTS', header=True)
-    hpxnside = header['HPXNSIDE']
-
-    theta_w, phi_w = healpy.pix2ang(hpxnside, pixweight['HPXPIXEL'], nest=True)
-
-    hpxnside_sample = 64 # pixel area on which we will sample the lyaqso
-    npix_sample = healpy.nside2npix(hpxnside_sample)
-    pixnumber_sample = healpy.ang2pix(hpxnside_sample, theta_w, phi_w, nest=True)
-
-    subpixels = {} # store the pixels at the resolution in the input target catalog that are included within the pixels at the new resolution.
-    for i in range(npix_sample):
-        ii_sample = pixnumber_sample==i
-        subpixels[i] =  healpy.ang2pix(hpxnside, theta_w[ii_sample], phi_w[ii_sample], nest=True)
-    
-    
-    # redefine the covered area for the new pixels from the higher resolution FRACAREA
-    covered_area = np.ones(npix_sample)
-    for i in range(npix_sample):
-        sum_weight = np.sum(pixweight['FRACAREA'][subpixels[i]])
-        if sum_weight>0.0:
-            covered_area[i] = np.sum(pixweight['FRACAREA'][subpixels[i]]**2)/np.sum(pixweight['FRACAREA'][subpixels[i]])
-        else:
-            covered_area[i] = 0.0
-    print('finished computing covered area')
-    theta_s, phi_s = healpy.pix2ang(hpxnside_sample, np.arange(npix_sample), nest=True)
-
-    pixelarea_sample = healpy.pixelfunc.nside2pixarea(hpxnside_sample, degrees=True)
-    n_lya_qso_in_pixel = np.int_(covered_area * 50 * pixelarea_sample)
-
-    # compute angular coordinates from the targets
-    targets_phi = np.deg2rad(targets['RA'])
-    targets_theta = np.deg2rad(90.0-targets['DEC'])
-
-    # find the pixnumber to which the target belongs (in the hpxnside_sample resolution)
-    pixnumber_targets = healpy.ang2pix(hpxnside_sample, targets_theta, targets_phi, nest=True)
-    print('finished computed pixnumber for all targets')
-    
-    # what target are QSOs?
-    is_qso = (targets['DESI_TARGET'] & desi_mask.QSO)!=0
-
-    # list of unique pixels covered by the targets
-    pixnumber_target_list = list(set(pixnumber_targets)) # list of pixelsIDs covered by the targets in the new resolution
-
-    n_qso_per_pixel_targets = np.zeros(len(pixnumber_target_list))
-    n_pixnumber_target_list = len(pixnumber_target_list)
-    print('started counting pixnumber target list', n_pixnumber_target_list)
-    for i in range(n_pixnumber_target_list):
-        ii_targets = is_qso & (pixnumber_targets==pixnumber_target_list[i])
-        n_qso_per_pixel_targets[i] = np.count_nonzero(ii_targets)
-    print('finished counting pixnumber target list')
-    
-    n_lya_desired_pixel_targets = np.random.poisson(n_lya_qso_in_pixel[pixnumber_target_list])
-    print('finished random poisson')
-    
-    # Generate the boolean array to determine whether a target is a lyaqso or not
-    n_targets = len(targets)
-    is_lya_qso = np.repeat(False, n_targets)
-    target_ids = np.arange(n_targets)
-    print('started looping over pixnumber_target_list')
-    for i in range(len(pixnumber_target_list)):
-        ii_targets = is_qso & (pixnumber_targets==pixnumber_target_list[i])
-        n_qso_in_pixel = np.count_nonzero(ii_targets)
-        n_lya_desired = n_lya_desired_pixel_targets[i]
-        if n_lya_desired >= n_qso_in_pixel:
-            is_lya_qso[ii_targets] = True
-        else:
-            #print(len(target_ids[ii_targets]), n_lya_desired)
-            ii_lya_qso = np.random.choice(target_ids[ii_targets], n_lya_desired, replace=False)
-            is_lya_qso[ii_lya_qso] = True
-    return is_lya_qso
-
-def make_global_DR8_sky(output_path="./"):
-    # Create output directory
-    os.makedirs(output_path, exist_ok=True)
-    global_DR8_sky_file = os.path.join(output_path, "global_DR8_sky.fits")
-
-    if os.path.exists(global_DR8_sky_file):
-        print("File {} already exist".format(global_DR8_sky_file))
-        return global_DR8_sky_file
-    
-    print('Preparing file {}'.format(global_DR8_sky_file))
-
-    columns = ['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME', 'OBSCONDITIONS']
-    
-    # List all the fits files to read
-    path_to_targets = '/global/cfs/projectdirs/desi/target/catalogs/dr8/0.39.0/skies/'
-    target_files = glob.glob(os.path.join(path_to_targets, "skies-*.fits"))
-    print('sky files to read:', len(target_files))
-    target_files.sort()
-    
-    # Read the first file, only the columns that are useful for MTL
-    data = fitsio.FITS(target_files[0], 'r')
-    target_data = data[1].read(columns=columns)
-    data.close()
-    
-    # Read all the other files
-    for i, i_name in enumerate(target_files[1:]): 
-        data = fitsio.FITS(i_name, 'r')
-        tmp_data = data[1].read(columns=columns)
-        target_data = np.hstack((target_data, tmp_data))
-        data.close()
-        print('reading file', i, len(target_files), len(tmp_data))
-
-    target_data = Table(target_data)
-
-    print('Started writing file {}'.format(global_DR8_sky_file))
-    target_data.write(global_DR8_sky_file, overwrite=True)
-    print('Finished writing file {}'.format(global_DR8_sky_file))
-    del target_data
-    return global_DR8_sky_file
-
-def random_assign_lya_qso(targets, fraction=0.25):
-    """
-    Assign a fraction of all QSOs to by a Lya QSO.
-    """
-        
-    n_targets = len(targets)
-
-    # what target are QSOs?
-    is_qso = (targets['DESI_TARGET'] & desi_mask.QSO)!=0
-    n_qso = np.count_nonzero(is_qso)
-    
-    is_lya_qso = np.repeat(False, n_targets)
-
-    target_ids = np.arange(n_targets)
-
-    n_lya_qso = int(fraction * n_qso)
-    ii_lya_qso = np.random.choice(target_ids[is_qso], n_lya_qso, replace=False)
-    is_lya_qso[ii_lya_qso] = True
-    print('Number of total QSOs: {}'.format(n_qso))
-    print('Numer of lya QSOs: {}'.format(n_lya_qso))
-    return is_lya_qso
-
-def make_global_DR8_mtl(output_path='./', program='dark'):
-    os.makedirs(output_path, exist_ok=True)
-    
-    global_DR8_mtl_file = os.path.join(output_path, 'global_DR8_mtl_{}.fits'.format(program))
-    if os.path.exists(global_DR8_mtl_file):
-        print("File {} already exists".format(global_DR8_mtl_file))
-        return global_DR8_mtl_file
-    
-    print('Preparing file {}'.format(global_DR8_mtl_file))
-    # List all the fits files to read
-    path_to_targets = '/global/cfs/projectdirs/desi/target/catalogs/dr8/0.39.0/targets/main/resolve/'+program+'/'
-    target_files = glob.glob(os.path.join(path_to_targets, "targets*fits"))
-    print('target files to read:', len(target_files))
-    target_files.sort()
-    
-    columns = ['TARGETID', 'DESI_TARGET', 'MWS_TARGET', 'BGS_TARGET', 'SUBPRIORITY', 'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME', 'FLUX_R', 'MW_TRANSMISSION_R']
-
-    data = fitsio.FITS(target_files[0], 'r')
-    target_data = data[1].read(columns=columns)
-    data.close()
-    for i, i_name in enumerate(target_files[1:]):
-        data = fitsio.FITS(i_name, 'r')
-        tmp_data = data[1].read(columns=columns)
-        target_data = np.hstack((target_data, tmp_data))
-        data.close()
-        print('reading file', i, len(target_files), len(tmp_data))
-    
-    if program=='dark':
-        full_mtl = desitarget.mtl.make_mtl(target_data, 'DARK|GRAY')
-    if program=='bright':
-        full_mtl = desitarget.mtl.make_mtl(target_data, 'BRIGHT')
-
-    print('Started writing file {}'.format(global_DR8_mtl_file))
-    full_mtl.write(global_DR8_mtl_file, overwrite=True)
-    print('Finished writing file {}'.format(global_DR8_mtl_file))
-
-    del full_mtl
-    return global_DR8_mtl_file
-
-def make_global_DR8_truth(global_DR8_mtl_file, output_path='./', program='dark'):
-    import desitarget.mock.mockmaker as mb
-    from desitarget.targetmask import desi_mask, bgs_mask, mws_mask
-    
-    os.makedirs(output_path, exist_ok=True)
-    global_DR8_truth_file = os.path.join(output_path, 'global_DR8_truth_{}.fits'.format(program))
-    if os.path.exists(global_DR8_truth_file):
-        print("File {} already exists".format(global_DR8_truth_file))
-        return global_DR8_truth_file
-    
-    print('Started reading file {}'.format(global_DR8_mtl_file))
-    targets = Table.read(global_DR8_mtl_file)
-    print('Finished reading file {}'.format(global_DR8_mtl_file))
-
-    # Find what targets will be associated to lya targets
-    is_lya_qso = random_assign_lya_qso(targets)
-    
-    # Initialized truth Table
-    colnames = list(targets.dtype.names)
-    print(colnames)
-    nobj = len(targets)
-    truth = mb.empty_truth_table(nobj=nobj)[0]
-    print(truth.keys())
-
-    for k in colnames:
-        if k in truth.keys():
-            print(k)
-            truth[k][:] = targets[k][:]
-
-    nothing = '          '
-    truth['TEMPLATESUBTYPE'] = np.repeat(nothing, nobj)
-
-    masks = ['MWS_ANY', 'BGS_ANY', 'STD_FAINT', 'STD_BRIGHT','ELG', 'LRG', 'QSO', ]
-    dict_truespectype = {'BGS_ANY':'GALAXY', 'ELG':'GALAXY', 'LRG':'GALAXY', 'QSO':'QSO', 
-                    'MWS_ANY':'STAR', 'STD_FAINT':'STAR', 'STD_BRIGHT':'STAR'}
-    dict_truetemplatetype = {'BGS_ANY':'BGS', 'ELG':'ELG', 'LRG':'LRG', 'QSO':'QSO', 
-                        'MWS_ANY':'STAR', 'STD_FAINT':'STAR', 'STD_BRIGHT':'STAR'}
-    dict_truez = {'BGS_ANY':0.2, 'ELG':1.5, 'LRG':0.7, 'QSO':2.0, 
-                        'MWS_ANY':0.0, 'STD_FAINT':0.0, 'STD_BRIGHT':0.0}
-
-    for m in masks:
-        istype = (targets['DESI_TARGET'] & desi_mask.mask(m))!=0
-        print(m, np.count_nonzero(istype))
-        truth['TRUESPECTYPE'][istype] = np.repeat(dict_truespectype[m], np.count_nonzero(istype))
-        truth['TEMPLATETYPE'][istype] = np.repeat(dict_truetemplatetype[m], np.count_nonzero(istype))
-        truth['MOCKID'][istype] = targets['TARGETID'][istype]
-        truth['TRUEZ'][istype] = dict_truez[m]
-        
-    truth['TRUEZ'][is_lya_qso] = 3.0
-
-    # Check that all targets have been assigned to a class
-    iii = truth['MOCKID']==0
-    assert np.count_nonzero(iii)==0
-    
-    del targets
-    
-    print('Started writing to file {}'.format(global_DR8_truth_file))
-    truth.write(global_DR8_truth_file, overwrite=True)
-    print('Finished writing to file {}'.format(global_DR8_truth_file))
-    
-    del truth
-    return global_DR8_truth_file
-    
-def prepare_tiles():
-    tiles = Table(desimodel.io.load_tiles())
-
-    ii_tiles = tiles['PROGRAM'] != 'BRIGHT'
-    ii_subset = ra_dec_subset(tiles) 
-
-    
-    tilefile = 'footprint/subset_tiles.fits'
-    tiles[ii_tiles&ii_subset].write(tilefile, overwrite='True')
-    tiles = Table.read(tilefile)
-
-    ii_gray = tiles['PROGRAM']=='GRAY'
-    ii_dark_0 = (tiles['PROGRAM']=='DARK') & (tiles['PASS']==0)
-    ii_dark_1 = (tiles['PROGRAM']=='DARK') & (tiles['PASS']==1)
-    ii_dark_2 = (tiles['PROGRAM']=='DARK') & (tiles['PASS']==2)
-    ii_dark_3 = (tiles['PROGRAM']=='DARK') & (tiles['PASS']==3)
-
-    footprint = dict()
-    footprint['gray'] = tiles[ii_gray]
-    footprint['dark0'] = tiles[ii_dark_0]
-    footprint['dark1'] = tiles[ii_dark_1]
-    footprint['dark2'] = tiles[ii_dark_2]
-    footprint['dark3'] = tiles[ii_dark_3]
-
-    footprint['gray'].write('footprint/subset_gray.fits', overwrite=True)
-    footprint['dark0'].write('footprint/subset_dark0.fits', overwrite=True)
-    footprint['dark1'].write('footprint/subset_dark1.fits', overwrite=True)
-    vstack([footprint['dark2'], footprint['dark3']]).write('footprint/subset_dark2_dark3.fits', overwrite=True)
-    vstack([footprint['dark1'], footprint['dark2'], footprint['dark3']]).write('footprint/subset_dark1_dark2_dark3.fits', overwrite=True)
-    vstack([footprint['dark0'], footprint['dark1'], footprint['dark2'], footprint['dark3']]).write('footprint/subset_dark0_dark1_dark2_dark3.fits', overwrite=True)
-    vstack([footprint['gray'], footprint['dark0'], footprint['dark1'], footprint['dark2'], footprint['dark3']]).write('footprint/subset_gray_dark0_dark1_dark2_dark3.fits', overwrite=True)
-
-def create_multi_footprint(surveysim_path, footprint_path, cadence=28):
-    
-    # load exposures and tiles
-    exposures = Table.read(os.path.join(sim_path,'exposures.fits'), hdu=1)
-    tiles = desimodel.io.load_tiles()
-    
-    # select tiles to be dark+gray in a special region of the sky
-    ii_subset = ra_dec_subset(tiles) 
-    tiles = tiles[ii_subset]
-    not_bright = tiles['PROGRAM']!='BRIGHT'
-    dark_gray_tiles = tiles[not_bright]
-    
-    # create a "month" of "cadence" days.
-    exposures['MONTH'] = np.int_((exposures['MJD']-exposures['MJD'].min())/cadence)
-   
-    all_tiles_in_month = {}
-    month_id = list(set(exposures['MONTH']))
-    month_id.sort()
-    print(month_id)
-    subsetnames = []
-    for month in month_id:
-        # gather all tiles available in a month from the surveysim file
-        all_tiles_in_month[month] = list(set(exposures['TILEID'][exposures['MONTH']==month]))
-        # check that the available tiles are in the subset of tiles we are interested in
-        ii = np.in1d(dark_gray_tiles['TILEID'], all_tiles_in_month[month])
-        n_tiles = np.count_nonzero(ii)
-        print(month, len(month_id), n_tiles)
-        # write those tiles in a single gile
-        if n_tiles > 0:
-            table_tiles = Table(dark_gray_tiles[ii])
-            subsetname = '{:02d}'.format(month)
-            tilefile = os.path.join(footprint_path, 'subset_{}.fits'.format(subsetname))
-            subsetnames.append(subsetname)
-            print('writing to', tilefile)
-            table_tiles.write(tilefile, overwrite=True)
-    return subsetnames
     
 def consolidate_favail(fba_files):
     # getting all the targetids of the assigned fibers
@@ -346,8 +28,10 @@ def consolidate_favail(fba_files):
         favail.extend(id_favail['TARGETID'])
     return list(set(favail))
     
-def run_strategy(footprint_names, pass_names, obsconditions, strategy, initial_mtl_file, initial_sky_file, initial_std_file, 
-                 fiberassign_script='fiberassign_legacy', legacy=None):
+
+
+    
+def old():
     for i_pass in range(len(footprint_names)-1):
     
         footprint_name = footprint_names[i_pass]
@@ -423,65 +107,66 @@ def run_strategy(footprint_names, pass_names, obsconditions, strategy, initial_m
         mtl = desitarget.mtl.make_mtl(targets, obsconditions[i_pass], zcat=zcat)
         mtl.write(new_mtl_filename, overwrite=True)
 
-        
-        
-global_DR8_mtl_file_dark = make_global_DR8_mtl(output_path='targets', program='dark')
-global_DR8_mtl_file_bright = make_global_DR8_mtl(output_path='targets', program='bright')
-global_DR8_sky_file = make_global_DR8_sky(output_path="targets")
-global_DR8_truth_file_dark = make_global_DR8_truth(global_DR8_mtl_file_dark, output_path='targets', program='dark')
-global_DR8_truth_file_bright = make_global_DR8_truth(global_DR8_mtl_file_bright, output_path='targets', program='bright')
+def run_strategy(initial_mtl_file, truth_file, sky_file, output_path="./", batch_path="./", program='dark'):
+    os.makedirs(output_path, exist_ok=True)
+    targets_path='{}/targets'.format(output_path)
+    zcat_path = '{}/zcat'.format(output_path)
+    os.makedirs(targets_path, exist_ok=True)
+    os.makedirs(zcat_path, exist_ok=True)
+    os.makedirs('{}/fiberassign'.format(output_path), exist_ok=True)
 
-
-#os.makedirs('targets', exist_ok=True)
-#os.makedirs('footprint', exist_ok=True)
-
-#initial_mtl_file = "targets/subset_dr8_mtl_dark_gray_NGC.fits"
-#if not os.path.exists(initial_mtl_file):
-#    print("Preparing MTL file")
-#    write_initial_mtl_file(initial_mtl_file)
-        
-#initial_std_file = "targets/subset_dr8_std.fits"
-#if not os.path.exists(initial_std_file):
-#    print("Preparing the inital std file")
-#    write_initial_std_file(initial_mtl_file, initial_std_file)
+    batch_files = glob.glob(batch_path+"/batch_*_"+program+".fits")
+    batch_files.sort()
     
-#initial_truth_file = "targets/subset_truth_dr8_mtl_dark_gray_NGC.fits"
-#if not os.path.exists(initial_truth_file):
-#    print("Preparing Truth File")
-#    write_initial_truth_file(initial_truth_file)
+    # Read targets and truth
+    targets = Table.read(mtl_filename)
+    truth = Table.read(truth_file)
+    
+    #obsconditions
+    obsconditions = None
+    if program=='dark':
+        obsconditions = 'DARK|GRAY'
+    if program=='bright':
+        obsconditions = 'BRIGHT'
+    
+    n_batch = len(batch_files)
+    for i_batch in range(2):
+        print()
+        print("Batch {}".format(i_batch))
+        fiberassign_path = '{}/fiberassign/{:04d}'.format(output_path, i_batch)
+        os.makedirs(fiberassign_path, exist_ok=True)
 
-#initial_sky_file = "targets/subset_dr8_sky.fits"
-#if not os.path.exists(initial_sky_file):
-#    print("Preparing the inital sky file")
-#    write_initial_sky_file(initial_sky_file)
+        footprint = batch_files[i_batch]
+        mtl_filename = os.path.join(targets_path, '{:04d}_mtl.fits'.format(i_batch))
+        new_mtl_filename = os.path.join(targets_path, '{:04d}_mtl.fits'.format(i_batch+1))
+
+        zcat_filename = os.path.join(targets_path, '{:04d}_zcat.fits'.format(i_batch))
+        old_zcat_filename = os.path.join(targets_path, '{:04d}_zcat.fits'.format(i_batch-1))
         
-#print("Preparing tiles")
-#sim_path = "/project/projectdirs/desi/datachallenge/surveysim2018/weather/081"
-#footprint_path = "./footprint"
-#subsetnames = create_multi_footprint(sim_path, footprint_path, cadence=180)
+        
+        if i_batch == 0:
+            shutil.copyfile(initial_mtl_file, mtl_filename)
+        print(footprint)
+        
+        fba_run = 'fba_run --targets {} --sky {} --footprint {}  --dir {} --rundate 2020-01-01T00:00:00 --overwrite'.format(
+            mtl_filename, sky_file, footprint, fiberassign_path)
+        print(fba_run)
+        os.system(fba_run)
+    
+        # Gather fiberassign files
+        fba_files = np.sort(glob.glob(os.path.join(fiberassign_path,"fba-*.fits")))
+        
+        # Compute zcat
+        if i_pass==0:
+            zcat = desisim.quickcat.quickcat(fba_files, targets, truth, fassignhdu='FASSIGN', perfect=True)
+        else:
+            old_zcat = Table.read(old_zcat_filename)
+            zcat = desisim.quickcat.quickcat(fba_files, targets, truth, fassignhdu='FASSIGN', zcat=old_zcat, perfect=True)        
+    
+        zcat.write(zcat_filename, overwrite=True)
+        mtl = desitarget.mtl.make_mtl(targets, obsconditions, zcat=zcat)
+        mtl.write(new_mtl_filename, overwrite=True)
+        
 
-#prepare_tiles()
-
-#footprint_names = subsetnames + ['full']
-#pass_names = subsetnames  + ['full']
-#obsconditions = ['DARK|GRAY'] * len(pass_names)
-#run_strategy(footprint_names, pass_names, obsconditions, 'monthly_strategy_A_updated_fibassign_files', 
-#            initial_mtl_file, initial_sky_file, initial_std_file , legacy=False, 
-#            fiberassign_script='fiberassign')
-
-#footprint_names = ['gray_dark0_dark1_dark2_dark3', 'dark0_dark1_dark2_dark3', 'dark1_dark2_dark3', 'dark2_dark3', 'full']
-#pass_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
-#obsconditions = ['DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY']
-#run_strategy(footprint_names, pass_names, obsconditions, 'legacy_noimprove_strategy_B', initial_mtl_file, initial_sky_file, initial_std_file,
-#             fiberassign_script='fiberassign_legacy_noimprove', legacy=True)
-
-#footprint_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
-#pass_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
-#obsconditions = ['DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY']
-#run_strategy(footprint_names, pass_names, obsconditions, 'strategy_A', initial_mtl_file, initial_sky_file, initial_std_file , legacy=False)
-
-#footprint_names = ['gray_dark0_dark1_dark2_dark3', 'dark0_dark1_dark2_dark3', 'dark1_dark2_dark3', 'dark2_dark3', 'full']
-#pass_names = ['gray', 'dark0', 'dark1', 'dark2_dark3', 'full']
-#obsconditions = ['DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY', 'DARK|GRAY']
-#run_strategy(footprint_names, pass_names, obsconditions, 'strategy_B', initial_mtl_file, initial_sky_file, initial_std_file , legacy=False)
-
+run_strategy("targets/patch_DR8_mtl_dark.fits", "targets/patch_DR8_truth_dark.fits", "targets/patch_DR8_sky.fits", 
+             output_path="monthly_dark_patch_month", batch_path="footprint_patch_month", program="dark")
