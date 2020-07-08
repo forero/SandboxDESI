@@ -21,29 +21,6 @@ def ra_dec_subset(data, ra_min=130, ra_max=180, dec_min=-10, dec_max=40):
     subset_ii &= (data['DEC']>dec_min) & (data['DEC']<dec_max)
     return subset_ii
 
-def random_assign_ly_qso(initial_mtl_file, fraction=0.25):
-    """
-    Assign a fraction of all QSOs to by a Lya QSO.
-    """
-    
-    print('Random Assignment of targets that will be in the truth file')
-    print('started reading targets')
-    targets = Table.read(initial_mtl_file)
-    print('finished reading targets')
-    
-    # what target are QSOs?
-    is_qso = (targets['DESI_TARGET'] & desi_mask.QSO)!=0
-    
-    ii_targets = is_qso & (pixnumber_targets==pixnumber_target_list[i])
-    n_qso_in_pixel = np.count_nonzero(ii_targets)
-    n_lya_desired = n_lya_desired_pixel_targets[i]
-    if n_lya_desired >= n_qso_in_pixel:
-        is_lya_qso[ii_targets] = True
-    else:
-        #print(len(target_ids[ii_targets]), n_lya_desired)
-        ii_lya_qso = np.random.choice(target_ids[ii_targets], n_lya_desired, replace=False)
-        is_lya_qso[ii_lya_qso] = True
-    return is_lya_qso
 
     
 
@@ -165,18 +142,27 @@ def make_global_DR8_sky(output_path="./"):
     del target_data
     return global_DR8_sky_file
 
+def random_assign_lya_qso(targets, fraction=0.25):
+    """
+    Assign a fraction of all QSOs to by a Lya QSO.
+    """
+        
+    n_targets = len(targets)
 
-def make_global_DR8_truth(global_DR8_mtl_file, output_path='./', program='dark'):
-    os.makedirs(output_path, exist_ok=True)
-    global_DR8_truth_file = os.path.join(output_path, 'global_DR8_truth_{}.fits'.format(program))
-    if os.path.exists(global_DR8_truth_file):
-        print("File {} already exists".format(global_DR8_truth_file))
-        return global_DR8_truth_file
+    # what target are QSOs?
+    is_qso = (targets['DESI_TARGET'] & desi_mask.QSO)!=0
+    n_qso = np.count_nonzero(is_qso)
     
-    print('Preparing file {}'.format(global_DR8_truth_file))
+    is_lya_qso = np.repeat(False, n_targets)
 
-    
-    return global_DR8_truth_file
+    target_ids = np.arange(n_targets)
+
+    n_lya_qso = int(fraction * n_qso)
+    ii_lya_qso = np.random.choice(target_ids[is_qso], n_lya_qso, replace=False)
+    is_lya_qso[ii_lya_qso] = True
+    print('Number of total QSOs: {}'.format(n_qso))
+    print('Numer of lya QSOs: {}'.format(n_lya_qso))
+    return is_lya_qso
 
 def make_global_DR8_mtl(output_path='./', program='dark'):
     os.makedirs(output_path, exist_ok=True)
@@ -217,14 +203,24 @@ def make_global_DR8_mtl(output_path='./', program='dark'):
     del full_mtl
     return global_DR8_mtl_file
 
-def write_initial_truth_file(initial_truth_file):
+def make_global_DR8_truth(global_DR8_mtl_file, output_path='./', program='dark'):
     import desitarget.mock.mockmaker as mb
     from desitarget.targetmask import desi_mask, bgs_mask, mws_mask
-    pixweight_file = "/project/projectdirs/desi/target/catalogs/dr8/0.31.1/pixweight/pixweight-dr8-0.31.1.fits"
-
-    is_lya_qso = assign_lya_qso(initial_mtl_file, pixweight_file)
     
-    targets = Table.read(initial_mtl_file)
+    os.makedirs(output_path, exist_ok=True)
+    global_DR8_truth_file = os.path.join(output_path, 'global_DR8_truth_{}.fits'.format(program))
+    if os.path.exists(global_DR8_truth_file):
+        print("File {} already exists".format(global_DR8_truth_file))
+        return global_DR8_truth_file
+    
+    print('Started reading file {}'.format(global_DR8_mtl_file))
+    targets = Table.read(global_DR8_mtl_file)
+    print('Finished reading file {}'.format(global_DR8_mtl_file))
+
+    # Find what targets will be associated to lya targets
+    is_lya_qso = random_assign_lya_qso(targets)
+    
+    # Initialized truth Table
     colnames = list(targets.dtype.names)
     print(colnames)
     nobj = len(targets)
@@ -261,9 +257,14 @@ def write_initial_truth_file(initial_truth_file):
     iii = truth['MOCKID']==0
     assert np.count_nonzero(iii)==0
     
-    print('writing truth')
-    truth.write(initial_truth_file, overwrite=True)
-    print('done truth')
+    del targets
+    
+    print('Started writing to file {}'.format(global_DR8_truth_file))
+    truth.write(global_DR8_truth_file, overwrite=True)
+    print('Finished writing to file {}'.format(global_DR8_truth_file))
+    
+    del truth
+    return global_DR8_truth_file
     
 def prepare_tiles():
     tiles = Table(desimodel.io.load_tiles())
@@ -428,6 +429,8 @@ global_DR8_mtl_file_dark = make_global_DR8_mtl(output_path='targets', program='d
 global_DR8_mtl_file_bright = make_global_DR8_mtl(output_path='targets', program='bright')
 global_DR8_sky_file = make_global_DR8_sky(output_path="targets")
 global_DR8_truth_file_dark = make_global_DR8_truth(global_DR8_mtl_file_dark, output_path='targets', program='dark')
+global_DR8_truth_file_bright = make_global_DR8_truth(global_DR8_mtl_file_bright, output_path='targets', program='bright')
+
 
 #os.makedirs('targets', exist_ok=True)
 #os.makedirs('footprint', exist_ok=True)
