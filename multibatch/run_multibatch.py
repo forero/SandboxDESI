@@ -131,7 +131,7 @@ def make_global_DR8_sky(output_path="./"):
     global_DR8_sky_file = os.path.join(output_path, "global_DR8_sky.fits")
 
     if os.path.exists(global_DR8_sky_file):
-        print("Files {} {} already exist".format(global_DR8_sky_file))
+        print("File {} already exist".format(global_DR8_sky_file))
         return global_DR8_sky_file
     
     print('Preparing file {}'.format(global_DR8_sky_file))
@@ -159,10 +159,24 @@ def make_global_DR8_sky(output_path="./"):
 
     target_data = Table(target_data)
 
+    print('Started writing file {}'.format(global_DR8_sky_file))
     target_data.write(global_DR8_sky_file, overwrite=True)
-    print("Wrote output to {}".format(global_DR8_sky_file))
+    print('Finished writing file {}'.format(global_DR8_sky_file))
+    del target_data
     return global_DR8_sky_file
 
+
+def make_global_DR8_truth(global_DR8_mtl_file, output_path='./', program='dark'):
+    os.makedirs(output_path, exist_ok=True)
+    global_DR8_truth_file = os.path.join(output_path, 'global_DR8_truth_{}.fits'.format(program))
+    if os.path.exists(global_DR8_truth_file):
+        print("File {} already exists".format(global_DR8_truth_file))
+        return global_DR8_truth_file
+    
+    print('Preparing file {}'.format(global_DR8_truth_file))
+
+    
+    return global_DR8_truth_file
 
 def make_global_DR8_mtl(output_path='./', program='dark'):
     os.makedirs(output_path, exist_ok=True)
@@ -202,22 +216,6 @@ def make_global_DR8_mtl(output_path='./', program='dark'):
 
     del full_mtl
     return global_DR8_mtl_file
-
-def write_initial_std_file(initial_mtl_file, initial_std_file):
-    mtl_data = Table.read(initial_mtl_file)
-    std_mask = desi_mask.STD_FAINT | desi_mask.STD_WD | desi_mask.STD_BRIGHT
-    print('STDMASK', std_mask)
-    std_ii = (mtl_data['DESI_TARGET'] & std_mask)!=0
-    print(len(std_ii), np.count_nonzero(std_ii))
-    mtl_data[std_ii].write(initial_std_file, overwrite=True)
-
-def write_initial_sky_file(initial_sky_file):
-    sky_data = Table.read("/project/projectdirs/desi/target/catalogs/dr8/0.31.0/skies/skies-dr8-0.31.0.fits")
-    subset_ii = ra_dec_subset(sky_data)
-    print('writing sky')
-    sky_data[subset_ii].write(initial_sky_file, overwrite=True)
-    print('done writing sky')
-
 
 def write_initial_truth_file(initial_truth_file):
     import desitarget.mock.mockmaker as mb
@@ -429,6 +427,7 @@ def run_strategy(footprint_names, pass_names, obsconditions, strategy, initial_m
 global_DR8_mtl_file_dark = make_global_DR8_mtl(output_path='targets', program='dark')
 global_DR8_mtl_file_bright = make_global_DR8_mtl(output_path='targets', program='bright')
 global_DR8_sky_file = make_global_DR8_sky(output_path="targets")
+global_DR8_truth_file_dark = make_global_DR8_truth(global_DR8_mtl_file_dark, output_path='targets', program='dark')
 
 #os.makedirs('targets', exist_ok=True)
 #os.makedirs('footprint', exist_ok=True)
