@@ -16,6 +16,123 @@ from desitarget.targetmask import desi_mask, obsconditions
 from collections import Counter
 import subprocess
 
+def cut_mtl_sky_tiles(targets_path="./", tile_path="./", cut_name="cut", limits={}):
+    min_ra = limits['min_ra'] 
+    max_ra = limits['max_ra'] 
+    min_dec = limits['min_dec'] 
+    max_dec = limits['max_dec'] 
+    
+    tilefile = os.path.join(tile_path, "tiles_bright_north.fits")
+    cut_tilefile = os.path.join(tile_path, "tiles_{}_bright_north.fits".format(cut_name))
+    if not os.path.exists(cut_tilefile):
+        tiles = Table.read(tilefile)
+        ii = (tiles['RA']>(min_ra)) & (tiles['RA']<(max_ra)) & (tiles['DEC']<max_dec) & (tiles['DEC']>min_dec) 
+        tiles[ii].write(cut_tilefile, overwrite='True')
+        print("Wrote tiles to {}".format(cut_tilefile))
+    
+    tilefile = os.path.join(tile_path, "tiles_dark_north.fits")
+    cut_tilefile = os.path.join(tile_path, "tiles_{}_dark_north.fits".format(cut_name))
+    if not os.path.exists(cut_tilefile):
+        tiles = Table.read(tilefile)
+        ii = (tiles['RA']>min_ra) & (tiles['RA']<max_ra) & (tiles['DEC']<max_dec) & (tiles['DEC']>min_dec)
+        tiles[ii].write(cut_tilefile, overwrite='True')
+        print("Wrote tiles to {}".format(cut_tilefile))
+    
+    
+    cut_mtl_dark_file = os.path.join(targets_path, "mtl_{}_dark_north.fits".format(cut_name))
+    cut_mtl_bright_file = os.path.join(targets_path, "mtl_{}_bright_north.fits".format(cut_name))
+    cut_sky_file = os.path.join(targets_path, "sky_{}_north.fits".format(cut_name))
+    
+
+    
+    try:
+        if not os.path.exists(cut_mtl_dark_file):
+            filename = os.path.join(targets_path, "dark_north.fits")
+            filein = fitsio.FITS(filename)
+            mtl_data = filein[1].read()
+            ii = (mtl_data['RA']>min_ra) & (mtl_data['RA']<max_ra) & (mtl_data['DEC']<max_dec) & (mtl_data['DEC']>min_dec)
+            cut_mtl = Table(mtl_data[ii]).write(cut_mtl_dark_file, overwrite=True)
+        else:
+            print('file {} exists'.format(cut_mtl_dark_file))
+    except:
+        pass
+    
+    
+    try:
+        if not os.path.exists(cut_mtl_bright_file):
+            filename = os.path.join(targets_path, "bright_north.fits")
+            filein = fitsio.FITS(filename)
+            mtl_data = filein[1].read()
+            ii = (mtl_data['RA']>min_ra) & (mtl_data['RA']<max_ra) & (mtl_data['DEC']<max_dec) & (mtl_data['DEC']>min_dec)
+            cut_mtl = Table(mtl_data[ii]).write(cut_mtl_bright_file, overwrite=True)
+        else:
+            print('file {} exists'.format(cut_mtl_dark_file))
+    except:
+        pass
+        
+    
+    try:
+        if not os.path.exists(cut_sky_file):
+            north_sky_file = os.path.join(targets_path, "sky_north.fits")
+            filein = fitsio.FITS(north_sky_file)
+            sky_data = filein[1].read()
+            ii = (sky_data['RA']>min_ra) & (sky_data['RA']<max_ra) & (sky_data['DEC']<max_dec) & (sky_data['DEC']>min_dec)
+            cut_sky = Table(sky_data[ii]).write(cut_sky_file, overwrite=True)
+        else:
+            print('file {} exists'.format(cut_mtl_dark_file))
+    except:
+        pass
+        
+    return 
+    
+
+
+def write_sky_files(output_path="./"):
+    # Create output directory
+    os.makedirs(output_path, exist_ok=True)
+    north_sky_file = os.path.join(output_path, "sky_north.fits")
+    south_sky_file = os.path.join(output_path, "sky_south.fits")
+
+    if os.path.exists(north_sky_file) and os.path.exists(south_sky_file):
+        print("Files {} {} already exist".format(north_sky_file, south_sky_file))
+        return
+    
+    
+    # List all the fits files to read
+    path_to_targets = '/global/cfs/projectdirs/desi/target/catalogs/dr8/0.39.0/skies/'
+    target_files = glob.glob(os.path.join(path_to_targets, "skies-*.fits"))
+    print('sky files to read:', len(target_files))
+    target_files.sort()
+    
+    # Read the first file, only the columns that are useful for MTL
+    data = fitsio.FITS(target_files[0], 'r')
+    target_data = data[1].read()
+    data.close()
+    
+    # Read all the other files
+    for i, i_name in enumerate(target_files[1:]): 
+        data = fitsio.FITS(i_name, 'r')
+        tmp_data = data[1].read()
+        target_data = np.hstack((target_data, tmp_data))
+        data.close()
+        print('reading file', i, len(target_files), len(tmp_data))
+
+    target_data = Table(target_data)
+    ii_north = (target_data['RA']>85) & (target_data['RA']<300) & (target_data['DEC']>-15)
+
+    # Create output directory
+    os.makedirs(output_path, exist_ok=True)
+    
+    print("Writing north sky cap")
+    target_data[ii_north].write(north_sky_file, overwrite=True)
+    print("Wrote output to {}".format(north_sky_file))
+        
+    print("Writing south sky cap")
+    target_data[~ii_north].write(south_sky_file, overwrite=True)
+    print("Wrote output to {}".format(south_sky_file))
+    return 
+
+
 def write_initial_mtl_files(output_path="./", program='bright'):
     north_mtl_file = os.path.join(output_path, "{}_north.fits".format(program))
     south_mtl_file = os.path.join(output_path, "{}_south.fits".format(program))
