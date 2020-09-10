@@ -66,7 +66,7 @@ def cut_mtl_sky_tiles(targets_path="./", tile_path="./", cut_name="cut", limits=
             ii = (mtl_data['RA']>min_ra) & (mtl_data['RA']<max_ra) & (mtl_data['DEC']<max_dec) & (mtl_data['DEC']>min_dec)
             cut_mtl = Table(mtl_data[ii]).write(cut_mtl_bright_file, overwrite=True)
         else:
-            print('file {} exists'.format(cut_mtl_dark_file))
+            print('file {} exists'.format(cut_mtl_bright_file))
     except:
         pass
         
@@ -79,7 +79,7 @@ def cut_mtl_sky_tiles(targets_path="./", tile_path="./", cut_name="cut", limits=
             ii = (sky_data['RA']>min_ra) & (sky_data['RA']<max_ra) & (sky_data['DEC']<max_dec) & (sky_data['DEC']>min_dec)
             cut_sky = Table(sky_data[ii]).write(cut_sky_file, overwrite=True)
         else:
-            print('file {} exists'.format(cut_mtl_dark_file))
+            print('file {} exists'.format(cut_sky_file))
     except:
         pass
         
