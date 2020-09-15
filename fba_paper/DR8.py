@@ -38,12 +38,9 @@ def cut_mtl_sky_tiles(targets_path="./", tile_path="./", cut_name="cut", limits=
         tiles[ii].write(cut_tilefile, overwrite='True')
         print("Wrote tiles to {}".format(cut_tilefile))
     
-    
     cut_mtl_dark_file = os.path.join(targets_path, "mtl_{}_dark_north.fits".format(cut_name))
     cut_mtl_bright_file = os.path.join(targets_path, "mtl_{}_bright_north.fits".format(cut_name))
     cut_sky_file = os.path.join(targets_path, "sky_{}_north.fits".format(cut_name))
-    
-
     
     try:
         if not os.path.exists(cut_mtl_dark_file):
