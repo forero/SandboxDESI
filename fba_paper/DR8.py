@@ -16,35 +16,35 @@ from desitarget.targetmask import desi_mask, obsconditions
 from collections import Counter
 import subprocess
 
-def cut_mtl_sky_tiles(targets_path="./", tile_path="./", cut_name="cut", limits={}):
+def cut_mtl_sky_tiles(targets_path="./", tile_path="./", cut_name="cut", limits={}, hemisphere='north'):
     min_ra = limits['min_ra'] 
     max_ra = limits['max_ra'] 
     min_dec = limits['min_dec'] 
     max_dec = limits['max_dec'] 
     
-    tilefile = os.path.join(tile_path, "tiles_bright_north.fits")
-    cut_tilefile = os.path.join(tile_path, "tiles_{}_bright_north.fits".format(cut_name))
+    tilefile = os.path.join(tile_path, "tiles_bright_{}.fits".format(hemisphere))
+    cut_tilefile = os.path.join(tile_path, "tiles_{}_bright_{}.fits".format(cut_name, hemisphere))
     if not os.path.exists(cut_tilefile):
         tiles = Table.read(tilefile)
         ii = (tiles['RA']>(min_ra)) & (tiles['RA']<(max_ra)) & (tiles['DEC']<max_dec) & (tiles['DEC']>min_dec) 
         tiles[ii].write(cut_tilefile, overwrite='True')
         print("Wrote tiles to {}".format(cut_tilefile))
     
-    tilefile = os.path.join(tile_path, "tiles_dark_north.fits")
-    cut_tilefile = os.path.join(tile_path, "tiles_{}_dark_north.fits".format(cut_name))
+    tilefile = os.path.join(tile_path, "tiles_dark_{}.fits".format(hemisphere))
+    cut_tilefile = os.path.join(tile_path, "tiles_{}_dark_{}.fits".format(cut_name, hemisphere))
     if not os.path.exists(cut_tilefile):
         tiles = Table.read(tilefile)
         ii = (tiles['RA']>min_ra) & (tiles['RA']<max_ra) & (tiles['DEC']<max_dec) & (tiles['DEC']>min_dec)
         tiles[ii].write(cut_tilefile, overwrite='True')
         print("Wrote tiles to {}".format(cut_tilefile))
     
-    cut_mtl_dark_file = os.path.join(targets_path, "mtl_{}_dark_north.fits".format(cut_name))
-    cut_mtl_bright_file = os.path.join(targets_path, "mtl_{}_bright_north.fits".format(cut_name))
-    cut_sky_file = os.path.join(targets_path, "sky_{}_north.fits".format(cut_name))
+    cut_mtl_dark_file = os.path.join(targets_path, "mtl_{}_dark_{}.fits".format(cut_name, hemisphere))
+    cut_mtl_bright_file = os.path.join(targets_path, "mtl_{}_bright_{}.fits".format(cut_name, hemisphere))
+    cut_sky_file = os.path.join(targets_path, "sky_{}_{}.fits".format(cut_name, hemisphere))
     
     try:
         if not os.path.exists(cut_mtl_dark_file):
-            filename = os.path.join(targets_path, "dark_north.fits")
+            filename = os.path.join(targets_path, "dark_{}.fits".format(hemisphere))
             filein = fitsio.FITS(filename)
             mtl_data = filein[1].read()
             ii = (mtl_data['RA']>min_ra) & (mtl_data['RA']<max_ra) & (mtl_data['DEC']<max_dec) & (mtl_data['DEC']>min_dec)
@@ -81,6 +81,8 @@ def cut_mtl_sky_tiles(targets_path="./", tile_path="./", cut_name="cut", limits=
         pass
         
     return 
+
+
     
 
 
