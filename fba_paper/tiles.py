@@ -16,6 +16,16 @@ from desitarget.targetmask import desi_mask, obsconditions
 from collections import Counter
 import subprocess
 
+def tiles_into_passes(input_tiles="tiles.fits", input_path="./",output_path="./"):
+    tiles = Table.read(os.path.join(input_path, input_tiles))
+    passes = set(tiles['PASS'])
+    
+    for p in passes:
+        filename = input_tiles.replace(".fits", "_pass_{}.fits".format(p))
+        filename = os.path.join(output_path, filename)
+        new_tiles = tiles[tiles['PASS']==p]
+        new_tiles.write(filename, overwrite=True)
+        print(filename)
 
 def split_tiles(output_path="./"):
     # Create output directory
