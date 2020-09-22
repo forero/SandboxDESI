@@ -1,0 +1,9 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -C amd
+#SBATCH -t 12:00:00
+#SBATCH -q bigmem
+
+export OMP_NUM_THREADS=32
+srun -n 1 fba_run --targets targets/mtl_cut_A_dark_north.fits --sky targets/sky_cut_A_north.fits --footprint tiles/tiles_cut_A_dark_north.fits --rundate 2020-01-01T00:00:00 --dir fba_run/mtl_cut_A_tiles_cut_A/ --overwrite > fba_output_mtl_cut_A_tiles_cut_A.txt
+srun -n 1 fba_merge_results --targets targets/mtl_cut_A_dark_north.fits --sky targets/sky_cut_A_north.fits --dir fba_run/mtl_cut_A_tiles_cut_A/
