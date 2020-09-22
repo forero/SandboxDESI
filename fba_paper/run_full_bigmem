@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -C amd
+#SBATCH -t 12:00:00
+#SBATCH -q bigmem
+
+export OMP_NUM_THREADS=32
+
+srun -n 1 fba_run --targets targets/dark_north.fits targets/dark_south.fits targets/bright_north.fits targets/bright_south.fits --sky targets/sky_north.fits targets/sky_south.fits --rundate 2020-01-01T00:00:00 --dir fba_run/full_run/ --overwrite > fba_full.txt
+
+srun -n 1 fba_merge_results --targets targets/dark_north.fits targets/dark_south.fits targets/bright_north.fits targets/bright_south.fits --sky targets/sky_north.fits targets/sky_south.fits --dir fba_run/full_run/
