@@ -57,7 +57,7 @@ def cut_mtl_sky_tiles(targets_path="./", tile_path="./", cut_name="cut", limits=
     
     try:
         if not os.path.exists(cut_mtl_bright_file):
-            filename = os.path.join(targets_path, "bright_north.fits")
+            filename = os.path.join(targets_path, "bright_{}.fits".format(hemisphere))
             filein = fitsio.FITS(filename)
             mtl_data = filein[1].read()
             ii = (mtl_data['RA']>min_ra) & (mtl_data['RA']<max_ra) & (mtl_data['DEC']<max_dec) & (mtl_data['DEC']>min_dec)
