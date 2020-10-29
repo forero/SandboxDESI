@@ -1,0 +1,56 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -C amd
+#SBATCH -t 12:00:00
+#SBATCH -q bigmem
+
+export OMP_NUM_THREADS=16
+
+passn=0
+targets=targets/mtl_cut_A_dark_south.fits
+sky=targets/sky_cut_A_south.fits
+output_path=fba_run/mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn/
+tiles=tiles/tiles_cut_A_dark_south_up_to_pass_$passn.fits
+
+srun -n 1 fba_run --targets $targets --sky $sky --footprint $tiles --rundate 2020-01-01T00:00:00 --dir $output_path --overwrite > fba_output_mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn.txt
+srun -n 1 fba_merge_results --targets $targets --sky $sky --dir $output_path
+
+
+passn=1
+targets=targets/mtl_cut_A_dark_south.fits
+sky=targets/sky_cut_A_south.fits
+output_path=fba_run/mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn/
+tiles=tiles/tiles_cut_A_dark_south_up_to_pass_$passn.fits
+
+srun -n 1 fba_run --targets $targets --sky $sky --footprint $tiles --rundate 2020-01-01T00:00:00 --dir $output_path --overwrite > fba_output_mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn.txt
+srun -n 1 fba_merge_results --targets $targets --sky $sky --dir $output_path
+
+
+passn=2
+targets=targets/mtl_cut_A_dark_south.fits
+sky=targets/sky_cut_A_south.fits
+output_path=fba_run/mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn/
+tiles=tiles/tiles_cut_A_dark_south_up_to_pass_$passn.fits
+
+srun -n 1 fba_run --targets $targets --sky $sky --footprint $tiles --rundate 2020-01-01T00:00:00 --dir $output_path --overwrite > fba_output_mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn.txt
+srun -n 1 fba_merge_results --targets $targets --sky $sky --dir $output_path
+
+
+passn=3
+targets=targets/mtl_cut_A_dark_south.fits
+sky=targets/sky_cut_A_south.fits
+output_path=fba_run/mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn/
+tiles=tiles/tiles_cut_A_dark_south_up_to_pass_$passn.fits
+
+srun -n 1 fba_run --targets $targets --sky $sky --footprint $tiles --rundate 2020-01-01T00:00:00 --dir $output_path --overwrite > fba_output_mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn.txt
+srun -n 1 fba_merge_results --targets $targets --sky $sky --dir $output_path
+
+
+passn=4
+targets=targets/mtl_cut_A_dark_south.fits
+sky=targets/sky_cut_A_south.fits
+output_path=fba_run/mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn/
+tiles=tiles/tiles_cut_A_dark_south_up_to_pass_$passn.fits
+
+srun -n 1 fba_run --targets $targets --sky $sky --footprint $tiles --rundate 2020-01-01T00:00:00 --dir $output_path --overwrite > fba_output_mtl_dark_south_cut_A_tiles_cut_A_up_to_pass_$passn.txt
+srun -n 1 fba_merge_results --targets $targets --sky $sky --dir $output_path
