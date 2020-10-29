@@ -30,12 +30,17 @@ def tiles_into_passes(input_tiles="tiles.fits", input_path="./",output_path="./"
 
 def tiles_into_cumulative_passes(input_tiles="tiles.fits", input_path="./",output_path="./"):
     tiles = Table.read(os.path.join(input_path, input_tiles))
-    passes = set(tiles['PASS'])
+    passes = np.sort(np.array(list(set(tiles['PASS']))))
+    print(passes)
     
     for p in passes:
-        filename = input_tiles.replace(".fits", "_pass_{}.fits".format(p))
+        filename = input_tiles.replace(".fits", "_up_to_pass_{}.fits".format(p))
         filename = os.path.join(output_path, filename)
         new_tiles = tiles[tiles['PASS']==p]
+        for l in passes:
+            if l < p:
+                new_tiles = vstack([new_tiles, tiles[tiles['PASS']==l]])
+        print(p, len(new_tiles))
         new_tiles.write(filename, overwrite=True)
         print(filename)        
 
