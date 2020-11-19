@@ -63,6 +63,11 @@ def split_tiles(output_path="./"):
         tiles[ii_bright & ~ii_north].write(tilefile, overwrite='True')
         print("Wrote tiles to {}".format(tilefile))
     
+    tilefile = os.path.join(output_path, "tiles_bright.fits")
+    if not os.path.exists(tilefile):
+        tiles[ii_bright].write(tilefile, overwrite='True')
+        print("Wrote tiles to {}".format(tilefile))
+    
     tilefile = os.path.join(output_path, "tiles_dark_north.fits")
     if not os.path.exists(tilefile):
         tiles[~ii_bright & ii_north].write(tilefile, overwrite='True')
@@ -71,5 +76,10 @@ def split_tiles(output_path="./"):
     tilefile = os.path.join(output_path, "tiles_dark_south.fits")
     if not os.path.exists(tilefile):
         tiles[~ii_bright & ~ii_north].write(tilefile, overwrite='True')
+        print("Wrote tiles to {}".format(tilefile))
+        
+    tilefile = os.path.join(output_path, "tiles_dark.fits")
+    if not os.path.exists(tilefile):
+        tiles[~ii_bright].write(tilefile, overwrite='True')
         print("Wrote tiles to {}".format(tilefile))
     return 
