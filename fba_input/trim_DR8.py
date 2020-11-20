@@ -64,37 +64,33 @@ def write_initial_mtl_files(output_path="./", program='bright'):
                'NUMOBS_INIT', 'PRIORITY_INIT', 'RA', 'DEC', 'HPXPIXEL', 'BRICKNAME', 
                'FLUX_G', 'FLUX_R', 'FLUX_Z', 'PHOTSYS',
               'FIBERTOTFLUX_G', 'FIBERTOTFLUX_R', 'FIBERTOTFLUX_Z',
-              'PARALLAX', 'PMRA', 'PMDEC', 'REF_EPOCH']
+              'PARALLAX', 'PMRA', 'PMDEC', 'REF_EPOCH', 'EBV', 
+              'FLUX_IVAR_G', 'FLUX_IVAR_R', 'FLUX_IVAR_Z', 
+              'FIBERFLUX_G', 'FIBERFLUX_R', 'FIBERFLUX_Z', 
+              'REF_ID', 'REF_CAT', 'GAIA_PHOT_G_MEAN_MAG', 'GAIA_PHOT_BP_MEAN_MAG', 
+               'GAIA_PHOT_RP_MEAN_MAG']
     
-# not found 'PRIORITY', 'SCND_TARGET'
+# not found 'PRIORITY', 'SCND_TARGET', 'NUMOBS_MORE', 'OBSPRIORITY'
+# 'WISE_W1', 'WISE_W2', ''GAIA_PHOT_BR_MEAN_MAG''
 
-#SERSC,SHAPE_R,SHAPE_E1,SHAPE_E2 (or whatever the DR9 set of shape parameters are)
-#PARALLAX, 
-#EBV
-#PRIORITY, SUBPRIORITY, OBSPRIORITY, NUMOBS_MORE
-#FLUX_IVAR_G, FLUX_IVAR_R, FLUX_IVAR_Z
-#FIBERFLUX_G, FIBERFLUX_R, FIBERFLUX_Z
-#Maybe: WISE_W1, WISE_W2
-#Maybe: REF_ID, REF_CAT
-#Maybe: GAIA_PHOT_G_MEAN_MAG, GAIA_PHOT_BP_MEAN_MAG, GAIA_PHOT_BR_MEAN_MAG]
+    print(target_files[0])
+
     
     # Read the first file, only the columns that are useful for MTL
     data = fitsio.FITS(target_files[0], 'r')
     target_data = data[1].read(columns=columns)
     data.close()
-    
     # Read all the other files
-    for i, i_name in enumerate(target_files[1:2]): 
+    for i, i_name in enumerate(target_files[1:]): 
         data = fitsio.FITS(i_name, 'r')
         tmp_data = data[1].read(columns=columns)
         target_data = np.hstack((target_data, tmp_data))
         data.close()
         print('reading file', i, len(target_files), len(tmp_data))
-    #full_mtl = desitarget.mtl.make_mtl(target_data, 'DARK|GRAY|BRIGHT')
-    
-    Table(target_data).write('full_mtl_{}.fits'.format(program), overwrite=True)
+    full_mtl = desitarget.mtl.make_mtl(target_data, 'DARK|GRAY|BRIGHT')
+    full_mtl.write('full_mtl_{}.fits'.format(program), overwrite=True)
 
     return
 
 #87 MB
-write_initial_mtl_files(output_path="./", program='bright')
+write_initial_mtl_files(output_path="./", program='dark')
