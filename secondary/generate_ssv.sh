@@ -1,0 +1,4 @@
+python fba_sv1_hack_ssv  --dr dr9 --dtver 0.50.0 --rundate 2021-01-20T00:00:00  --tilera 84.00  --tiledec -6.20  --tileid 80721  --faflavor sv1orion  --priority default --outdir ./tiles_ssv/80721
+python fba_sv1_hack_ssv  --dr dr9 --dtver 0.50.0 --rundate 2021-01-20T00:00:00  --tilera 98.0063  --tiledec -4.8356  --tileid 80722  --faflavor sv1rosette  --priority default --outdir ./tiles_ssv/80722
+python fba_sv1_hack_ssv  --dr dr9 --dtver 0.50.0 --rundate 2021-01-20T00:00:00  --tilera 130.1166  --tiledec 19.4692  --tileid 80723  --faflavor sv1praesepe  --priority default --outdir ./tiles_ssv/80723
+python fba_sv1_hack_ssv   --dr dr9 --dtver 0.50.0 --rundate 2021-01-20T00:00:00  --tilera 132.87  --tiledec 63.73  --tileid 80724  --faflavor sv1umaii  --priority default --outdir ./tiles_ssv/80724
