@@ -8,7 +8,7 @@ from collections import Counter
 from astropy.table import Table
 import os
 
-def join_fba_targets(targets_file="./targets.fits", fba_path="./", summary_filename="fba_summary.fits"):
+def join_fba_targets(targets_file="./targets.fits", fba_path="./", summary_filename="fba_summary.fits", exclude_petal=-1):
     
     print(targets_file, fba_path, summary_filename)
     if os.path.exists(summary_filename):
@@ -29,6 +29,8 @@ def join_fba_targets(targets_file="./targets.fits", fba_path="./", summary_filen
     for fba_file in fba_files:
         fassign = fitsio.read(fba_file, ext="FASSIGN")
         favail = fitsio.read(fba_file, ext="FAVAIL")
+        if exclude_petal>0:
+            fassign = fassign[fassign['PETAL_LOC']!=3] 
         t_assigned.append(fassign["TARGETID"])
         t_avail_fiber.append(favail["TARGETID"])
         t_avail_tile.append(list(set(favail["TARGETID"])))
