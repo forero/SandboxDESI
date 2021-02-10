@@ -30,7 +30,7 @@ def join_fba_targets(targets_file="./targets.fits", fba_path="./", summary_filen
         fassign = fitsio.read(fba_file, ext="FASSIGN")
         favail = fitsio.read(fba_file, ext="FAVAIL")
         if exclude_petal>0:
-            fassign = fassign[fassign['PETAL_LOC']!=3] 
+            fassign = fassign[fassign['PETAL_LOC']!=exclude_petal] 
         t_assigned.append(fassign["TARGETID"])
         t_avail_fiber.append(favail["TARGETID"])
         t_avail_tile.append(list(set(favail["TARGETID"])))
