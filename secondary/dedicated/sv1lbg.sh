@@ -1,0 +1,1 @@
+python ~/fiberassign/bin/fba_sv1  --dr dr9 --dtver 0.50.0 --rundate 2021-02-05T00:00:00  --tilera 150.12  --tiledec 2.20  --tileid 82000  --faflavor sv1lbg  --priority default --outdir ./sv1lbg # cosmos

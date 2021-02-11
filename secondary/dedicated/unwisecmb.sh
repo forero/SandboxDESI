@@ -1,0 +1,3 @@
+python ~/fiberassign/bin/fba_sv1  --dr dr9 --dtver 0.50.0 --rundate 2021-02-05T00:00:00  --tilera 150.0  --tiledec 0.0  --tileid 82000  --faflavor unwisecmb  --priority default --outdir ./unwisecmb 
+python ~/fiberassign/bin/fba_sv1  --dr dr9 --dtver 0.50.0 --rundate 2021-02-05T00:00:00  --tilera 180.0  --tiledec 0.0  --tileid 82001  --faflavor unwisecmb  --priority default --outdir ./unwisecmb 
+python ~/fiberassign/bin/fba_sv1  --dr dr9 --dtver 0.50.0 --rundate 2021-02-05T00:00:00  --tilera 210.0  --tiledec 0.0  --tileid 82002  --faflavor unwisecmb  --priority default --outdir ./unwisecmb 
