@@ -1,1 +1,1 @@
-python ~/fiberassign/bin/fba_sv1  --dr dr9 --dtver 0.50.0 --rundate 2020-01-01T00:00:00 --tilera 214.86  --tiledec 55.68  --tileid 82000  --faflavor sv1scndcfhtls  --priority default --outdir ./sv1scndcfhtls # cfhstls w3
+python ~/fiberassign/bin/fba_sv1  --dr dr9 --dtver 0.51.0 --rundate 2020-01-01T00:00:00 --tilera 214.86  --tiledec 53.0  --tileid 82000  --faflavor sv1scndcfhtls  --priority custom --outdir ./sv1scndcfhtls # cfhstls w3
