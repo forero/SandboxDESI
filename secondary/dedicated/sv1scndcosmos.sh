@@ -1,5 +1,7 @@
 python ~/fiberassign/bin/fba_sv1  --dr dr9 --dtver 0.51.0 --rundate 2020-01-01T00:00:00 --tilera 150.12  --tiledec 2.20  --tileid 82000  --faflavor sv1scndcosmos  --priority custom --outdir ./sv1scndcosmos # cosmos
 
+python ~/fiberassign/bin/fba_sv1  --dr dr9 --dtver 0.51.0 --rundate 2020-01-01T00:00:00 --tilera 150.12  --tiledec 2.20  --tileid 82001  --faflavor sv1scndcosmos  --priority custom --noreobs ./sv1scndcosmos/fiberassign-082000.fits.gz --outdir ./sv1scndcosmos 
+
 # RUNDATE EFFECTIVE_AREA_IN_DEG2
 #2020-01-01T00:00:00 7.37 Full fiber reach
 #2021-01-17T00:00:00 2.58 Restricted fiber reach
