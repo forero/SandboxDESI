@@ -176,6 +176,18 @@ def write_onepct_mtl(output_path="./", program='bright'):
     
     return 
 
+def update_onepct_mtl(filename):
+    data = Table.read(filename)
+    print('finished reading', filename)
+    isqso = (data['DESI_TARGET']&desi_mask['QSO'])!=0
+    r = np.random.random(len(data))
+    rr = r<0.82
+    data['NUMOBS_INIT'][rr & isqso] = 1
+    data['NUMOBS_MORE'][rr & isqso] = 1
+    data.write(filename, overwrite=True)
+    print('finished writing', filename)
+    
 write_onepct_mtl(output_path='./targets/', program='dark')
 write_sky_file(output_path='./targets/')
 write_gfa_file(output_path='./targets/')
+update_onepct_mtl("./targets/mtl_dark_onepct.fits")
