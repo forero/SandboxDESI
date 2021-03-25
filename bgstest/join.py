@@ -150,10 +150,21 @@ def join_fba_targets(targets_file="./targets.fits", fba_path="./", summary_filen
     print('Done writing to {}'.format(summary_filename))
 
 
-join_fba_targets(targets_file="targets/mtl_bright_sv1_onepct.fits", fba_path="./fba_output_sv1_bright/", 
-                 summary_filename="fba_summary_bright_sv1.fits", survey='sv1')
-join_fba_targets(targets_file="targets/mtl_bright_main_onepct.fits", fba_path="./fba_output_main_bright/", summary_filename="fba_summary_bright_main.fits")
+#join_fba_targets(targets_file="targets/mtl_bright_sv1_onepct.fits", fba_path="./fba_output_sv1_bright/", 
+#                 summary_filename="fba_summary_bright_sv1.fits", survey='sv1')
+#join_fba_targets(targets_file="targets/mtl_bright_main_onepct.fits", fba_path="./fba_output_main_bright/", 
+#                 summary_filename="fba_summary_bright_main.fits")
 
-#fba_run --targets targets/mtl_bright_main_onepct.fits --sky targets/sky_onepct.fits --footprint tiles/tiles_one_pct_bright.fits --rundate 2020-01-01T00:00:00 --dir fba_output_main_bright/ --overwrite
+#join_fba_targets(targets_file="targets/mtl_bright_sv1_onepct.fits", fba_path="./fba_output_sv1_bright_updated_pos/", 
+#                 summary_filename="fba_summary_bright_sv1_updated_pos.fits", survey='sv1')
+#join_fba_targets(targets_file="targets/mtl_bright_main_onepct.fits", fba_path="./fba_output_main_bright_updated_pos/", 
+#                 summary_filename="fba_summary_bright_main_updated_pos.fits")
 
-#fba_run --targets targets/mtl_bright_sv1_onepct.fits --sky targets/sky_onepct.fits --footprint tiles/tiles_one_pct_bright.fits --rundate 2020-01-01T00:00:00 --dir fba_output_sv1_bright/ --overwrite
+#join_fba_targets(targets_file="targets/mtl_bright_newbgs_sv1_onepct.fits", fba_path="./fba_output_newbgs_sv1_bright/", 
+#                 summary_filename="fba_summary_bright_newbgs_sv1.fits", survey='sv1')
+#join_fba_targets(targets_file="targets/mtl_bright_newbgs_sv1_onepct.fits", fba_path="./fba_output_newbgs_sv1_updated_pos/", 
+#                 summary_filename="fba_summary_bright_newbgs_sv1_updated_pos.fits", survey='sv1')
+
+join_fba_targets(targets_file="targets/mtl_bright_newbgs_david_sv1_onepct.fits", 
+                 fba_path="./fba_output_newbgs_david_sv1_updated_pos/", 
+                 summary_filename="fba_summary_bright_newbgs_david_sv1_updated_pos.fits", survey='sv1')
