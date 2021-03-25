@@ -1,0 +1,1 @@
+fba_run --targets inputs/mtl_updated_qso_0.82_dark_sv2_onepct.fits --sky inputs/sky_onepct.fits --footprint inputs/one_pct_7pass-tiles.fits --rundate 2021-03-17T23:20:01 --dir fba_mtl_updated_qso_0.82_dark_sv2_onepct/ --overwrite
