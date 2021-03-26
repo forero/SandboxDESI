@@ -123,7 +123,7 @@ def join_fba_targets(targets_file="./targets.fits", fba_path="./", summary_filen
             'isQSO':sv1_targetmask.desi_mask['QSO'],
             'isBGS_ANY':sv1_targetmask.desi_mask['BGS_ANY'],
             'isMWS_ANY':sv1_targetmask.desi_mask['MWS_ANY']}
-    elif survey='sv2':
+    elif survey=='sv2':
         types = {'isELG':sv2_targetmask.desi_mask['ELG'],
             'isLRG':sv2_targetmask.desi_mask['LRG'],
             'isQSO':sv2_targetmask.desi_mask['QSO'],
@@ -160,21 +160,16 @@ def join_fba_targets(targets_file="./targets.fits", fba_path="./", summary_filen
     print('Done writing to {}'.format(summary_filename))
 
 
-#join_fba_targets(targets_file="targets/mtl_bright_sv1_onepct.fits", fba_path="./fba_output_sv1_bright/", 
-#                 summary_filename="fba_summary_bright_sv1.fits", survey='sv1')
-#join_fba_targets(targets_file="targets/mtl_bright_main_onepct.fits", fba_path="./fba_output_main_bright/", 
-#                 summary_filename="fba_summary_bright_main.fits")
 
-#join_fba_targets(targets_file="targets/mtl_bright_sv1_onepct.fits", fba_path="./fba_output_sv1_bright_updated_pos/", 
-#                 summary_filename="fba_summary_bright_sv1_updated_pos.fits", survey='sv1')
-#join_fba_targets(targets_file="targets/mtl_bright_main_onepct.fits", fba_path="./fba_output_main_bright_updated_pos/", 
-#                 summary_filename="fba_summary_bright_main_updated_pos.fits")
+#join_fba_targets(targets_file="inputs/mtl_updated_qso_0.82_dark_sv2_onepct.fits", 
+#                 fba_path="./fba_mtl_updated_qso_0.82_dark_sv2_onepct/", 
+#                 summary_filename="summary_fba_mtl_updated_qso_0.82_dark_sv2_onepct.fits", survey='sv2')
 
-#join_fba_targets(targets_file="targets/mtl_bright_newbgs_sv1_onepct.fits", fba_path="./fba_output_newbgs_sv1_bright/", 
-#                 summary_filename="fba_summary_bright_newbgs_sv1.fits", survey='sv1')
-#join_fba_targets(targets_file="targets/mtl_bright_newbgs_sv1_onepct.fits", fba_path="./fba_output_newbgs_sv1_updated_pos/", 
-#                 summary_filename="fba_summary_bright_newbgs_sv1_updated_pos.fits", survey='sv1')
+join_fba_targets(targets_file="inputs/mtl_updated_bgs_bright_sv2_onepct.fits", 
+                 fba_path="./fba_mtl_updated_bgs_bright_sv2_onepct/", 
+                 summary_filename="summary_fba_mtl_updated_bgs_bright_sv2_onepct.fits", survey='sv2')
 
-join_fba_targets(targets_file="inputs/mtl_updated_qso_0.82_dark_sv2_onepct.fits", 
-                 fba_path="./fba_mtl_updated_qso_0.82_dark_sv2_onepct/", 
-                 summary_filename="summary_fba_mtl_updated_qso_0.82_dark_sv2_onepct.fits", survey='sv2')
+
+join_fba_targets(targets_file="inputs/mtl_bright_sv2_onepct.fits", 
+                 fba_path="./fba_mtl_bright_sv2_onepct/", 
+                 summary_filename="summary_fba_mtl_bright_sv2_onepct.fits", survey='sv2')
