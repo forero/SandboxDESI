@@ -165,9 +165,9 @@ def join_fba_targets(targets_file="./targets.fits", fba_path="./", summary_filen
 #                 fba_path="./fba_mtl_updated_qso_0.82_dark_sv2_onepct/", 
 #                 summary_filename="summary_fba_mtl_updated_qso_0.82_dark_sv2_onepct.fits", survey='sv2')
 
-join_fba_targets(targets_file="inputs/mtl_updated_bgs_bright_sv2_onepct.fits", 
-                 fba_path="./fba_mtl_updated_bgs_bright_sv2_onepct/", 
-                 summary_filename="summary_fba_mtl_updated_bgs_bright_sv2_onepct.fits", survey='sv2')
+#join_fba_targets(targets_file="inputs/mtl_updated_bgs_bright_sv2_onepct.fits", 
+#                 fba_path="./fba_mtl_updated_bgs_bright_sv2_onepct/", 
+#                 summary_filename="summary_fba_mtl_updated_bgs_bright_sv2_onepct.fits", survey='sv2')
 
 
 join_fba_targets(targets_file="inputs/mtl_bright_sv2_onepct.fits", 

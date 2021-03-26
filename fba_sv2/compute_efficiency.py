@@ -25,13 +25,16 @@ def print_eff(filename, limits={}):
 
         n_target = np.count_nonzero(is_in&is_obs&is_target)
         eff_target = np.count_nonzero(is_in&is_obs&is_target)/np.count_nonzero(is_in&is_target)
-        print('Observed {} targets: {}k ({:.0f} per sqdeg)\t Fiber efficiency: {:.2f}'.format(i, n_target//1000, n_target/area, eff_target))
+        print('Observed {} : {}k ({:.0f} per sqdeg)\t\t Fiber efficiency: {:.2f}'.format(i, n_target//1000, n_target/area, eff_target))
 
     
 
-limits = {'min_ra':155, 'max_ra':195, 'min_dec':47, 'max_dec':58}
+limits = {'min_ra':155, 'max_ra':195, 'min_dec':45, 'max_dec':55}
 print_eff('summary_fba_mtl_updated_qso_0.82_dark_sv2_onepct.fits', limits=limits)
 
+print()
+print('NEW TILING (5 PASSES) - REAL FOCAL PLANE - NEW BGS DEFINITION (JAIME FROM SV2)')
 print_eff('summary_fba_mtl_updated_bgs_bright_sv2_onepct.fits', limits=limits)
 
+print()
 print_eff('summary_fba_mtl_bright_sv2_onepct.fits', limits=limits)
