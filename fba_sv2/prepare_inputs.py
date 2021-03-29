@@ -188,9 +188,9 @@ def update_bgs(filename):
     color = (zmag - w1mag) - 3.0/2.5 * (gmag - rmag) + 1.2
     rfiber_color_cut = (rfibermag < 20.75) | ((rfibermag < 21.5) & (color>0))
     
-    is_bgs_faint = (rmag>19.5) & (rmag<20.0) & (rfiber_color_cut) & (rr < 0.66)
+    is_bgs_faint = (rmag>19.5) & (rmag<20.3) & (rfiber_color_cut) & (rr < 0.66)
 
-    is_bgs_hip = (rmag>19.5) & (rmag<20.0) & (rfiber_color_cut) & (~(rr < 0.66))
+    is_bgs_hip = (rmag>19.5) & (rmag<20.3) & (rfiber_color_cut) & (~(rr < 0.66))
     
     is_bgs = is_bgs_main | is_bgs_faint | is_bgs_hip
     
