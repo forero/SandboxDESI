@@ -144,8 +144,12 @@ def write_onepct_mtl(output_path="./", program='bright', survey='main', cut_name
                 target_data = np.hstack((target_data, tmp_data[ii_one_pct]))
         data.close()
         print('reading file', i, len(target_files), len(tmp_data))
-    full_mtl = desitarget.mtl.make_mtl(target_data, 'DARK|GRAY|BRIGHT')
-
+    if program=='bright':
+        full_mtl = desitarget.mtl.make_mtl(target_data, 'BRIGHT')
+    else:
+        full_mtl = desitarget.mtl.make_mtl(target_data, 'DARK|GRAY')
+        
+        
     if limits is not None:
         ii_one_pct = (full_mtl['RA']>min_ra) & (full_mtl['RA']<max_ra) & (full_mtl['DEC']>min_dec) & (full_mtl['DEC']<max_dec) 
     
@@ -298,12 +302,12 @@ limits = {'min_ra':160, 'max_ra':200, 'min_dec':45, 'max_dec':60}
 
 
 
-mtl_file_dark = write_onepct_mtl(output_path='./inputs/', program='dark', survey='sv3', cut_name='no_limits', limits=None)
-secondary_file_dark = write_onepct_secondary(output_path='./inputs/', program='dark', survey='sv3', cut_name='no_limits', limits=None)
+mtl_file_dark = write_onepct_mtl(output_path='./inputs/', program='dark', survey='sv3', cut_name='full_sky', limits=None)
+secondary_file_dark = write_onepct_secondary(output_path='./inputs/', program='dark', survey='sv3', cut_name='full_sky', limits=None)
 updated_mtl_file_dark = update_onepct_mtl(mtl_file_dark, mask_name='SV3_DESI_TARGET')
 
-mtl_file_bright = write_onepct_mtl(output_path='./inputs/', program='bright', survey='sv3', cut_name='no_limits', limits=None)
-secondary_file_bright = write_onepct_secondary(output_path='./inputs/', program='bright', survey='sv3', cut_name='no_limits', limits=None)
+mtl_file_bright = write_onepct_mtl(output_path='./inputs/', program='bright', survey='sv3', cut_name='full_sky', limits=None)
+secondary_file_bright = write_onepct_secondary(output_path='./inputs/', program='bright', survey='sv3', cut_name='full_sky', limits=None)
 updated_mtl_file_bright = update_bgs(mtl_file_bright)
 
 sky_file = write_sky_file(output_path='./inputs/', limits=None)
