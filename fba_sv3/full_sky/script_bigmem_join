@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -C amd
+#SBATCH -t 48:00:00
+#SBATCH -q bigmem
+
+export OMP_NUM_THREADS=32
+
+srun -n 1 python join.py
+
+
+
+
+
