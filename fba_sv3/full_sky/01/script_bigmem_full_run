@@ -8,8 +8,8 @@ export OMP_NUM_THREADS=32
 
 srun -n 1 python prepare_inputs.py
 
-srun -n 1 fba_run --targets inputs/mtl_updated_lya_0.20_full_sky_dark_sv3.fits  inputs/secondary_full_sky_dark_sv3.fits --sky inputs/sky.fits --footprint inputs/dark_tiles.fits --rundate 2021-04-20T10:00:00 --dir fba_mtl_dark_full_sky/ --overwrite --no_redistribute 
+srun -n 1 fba_run --targets inputs/mtl_updated_lya_0.20_full_sky_dark_sv3.fits  inputs/secondary_full_sky_dark_sv3.fits --sky inputs/sky.fits --footprint inputs/8pass_dark_tiles.fits --rundate 2021-04-20T10:00:00 --dir fba_mtl_dark_full_sky/ --overwrite --no_redistribute 
 
-srun -n 1 fba_run --targets inputs/mtl_full_sky_bright_sv3.fits  inputs/secondary_full_sky_bright_sv3.fits --sky inputs/sky.fits --footprint inputs/bright_tiles.fits --rundate 2021-04-20T20:00:00 --dir fba_mtl_bright_full_sky/ --overwrite --no_redistribute 
+srun -n 1 fba_run --targets inputs/mtl_full_sky_bright_sv3.fits  inputs/secondary_full_sky_bright_sv3.fits --sky inputs/sky.fits --footprint inputs/5pass_bright_tiles.fits --rundate 2021-04-20T20:00:00 --dir fba_mtl_bright_full_sky/ --overwrite --no_redistribute 
 
 srun -n 1 python join.py
