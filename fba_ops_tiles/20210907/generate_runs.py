@@ -17,10 +17,11 @@ ra = coordinates[:,0]
 dec = coordinates[:,1]
 start_tileid = 85000
 tileid = np.int_(start_tileid + np.arange(len(ra)))
-options = ['doclean=n','dr=dr9','dtver=0.58.0','forcetileid=n',
+options = ['doclean=n','dr=dr9','dtver=1.1.1','forcetileid=n',
            'gaiadr=gaiadr2' , 'goaltime=1000.0' , 'ha=0.0' , 
            'margin_gfa=0.0' , 'margin_petal=0.0' , 'margin_pos=0.0' , 'mintfrac=0.85', 'outdir=./' , 
-           'pmcorr=n' , 'program=DARK', 'sky_per_petal=40' , 'sky_per_slitblock=1' ,'standards_per_petal=10' , 'survey=main']
+           'pmcorr=n' , 'program=DARK', 'sky_per_petal=40' , 'sky_per_slitblock=1' ,'standards_per_petal=10' , 'survey=main', 
+           'hdr_survey=special', 'hdr_faprgrm=specialdark']
            #'tiledec=20.0' , 'tileid=81100' , tilera=200.0
 for i in range(len(ra)):
     ops = " --".join(options)
