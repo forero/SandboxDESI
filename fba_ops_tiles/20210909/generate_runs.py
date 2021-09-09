@@ -1,3 +1,4 @@
+# tiles designed for focal plane testing
 import numpy as np
 
 # inside the footprint
