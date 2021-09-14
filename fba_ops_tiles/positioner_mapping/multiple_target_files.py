@@ -30,7 +30,7 @@ for m in range(9):
 # final parity check
 parity = nbitset % 2
 print(parity[:10])
-ii = parity!=0
+ii = parity==0
 tid_to_include = fba_main['TARGETID'][ii]
 tin = np.isin(data_main['TARGETID'], tid_to_include)
 new_data = data_main[tin]
