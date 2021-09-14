@@ -5,11 +5,11 @@ from collections import Counter
 target_filename = "090000-targ.fits"
 data_main = fitsio.read(target_filename)
 
-print('{} targets in the original file'.format(len(data_main['TARGETID'])))
+#print('{} targets in the original file'.format(len(data_main['TARGETID'])))
 # cut-off the faint targets
-ii = data_main['GAIA_PHOT_G_MEAN_MAG']<=19
-data_main = data_main[ii]
-print('{} targets after the magnitude cut'.format(len(data_main['TARGETID'])))
+#ii = data_main['GAIA_PHOT_G_MEAN_MAG']<=100
+#data_main = data_main[ii]
+#print('{} targets after the magnitude cut'.format(len(data_main['TARGETID'])))
 
 
 fba_potential = fitsio.read("fiberassign-090000.fits", ext="POTENTIAL_ASSIGNMENTS")
