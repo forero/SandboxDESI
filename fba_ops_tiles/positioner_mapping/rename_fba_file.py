@@ -30,7 +30,7 @@ for extname in extnames:
         
     header['TILEID'] = newtileid
     if (extname=='PRIMARY'):
-        header['FAFLAVOR'] = 'posmapping'
+        header['FAFLAVOR'] = 'cmxposmapping'
         fileout.write(None, header=header, extname=extname)
     else:
         fileout.write(data, header=header, extname=extname)
