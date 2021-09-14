@@ -7,6 +7,7 @@ data_main = fitsio.read(target_filename)
 fba_main = fitsio.read("fiberassign-090000.fits")
 fiber_id = (fba_main['FIBER']%500)
 
+nbitset = fiber_id*0
 for m in range(9):
     ii = (fiber_id & (2**m))!=0
     tid_to_include = fba_main['TARGETID'][ii]    
@@ -22,9 +23,13 @@ for m in range(9):
     print()
     #print(i,np.count_nonzero(fba_main['DEVICE_LOC']==i))
 
+    nbitset[ii] += 1
+    
+
 # final parity check
-m = 0
-ii = ~((fiber_id & (2**m))!=0)
+parity = nbitset % 2
+print(parity[:10])
+ii = parity!=0
 tid_to_include = fba_main['TARGETID'][ii]
 tin = np.isin(data_main['TARGETID'], tid_to_include)
 new_data = data_main[tin]
