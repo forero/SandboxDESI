@@ -1,5 +1,6 @@
 import numpy as np
 import fitsio
+import os
 
 target_filename = "090000-unique_targ.fits"
 data_main = fitsio.read(target_filename)
