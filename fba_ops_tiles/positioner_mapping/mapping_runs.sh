@@ -7,7 +7,7 @@ fiberassign --mtl 090000-unique_targ.fits --sky 090000-sky.fits --gfafile 090000
 python multiple_target_files.py
 
 fiberassign --mtl 090000-unique_unique_targ_m_00.fits --sky 090000-sky.fits --gfafile 090000-gfa.fits --nstarpetal 0 --footprint 090000-tiles.fits --overwrite
-mv fiberassign-090000.fits fiberassign-082248.fits
+python rename_fba_file.py fiberassign-090000.fits fiberassign-082248.fits
 gzip  fiberassign-082248.fits
 
 fiberassign --mtl 090000-unique_unique_targ_m_01.fits --sky 090000-sky.fits --gfafile 090000-gfa.fits --nstarpetal 0 --footprint 090000-tiles.fits --overwrite
