@@ -14,7 +14,7 @@ def read_desi_exposure(filename, camera='b', petal=0):
 
 data_path = "/global/cfs/cdirs/desi/spectro/data/"
 
-exposures = glob.glob(os.path.join(data_path, "20211*/*/desi*.fits.fz"))
+exposures = glob.glob(os.path.join(data_path, "202110*/*/desi*.fits.fz"))
 exposures.sort()
 
 
@@ -23,7 +23,7 @@ outfile.write("NIGHT,EXPID,FLAVOR,CAMERA,PETAL,ENTROPY\n")
 outfile.close()
 
 print(len(exposures))
-for exp_file in exposures[:100]:
+for exp_file in exposures:
     night = exp_file.split('/')[-3]
     expid = int(exp_file.split('/')[-2])
     
