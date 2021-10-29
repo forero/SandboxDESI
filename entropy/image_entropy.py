@@ -31,7 +31,10 @@ def compute_probability_distribution_1D(data):
         
     values = []
     for p in sorted_perms:
-        values.append(sorts[p])
+        try:
+            values.append(sorts[p])
+        except:
+            values.append(0.0)
     values = np.array(values)
     values = values/np.sum(values)
 
@@ -64,7 +67,10 @@ def compute_probability_distribution_2D(data, n_stride=2):
         
     values = []
     for p in sorted_perms:
-        values.append(sorts[p])
+        try:
+            values.append(sorts[p])
+        except:
+            values.append(0.0)
     values = np.array(values)
     values = values/np.sum(values)
     
