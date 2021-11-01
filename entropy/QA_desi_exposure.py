@@ -17,8 +17,8 @@ data_path = "/global/cfs/cdirs/desi/spectro/data/"
 exposures = glob.glob(os.path.join(data_path, "202110*/*/desi*.fits.fz"))
 exposures.sort()
 
-
-outfile = open("exposures_entropy.csv","w")
+outname = "entropy_exposures.csv"
+outfile = open(outname,"w")
 outfile.write("NIGHT,EXPID,FLAVOR,CAMERA,PETAL,ENTROPY\n")
 outfile.close()
 
@@ -36,7 +36,7 @@ for exp_file in exposures:
             
             out = "{},{},{},{},{},{}\n".format(night, expid, flavor, camera, petal, entropy)
             print(out)
-            outfile = open("exposures_entropy.csv","a")
+            outfile = open(outname,"a")
             outfile.write(out)
             outfile.close()
 
