@@ -7,17 +7,20 @@ import image_entropy as ient
 
 
 def read_desi_exposure(filename, camera='b', petal=0):
-    exp_data = fitsio.read(filename, ext=camera+str(petal)) 
-    header = fitsio.read(filename, header=True)
-    flavor = header[1]["FLAVOR"]
-    return exp_data, flavor
-
+    try:
+        exp_data = fitsio.read(filename, ext=camera+str(petal)) 
+        header = fitsio.read(filename, header=True)
+        flavor = header[1]["FLAVOR"]
+        return exp_data, flavor
+    except:
+        return None, None
 data_path = "/global/cfs/cdirs/desi/spectro/data/"
 
-exposures = glob.glob(os.path.join(data_path, "202110*/*/desi*.fits.fz"))
+exposures = glob.glob(os.path.join(data_path, "2021101*/*/desi*.fits.fz"))
 exposures.sort()
+print(exposures)
 
-outname = "entropy_exposures.csv"
+outname = "entropy_exposures_2021101.csv"
 outfile = open(outname,"w")
 outfile.write("NIGHT,EXPID,FLAVOR,CAMERA,PETAL,ENTROPY\n")
 outfile.close()
@@ -30,10 +33,12 @@ for exp_file in exposures:
     for camera in ['b', 'r', 'z']:
         for petal in range(10):            
             data, flavor = read_desi_exposure(exp_file, camera=camera, petal=petal)
-            p = ient.compute_probability_distribution_2D(data, n_stride=20)
-            entropy = ient.compute_entropy(p)
+            entropy = -1
+            if data is not None:
+                p = ient.compute_probability_distribution_2D(data, n_stride=20)
+                entropy = ient.compute_entropy(p)
+                
             print(night, expid, flavor, camera, petal, entropy, np.shape(data))
-            
             out = "{},{},{},{},{},{}\n".format(night, expid, flavor, camera, petal, entropy)
             print(out)
             outfile = open(outname,"a")
