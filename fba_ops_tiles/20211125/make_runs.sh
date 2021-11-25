@@ -1,0 +1,17 @@
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=0.0 --tiledec=84.9 --tileid=82412
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=40.0 --tiledec=84.0 --tileid=82425
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=105.0 --tiledec=84.0 --tileid=82438
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=175.0 --tiledec=83.0 --tileid=82451
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=215.0 --tiledec=84.1 --tileid=82464
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=260.0 --tiledec=84.0 --tileid=82477
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=322.0 --tiledec=84.5 --tileid=82490
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=13.5 --tiledec=-20.0 --tileid=82503
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=31.6 --tiledec=-20.0 --tileid=82516
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=48.5 --tiledec=-20.0 --tileid=82529
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=65.0 --tiledec=-18.9 --tileid=82542
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=84.3 --tiledec=-20.0 --tileid=82555
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=105.5 --tiledec=-18.4 --tileid=82568
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=123.8 --tiledec=-18.4 --tileid=82581
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=146.0 --tiledec=-20.0 --tileid=82594
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=167.0 --tiledec=-20.0 --tileid=82607
+fba_cmx --dr=dr9 --dtver=0.49.0 --rundate=2021-11-25T21:00:00 --seed=77 --faflavor=dithprec --outdir=./ --tilera=186.0 --tiledec=-20.0 --tileid=82620
