@@ -44,7 +44,7 @@ def compute_probability_distribution_2D(data, n_stride=2):
     
     n_x = s[0]//n_stride -1
     n_y = s[1]//n_stride -1
-    print("computation over {} locations ".format(n_x*n_y))
+    #print("computation over {} locations ".format(n_x*n_y))
 
     
     sorts = {}
@@ -82,28 +82,3 @@ def compute_entropy(proba_values):
     p = np.array(proba_values)
     entropy = np.sum(-p*np.log2(p))/np.log2(len(p))
     return entropy
-
-def read_sky_sframe(sframe_file):
-    h = fitsio.FITS(sframe_file)
-    sel = h["FIBERMAP"]["OBJTYPE"].read() == "SKY"
-    sky = h["FLUX"].read()[sel,:]
-    return sky
-
-def compute_camera_entropy(exp_path, date, expid, band):
-    n_petals = 10
-    skyb_petals = []
-    for i in range(n_petals):
-        filename = '{}/{}/{:08d}/sframe-{}{}-{:08d}.fits'.format(exp_path, date, expid, band, i, expid)
-        skyb_petals.append(read_sky_sframe(filename))
-        #print('read ', i)
-    
-    p_skyb_petals = []
-    for i in range(n_petals):
-        p_skyb_petals.append(compute_probability_distribution(skyb_petals[i]))
-        #print('probability', i)
-
-    entropy_p_skyb_petals = []
-    for i in range(n_petals):
-        entropy_p_skyb_petals.append(compute_entropy(p_skyb_petals[i]))
-        #print('entropy', i)
-    return np.array(entropy_p_skyb_petals)
