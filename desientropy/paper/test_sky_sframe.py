@@ -1,4 +1,6 @@
 import desientropy.sky_sframe
 
-desientropy.sky_sframe.summary_entropy_night("daily", 20220329)
-#desientropy.sky_sframe.summary_entropy_expid("daily", 20220305, 125018)
+for i in range(15,0,-1):
+        print(i)
+        desientropy.sky_sframe.summary_entropy_night("daily", 20220400+i, sample_lambda=True)
+
