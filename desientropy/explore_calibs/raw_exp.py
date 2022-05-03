@@ -19,6 +19,7 @@ def read_raw_exp(desi_exp_filename):
     obstype = header['OBSTYPE']
     program = header['PROGRAM']
     expid = header['EXPID']
+    night = header['NIGHT']
     
     raw_data = {}
     for i in range(2,4):#n_hdu-1):
@@ -27,7 +28,7 @@ def read_raw_exp(desi_exp_filename):
         print(ext_name)
         raw_data[ext_name] = a.read()
         print(np.shape(raw_data[ext_name]))
-    return {'data':raw_data, 'obstype':obstype, 'program':program, 'expid':expid}
+    return {'DATA':raw_data, 'OBSTYPE':obstype, 'PROGRAM':program, 'EXPID':expid, 'NIGHT':night}
 
 def new_data_amp(data_amp, tau=20):
     n_x = np.shape(data_amp)[0]
@@ -41,26 +42,41 @@ def new_data_amp(data_amp, tau=20):
     return new_data
 
 def compute_raw_exp_entropy(raw_exp_data):
-    spectros = list(raw_exp_data['data'].keys())
-    print(spectros)
+    summary = {}
+    summary['SPECTRO'] = []
+    summary['AMP'] = []
+    summary['EXPID'] = []
+    summary['NIGHT'] = []
+    summary['PROGRAM'] = []
+    summary['OBSTYPE'] = []
+    summary['H'] = []
+
+    spectros = list(raw_exp_data['DATA'].keys())
+    print('computing for expid', raw_exp_data['EXPID'])
     for spectro in spectros:
-        data = raw_exp_data['data'][spectro]
+        print('\t spectro:', spectro)
+        data = raw_exp_data['DATA'][spectro]
         n_x = np.shape(data)[0]
         n_y = np.shape(data)[1]
-        data_amp_A = new_data_amp(data[:n_x//2, :n_y//2])
-        data_amp_B = new_data_amp(data[n_x//2:, :n_y//2])
-        data_amp_C = new_data_amp(data[:n_x//2, n_y//2:])
-        data_amp_D = new_data_amp(data[n_x//2:, n_y//2:])
         
-        entropy_A = desientropy.compute.entropy_2d(data_amp_A)
-        entropy_B = desientropy.compute.entropy_2d(data_amp_B)
-        entropy_C = desientropy.compute.entropy_2d(data_amp_C)
-        entropy_D = desientropy.compute.entropy_2d(data_amp_D)
+        amps = ['A', 'B', 'C', 'D']
+        data_amp = list(range(len(amps)))
+        data_amp[0] = new_data_amp(data[:n_x//2, :n_y//2])
+        data_amp[1] = new_data_amp(data[n_x//2:, :n_y//2])
+        data_amp[2] = new_data_amp(data[:n_x//2, n_y//2:])
+        data_amp[3] = new_data_amp(data[n_x//2:, n_y//2:])
+        
+        entropy = list(range(len(amps)))
+        for i in range(len(amps)):
+            entropy[i] = desientropy.compute.entropy_2d(data_amp[i])
 
-        print(np.shape(data_amp_A), entropy_A)
-        print(np.shape(data_amp_B), entropy_B)
-        print(np.shape(data_amp_C), entropy_C)
-        print(np.shape(data_amp_D), entropy_D)        
+            
+        for i in range(len(amps)):
+            summary['SPECTRO'].append(spectro)
+            summary['AMP'].append(amps[i])
+            summary['H'].append(entropy[i])
+            for j in ['EXPID', 'PROGRAM', 'OBSTYPE']:
+                summary[j].append(raw_exp_data[j])
 
 
         
