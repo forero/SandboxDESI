@@ -24,7 +24,7 @@ def read_raw_exp(desi_exp_filename):
     night = header['NIGHT']
     
     raw_data = {}
-    for i in range(2,4):#n_hdu-1):
+    for i in range(2,n_hdu-1):
         a = fits[i]
         ext_name = a.get_extname()
         raw_data[ext_name] = a.read()
