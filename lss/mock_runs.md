@@ -18,15 +18,15 @@ python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax
 3. Now this could be done outside the interactive session
 
 ```
-python $HOME/LSS/scripts/mock_tools/mkCat_mock.py  --mockmin 1 --mockmax 2 --survey Y1 --combd y --combr y --combdr y --tracer dark --add_gtl n --countran y --base_output /global/cscratch1/sd/forero/tmp/ 
+python $HOME/LSS/scripts/mock_tools/mkCat_mock.py  --mockmin 1 --mockmax 2 --survey Y1 --combd y --combr y --combdr y --tracer dark --add_gtl n --countran y --base_output $PSCRATCH/MockLSS
 ```
 
 4. Finally for each tracer (LRG, ELG, QSO)
 
 ```
-python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer LRG --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot y --mkclusdat_allpot y --nz y --base_output /global/cscratch1/sd/forero/tmp/  --add_gtl n
+python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer LRG --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot y --mkclusdat_allpot y --nz y --base_output $PSCRATCH/MockLSS  --add_gtl n
 
-python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer ELG --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot y --mkclusdat_allpot y --nz y --base_output /global/cscratch1/sd/forero/tmp/  --add_gtl n
+python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer ELG --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot y --mkclusdat_allpot y --nz y --base_output $PSCRATCH/MockLSS  --add_gtl n
 
-python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer QSO --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot y --mkclusdat_allpot y --nz y --base_output /global/cscratch1/sd/forero/tmp/  --add_gtl n
+python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer QSO --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot y --mkclusdat_allpot y --nz y --base_output $PSCRATCH/MockLSS  --add_gtl n
 ```
