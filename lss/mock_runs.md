@@ -25,6 +25,8 @@ python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax
 python $HOME/LSS/scripts/mock_tools/prepare_mocks_ran_main.py --ranmin 1 --ranmax 2 --footprint Y1 --nproc 64
 ```
 
+----
+
 4. Combine across tiles for dark time info, default just does dark time. 
    Setting --add_gtl n means that we are not using the good fiber list from the actual observed data.
 
