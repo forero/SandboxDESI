@@ -22,7 +22,7 @@ python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax
 3. Prepare randoms (still within the previous session)
 
 ```
-python prepare_mocks_ran_main.py --ranmin 1 --ranmax 2 --footprint Y1
+python $HOME/LSS/scripts/prepare_mocks_ran_main.py --ranmin 1 --ranmax 2 --footprint Y1
 ```
 
 4. Combine across tiles for dark time info, default just does dark time. 
