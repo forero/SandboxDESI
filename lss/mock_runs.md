@@ -17,13 +17,19 @@ cd $HOME/LSS/scripts/mock_tools/
 python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint Y1 --nproc 64 --base_output $PSCRATCH/MockLSS --prep y
 ```
 
-3. Now this could be done outside the interactive session
+3. Prepare randoms (still within the previous session)
+
+```
+python prepare_mocks_ran_main.py --ranmin 1 --ranmax 2 --footprint Y1
+```
+
+4. Combine across tiles for dark time info, default just does dark time.
 
 ```
 python $HOME/LSS/scripts/mock_tools/mkCat_mock.py  --mockmin 1 --mockmax 2 --survey Y1 --combd y --combr y --combdr y --tracer dark --add_gtl n --countran y --base_output $PSCRATCH/MockLSS
 ```
 
-4. Finally for each tracer (LRG, ELG, QSO)
+5. Finally for each tracer (LRG, ELG, QSO)
 
 ```
 python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer LRG --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot y --mkclusdat_allpot y --nz y --base_output $PSCRATCH/MockLSS  --add_gtl n
