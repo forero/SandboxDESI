@@ -1,0 +1,4 @@
+TILE, PETAL, NIGHT, PETAL_H, TILE_H
+03371 2 20220917 0.977 0.998 # This corresponds to the tile on triangulum
+03371 7 20220917 0.975 0.998
+
