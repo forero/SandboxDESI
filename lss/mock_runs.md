@@ -18,6 +18,12 @@ cd $HOME/LSS/scripts/mock_tools/
 python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint Y1 --nproc 32 --base_output $SCRATCH/MockLSS --prep y
 ```
 
+3. Prepare randoms (still within the previous session)
+
+```
+python $HOME/LSS/scripts/mock_tools/prepare_mocks_ran_main.py --ranmin 1 --ranmax 2 --footprint Y1 --nproc 32
+```
+
 # On Perlmutter
 
 (Main reference https://github.com/desihub/LSS/blob/main/Sandbox/LSSpipe_ab1stgen_Y1.txt)
