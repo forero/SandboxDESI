@@ -1,3 +1,23 @@
+# On Cori, DA02
+
+1. Basic path setup
+
+```
+cd $SCRATCH/MockLSS
+source /global/common/software/desi/desi_environment.sh main
+PYTHONPATH=$PYTHONPATH:$HOME/LSS/py
+```
+
+
+2. Prepare data to run fiberassign on the mocks
+
+```
+salloc -N 1 -C cpu -t 04:00:00 --qos interactive -C haswell
+mkdir -p $SCRATCH/MockLSS/FirstGenMocks/AbacusSummit//Y1/multipass_mock1_dark/
+cd $HOME/LSS/scripts/mock_tools/
+python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint DA02 --nproc 32 --base_output $SCRATCH/MockLSS --prep y
+```
+
 # On Perlmutter
 
 (Main reference https://github.com/desihub/LSS/blob/main/Sandbox/LSSpipe_ab1stgen_Y1.txt)
@@ -9,6 +29,7 @@ cd $PSCRATCH/MockLSS
 source /global/common/software/desi/desi_environment.sh main
 PYTHONPATH=$PYTHONPATH:$HOME/LSS/py
 ```
+
 
 2. Prepare data to run fiberassign on the mocks
 
