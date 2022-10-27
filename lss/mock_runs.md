@@ -1,4 +1,4 @@
-# On Cori, DA02
+# On Cori, Y1
 
 1. Basic path setup
 
@@ -13,9 +13,9 @@ PYTHONPATH=$PYTHONPATH:$HOME/LSS/py
 
 ```
 salloc -N 1 -C cpu -t 04:00:00 --qos interactive -C haswell
-mkdir -p $SCRATCH/MockLSS/FirstGenMocks/AbacusSummit//Y1/multipass_mock1_dark/
+mkdir -p $SCRATCH/MockLSS/FirstGenMocks/AbacusSummit/Y1/multipass_mock1_dark/
 cd $HOME/LSS/scripts/mock_tools/
-python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint DA02 --nproc 32 --base_output $SCRATCH/MockLSS --prep y
+python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint Y1 --nproc 32 --base_output $SCRATCH/MockLSS --prep y
 ```
 
 # On Perlmutter
