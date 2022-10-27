@@ -18,9 +18,12 @@ cd $HOME/LSS/scripts/mock_tools/
 python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint Y1 --nproc 32 --base_output $SCRATCH/MockLSS --prep y
 ```
 
-3. Prepare randoms (still within the previous session)
+3. Prepare randoms (in a new large memory session)
 
 ```
+module load cmem
+cd $HOME/LSS/scripts/mock_tools/
+salloc -N 1 -C amd -t 4:00:00 -q interactive
 python $HOME/LSS/scripts/mock_tools/prepare_mocks_ran_main.py --ranmin 1 --ranmax 2 --footprint Y1 --nproc 32
 ```
 
