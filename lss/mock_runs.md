@@ -20,10 +20,10 @@ salloc -N 1 -C cpu -t 04:00:00 --qos interactive --account desi
 mkdir -p $PSCRATCH/MockLSS/FirstGenMocks/AbacusSummit//Y1/multipass_mock1_dark/
 cd $HOME/LSS/scripts/mock_tools/
 python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint Y1 --nproc 64 --base_output $PSCRATCH/MockLSS/ --prep y
-```
+````
 
 
-3. Prepare randoms (still within the previous session)
+4. Prepare randoms (still within the previous session) and run fiberassign on them
 
 ```
 python $HOME/LSS/scripts/mock_tools/prepare_mocks_ran_main.py --ranmin 1 --ranmax 2 --footprint Y1 --nproc 64 --base_output $PSCRATCH/MockLSS/
@@ -31,7 +31,7 @@ python $HOME/LSS/scripts/mock_tools/prepare_mocks_ran_main.py --ranmin 1 --ranma
 
 
 
-4. Combine across tiles for dark time info, default just does dark time. 
+5. Combine across tiles for dark time info, default just does dark time. 
    Setting --add_gtl n means that we are not using the good fiber list from the actual observed data.
 
 ```
