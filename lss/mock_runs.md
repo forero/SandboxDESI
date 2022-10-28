@@ -49,6 +49,23 @@ python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer ELG --mockmin 1 --moc
 python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer QSO --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot y --mkclusdat_allpot y --nz y --base_output $PSCRATCH/MockLSS/  --add_gtl n
 ```
 
+LRG fails with
+
+```
+Traceback (most recent call last):
+  File "/global/homes/f/forero/LSS/scripts/mock_tools/mkCat_mock.py", line 435, in <module>
+    docat(mn,i)
+  File "/global/homes/f/forero/LSS/scripts/mock_tools/mkCat_mock.py", line 336, in docat
+    ztab = Table(fitsio.read(tarf,columns=['TARGETID','RSDZ']))
+  File "/global/common/software/desi/perlmutter/desiconda/20220119-2.0.1/conda/lib/python3.9/site-packages/fitsio/fitslib.py", line 139, in read
+    with FITS(filename, **kwargs) as fits:
+  File "/global/common/software/desi/perlmutter/desiconda/20220119-2.0.1/conda/lib/python3.9/site-packages/fitsio/fitslib.py", line 520, in __init__
+    self._FITS = _fitsio_wrap.FITS(filename, self.intmode, create)
+OSError: FITSIO status = 104: could not open the named file
+failed to find or open the following file: (ffopen)
+/pscratch/sd/f/forero/MockLSS/FirstGenMocks/AbacusSummit/Y1/fba1/targs.fits
+```
+
 6. Make plots
 
 ```
