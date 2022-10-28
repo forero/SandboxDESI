@@ -18,8 +18,10 @@ PYTHONPATH=$PYTHONPATH:$HOME/LSS/py
 ```
 salloc -N 1 -C cpu -t 04:00:00 --qos interactive --account desi
 mkdir -p $PSCRATCH/MockLSS/FirstGenMocks/AbacusSummit//Y1/multipass_mock1_dark/
+
 cd $HOME/LSS/scripts/mock_tools/
-python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint Y1 --nproc 64 --base_output $PSCRATCH/MockLSS/ --prep y
+python $HOME/LSS/scripts/mock_tools/prepare_mocks_main.py --base_output $PSCRATCH/MockLSS/ --prep y --realmin 1 --realmax 2 --survey Y1 
+python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint Y1 --nproc 64 --base_output $PSCRATCH/MockLSS/ 
 ````
 
 
