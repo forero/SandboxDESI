@@ -65,6 +65,14 @@ OSError: FITSIO status = 104: could not open the named file
 failed to find or open the following file: (ffopen)
 /pscratch/sd/f/forero/MockLSS/FirstGenMocks/AbacusSummit/Y1/fba1/targs.fits
 ```
+So, instead use `n` in `mkclustdat_allpot` and `mkclusran_allpot`.
+
+```
+python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer LRG --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot n --mkclusdat_allpot n --nz y --base_output $PSCRATCH/MockLSS/  --add_gtl n
+
+python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer ELG --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot n --mkclusdat_allpot n --nz y --base_output $PSCRATCH/MockLSS/  --add_gtl n
+```
+
 
 6. Make plots
 
