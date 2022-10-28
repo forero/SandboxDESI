@@ -22,13 +22,15 @@ cd $HOME/LSS/scripts/mock_tools/
 python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint Y1 --nproc 64 --base_output $PSCRATCH/MockLSS/ --prep y
 ```
 
+----
+
 3. Prepare randoms (still within the previous session)
 
 ```
-python $HOME/LSS/scripts/mock_tools/prepare_mocks_ran_main.py --ranmin 1 --ranmax 2 --footprint Y1 --nproc 64
+python $HOME/LSS/scripts/mock_tools/prepare_mocks_ran_main.py --ranmin 1 --ranmax 2 --footprint Y1 --nproc 64 --base_output $PSCRATCH/MockLSS/
 ```
 
-----
+
 
 4. Combine across tiles for dark time info, default just does dark time. 
    Setting --add_gtl n means that we are not using the good fiber list from the actual observed data.
