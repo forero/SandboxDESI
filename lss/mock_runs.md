@@ -62,5 +62,5 @@ python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer QSO --mockmin 1 --moc
 ```
 cd $HOME/LSS/scripts/
 source /global/common/software/desi/users/adematti/cosmodesi_environment.sh main
-python xirunpc.py --basedir PSCRATCH/MockLSS/FirstGenMocks/AbacusSummit/Y1/mock1/LSScats/ --tracer LRG --tracer LRG_complete
+python xirunpc.py --basedir $PSCRATCH/MockLSS/FirstGenMocks/AbacusSummit/Y1/mock1/LSScats/ --tracer LRG --tracer LRG_complete
 ```
