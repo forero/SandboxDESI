@@ -13,7 +13,7 @@ PYTHONPATH=$PYTHONPATH:$HOME/LSS/py
 ```
 
 
-2. Prepare data to run fiberassign on the mocks
+2. Prepare data to run fiberassign on the mocks 
 
 ```
 salloc -N 1 -C cpu -t 04:00:00 --qos interactive --account desi
@@ -21,6 +21,11 @@ mkdir -p $PSCRATCH/MockLSS/FirstGenMocks/AbacusSummit//Y1/multipass_mock1_dark/
 
 cd $HOME/LSS/scripts/mock_tools/
 python $HOME/LSS/scripts/mock_tools/prepare_mocks_main.py --base_output $PSCRATCH/MockLSS/ --prep y --realmin 1 --realmax 2 --survey Y1 
+```
+
+3. Run fiberassign on the mocks (still in the intereactive session)
+
+```
 python $HOME/LSS/scripts/mock_tools/run_mocks_multipass.py --realmin 1 --realmax 2 --footprint Y1 --nproc 64 --base_output $PSCRATCH/MockLSS/ 
 ````
 
@@ -39,9 +44,9 @@ python $HOME/LSS/scripts/mock_tools/prepare_mocks_ran_main.py --ranmin 1 --ranma
 ```
 python $HOME/LSS/scripts/mock_tools/mkCat_mock.py  --mockmin 1 --mockmax 2 --survey Y1 --combd y --combr y --combdr y --tracer dark --add_gtl n --countran y --base_output $PSCRATCH/MockLSS/
 ```
-----
 
-5. Finally for each tracer (LRG, ELG, QSO)
+
+6. Finally for each tracer (LRG, ELG, QSO)
 
 ```
 python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer LRG --mockmin 1 --mockmax 2 --survey Y1 --fulld y --fullr y --apply_veto y --mkclusran y --mkclusdat y --mkclusran_allpot y --mkclusdat_allpot y --nz y --base_output $PSCRATCH/MockLSS/  --add_gtl n
@@ -52,9 +57,10 @@ python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer QSO --mockmin 1 --moc
 ```
 
 
-6. Make plots
+7. Make plots
 
 ```
 cd $HOME/LSS/scripts/
 python xirunpc.py --basedir argument ($desi/survey/catalogs/main/mocks/FirstGenMocks/AbacusSummit/Y1/mock1/LSScats/ --tracer LRG --tracer LRG_complete
+python xirunpc.py --basedir PSCRATCH/MockLSS/FirstGenMocks/AbacusSummit/Y1/mock1/LSScats/ --tracer LRG --tracer LRG_complete
 ```
