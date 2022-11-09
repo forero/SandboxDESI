@@ -57,7 +57,7 @@ python $HOME/LSS/scripts/mock_tools/mkCat_mock.py --tracer QSO --mockmin 1 --moc
 ```
 
 
-7. Make plots
+7. Compute correlation function data
 
 ```
 cd $HOME/LSS/scripts/
