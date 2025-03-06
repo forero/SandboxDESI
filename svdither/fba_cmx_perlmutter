@@ -643,7 +643,7 @@ def main():
         # Fix invalid TARGETIDs by generating new ones
         invalid_targetids = (d["TARGETID"] <= 0)
         if np.any(invalid_targetids):
-            log.info("{:.1f}s\tFound {} GFA targets with invalid TARGETID (≤0)".format(
+            log.info("{:.1f}s\tFound {} GFA targets with invalid TARGETID (<0)".format(
                 time() - start, np.sum(invalid_targetids)))
         
             # Create unique TARGETIDs for GFA targets
