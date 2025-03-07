@@ -333,7 +333,7 @@ def update_nowradec(
 
 
 def main():
-    #  # Monkey patch the main_cmx_or_sv function to handle CMX files properly
+      # Monkey patch the main_cmx_or_sv function to handle CMX files properly
     import types
     from desitarget.targets import main_cmx_or_sv
 
@@ -640,7 +640,7 @@ def main():
             )
         )
     
-        # Fix invalid TARGETIDs by generating new ones
+        # Fix invalid TARGETIDs by generating new ones JEFR
         invalid_targetids = (d["TARGETID"] <= 0)
         if np.any(invalid_targetids):
             log.info("{:.1f}s\tFound {} GFA targets with invalid TARGETID (<0)".format(
@@ -849,13 +849,14 @@ def main():
                 "--sky_per_petal",
                 fdict["nskypet"],
                 "--gfafile",
-                root + "-gfa.fits",
-                "--sciencemask", str(cmx_mask["STD_DITHER"].mask if "STD_DITHER" in cmx_mask.names() else 0),
-                "--stdmask", str(cmx_mask["STD_FAINT"].mask | cmx_mask["STD_BRIGHT"].mask),
-                "--skymask", str(cmx_mask["SKY"].mask),
-                "--safemask", str(cmx_mask["BAD_SKY"].mask),
-                "--excludemask", "0"            # No exclusion mask for CMX
+                root + "-gfa.fits",            
+                "--sciencemask", str(cmx_mask["STD_DITHER"].mask if "STD_DITHER" in cmx_mask.names() else 0)
             ]
+                #"--stdmask", str(cmx_mask["STD_FAINT"].mask | cmx_mask["STD_BRIGHT"].mask),
+                #"--skymask", str(cmx_mask["SKY"].mask),
+                #"--safemask", str(cmx_mask["BAD_SKY"].mask),
+                #"--excludemask", "0"            # No exclusion mask for CMX
+            #]
 
             # Add this line to specify the gaia_stdmask parameter JEFR
             opts.append("--gaia_stdmask")
